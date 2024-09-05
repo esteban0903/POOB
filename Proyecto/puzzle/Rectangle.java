@@ -194,5 +194,8 @@ public class Rectangle{
     public int getyPosition(){
         return yPosition;
     }
+    public String getColor(){
+        return color;
+    }
 }
 
