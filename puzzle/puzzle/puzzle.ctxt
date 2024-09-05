@@ -1,0 +1,22 @@
+#BlueJ class context
+comment0.target=puzzle
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ puzzle\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=height\ width
+comment1.target=puzzle(int,\ int)
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ puzzle\r\n
+comment2.params=ending
+comment2.target=puzzle(int[][])
+comment3.params=starting\ ending
+comment3.target=puzzle(int[][],\ int[][])
+comment3.text=\r\n\ This\ method\ checks\ the\ dimensions\ of\ the\ input\ matrices\ and\ initializes\ the\r\n\ `starting`\ and\ `ending`\ matrices.\ If\ the\ dimensions\ are\ invalid,\ it\ shows\ an\ error\ message.\r\n\ \r\n\ @param\ \ starting\ \ \ the\ initial\ matrix\ configuration\ (2D\ array\ of\ integers)\r\n\ @param\ \ ending\ \ \ \ \ the\ final\ matrix\ configuration\ to\ be\ initialized\ (2D\ array\ of\ integers)\r\n\ \r\n\ If\ the\ number\ of\ rows\ in\ `starting`\ is\ less\ than\ 1\ or\ the\ number\ of\ columns\ is\ less\ than\ 500,\r\n\ an\ error\ dialog\ is\ shown.\ Otherwise,\ the\ method\ initializes\ both\ `starting`\ and\ `ending`\ matrices\r\n\ with\ the\ given\ dimensions.\r\n
+comment4.params=
+comment4.target=void\ createBoard()
+comment5.params=row\ column\ color
+comment5.target=void\ addTile(int,\ int,\ java.lang.String)
+comment6.params=row\ column
+comment6.target=boolean\ verifyRanges(int,\ int)
+comment7.params=row\ column\ rectangle
+comment7.target=void\ positionTile(int,\ int,\ Rectangle)
+comment8.params=
+comment8.target=void\ makeVisible()
+numComments=9
