@@ -182,6 +182,9 @@ public class Rectangle{
             canvas.erase(this);
         }
     }
+    public boolean equals(Rectangle rectangle){
+        return color.equals(rectangle.getColor());
+    }
     public int getWidth(){
         return width;
     }

@@ -1,4 +1,5 @@
 import javax.swing.JOptionPane;
+import java.util.Arrays;
 /**
  * Write a description of class puzzle here.
  * 
@@ -11,10 +12,18 @@ public class puzzle
     private int  width;
     private char[][] ending;
     private Rectangle[][] boardRectangles;
+    private Rectangle[][] boardRectanglesEdit;
+    private Rectangle[][] boardRectanglesEnding;
+    private char[][] matrixColorsEdit;
     private char[][] arrangement;
+    private int[][] boardGlue;
     private boolean isVisible;
-    private Rectangle background;
-    private Rectangle edges;
+    private int boardWidth;
+    private Rectangle backgroundEdit;
+    private Rectangle edgesEdit;
+    private Rectangle backgroundEnding;
+    private Rectangle edgesEnding;
+    
     String[] colorNames = {"aqua", "blue", "cyan", "darkGray", "emerald", "fuchsia", 
     "green", "hotPink", "ivory", "jade", "khaki", "lavender", 
     "magenta", "navy", "orange", "purple", "quartz", "red", 
@@ -26,29 +35,34 @@ public class puzzle
     */
     public puzzle(int height, int width){
         if (height<1 || width>500){
-            JOptionPane.showMessageDialog(null, "Invalid dimensions: Height = " + height + ", Width = " + width, "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage( "Invalid dimensions: Height = " + height + ", Width = " + width);
         }else{
             this.height=height;
             this.width=width;
-            ending = new char[width][height];
             arrangement=new char[width][height];
-            boardRectangles = new Rectangle[width][height];
+            boardRectanglesEdit = new Rectangle[width][height];
             createBoard();
         }   
+    }
+    private void showMessage(String message){
+        if (isVisible){
+            JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
     public puzzle(char ending[][]){
         int rows=ending.length;
         int columns=ending[0].length;
-        if (rows<1 || columns>500){
-            JOptionPane.showMessageDialog(null, "Invalid dimensions: Height = " + rows + ", Width = " + columns, "Error", JOptionPane.ERROR_MESSAGE);
+        if ((rows<1 || columns>500)){
+            showMessage( "Invalid dimensions: Height = " + rows + ", Width = " + columns);
         }else{
             height=rows;
             width=columns;
             this.ending = ending;
             arrangement=new char[rows][columns];
-            boardRectangles = new Rectangle[rows][columns];
+            boardRectanglesEnding = new Rectangle[rows][columns];
+            boardRectanglesEdit = new Rectangle[rows][columns];
             createBoard();
-            fillBoard(arrangement);
+            createBoardEnding();
         }
     }
     /**
@@ -67,27 +81,49 @@ public class puzzle
         int columns=starting[0].length;
         
         if (rows<1 || columns>500){
-            JOptionPane.showMessageDialog(null, "Invalid dimensions: Row = " + rows + ", Column = " + columns, "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage( "Invalid dimensions: Height = " + rows + ", Width = " + columns);
         }else{ 
             height=rows;
             width=columns;
             this.ending = ending;
             arrangement=starting;
-            boardRectangles = new Rectangle[rows][columns];
+            boardRectanglesEnding = new Rectangle[rows][columns];
+            boardRectanglesEdit = new Rectangle[rows][columns];
+            createBoardEnding();
             createBoard();
-            fillBoard(arrangement);
+            
         }
     }
     private void createBoard(){
-        background= new Rectangle();
-        edges=new Rectangle();
-        background.changeSize(height*50,width*50);
-        background.changeColor("maroon");
-        edges.changeSize(50*height+10,50*width+10);
-        edges.changeColor("black");
-        edges.moveHorizontal(-5);
-        edges.moveVertical(-5);
+        backgroundEdit= new Rectangle();
+        edgesEdit=new Rectangle();
+        backgroundEdit.changeSize(height*50,width*50);
+        backgroundEdit.changeColor("maroon");
+        edgesEdit.changeSize(50*height+10,50*width+10);
+        edgesEdit.changeColor("black");
+        edgesEdit.moveHorizontal(-5);
+        edgesEdit.moveVertical(-5);
+        fillBoard(arrangement);
+    }
+    
+    private void createBoardEnding(){
+        boardWidth=(50*width)+50 ;
+        backgroundEnding= new Rectangle();
+        edgesEnding=new Rectangle();
+        backgroundEnding.changeSize(height*50,width*50);
+        backgroundEnding.changeColor("maroon");
+        backgroundEnding.moveHorizontal(boardWidth);
+        edgesEnding.changeSize(50*height+10,50*width+10);
+        edgesEnding.changeColor("black");
+        edgesEnding.moveHorizontal(boardWidth-5);
+        edgesEnding.moveVertical(-5);
+        boardRectangles=boardRectanglesEnding;
+        matrixColorsEdit=ending;
         
+        fillBoard(ending);
+        boardRectangles=boardRectanglesEdit;
+        matrixColorsEdit=arrangement;
+        boardWidth=0;
     }
     
     private void fillBoard(char [][]matrixFill){
@@ -105,23 +141,25 @@ public class puzzle
         return colorNames[getLetterIndex(letter)];
     }
     
-    public int getLetterIndex(char letter) {
+    private int getLetterIndex(char letter) {
         letter = Character.toUpperCase(letter);
         return letter - 'A';
     }
+    
     public void addTile( int row, int column, String color){
         if (!verifyRanges(row,column)){
             return;
         }if (boardRectangles[row][column] == null){
-            arrangement[row][column]=color.charAt(0);
+            matrixColorsEdit[row][column]=color.charAt(0);
             Rectangle rectangle = new Rectangle();
             rectangle.changeSize(50,50);
             rectangle.changeColor(color);
             boardRectangles[row][column]=rectangle;
             positionTile(row,column,rectangle) ;
+            
         
         }else{ 
-            JOptionPane.showMessageDialog(null, "Error: There is already a tile at position [" + row + "][" + column + "].", "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage( "Error: There is already a tile at position [" + row + "][" + column + "].");
         }
     }
     
@@ -129,16 +167,16 @@ public class puzzle
         if (!verifyRanges(row,column)){
             return;
         }if (arrangement[row][column] != '.'){
-            boardRectangles[row][column].makeInvisible();
+            boardRectanglesEdit[row][column].makeInvisible();
             arrangement[row][column]='.';
-            boardRectangles[row][column]=null;
+            boardRectanglesEdit[row][column]=null;
         }else{ 
-            JOptionPane.showMessageDialog(null, "Error: There is a null tile at position [" + row + "][" + column + "].", "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
     }
     private boolean verifyRanges(int row, int column){
         if (row>=height || row<0  || column>=width || column<0){
-            JOptionPane.showMessageDialog(null, "Error: The specified row or column is out of range.", "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage("Error: The specified row or column is out of range.");
             return false;
         }else{
             return true;
@@ -146,46 +184,93 @@ public class puzzle
     }
     
     private void positionTile(int row, int column, Rectangle rectangle){
-        rectangle.moveHorizontal(column*50);
+        rectangle.moveHorizontal(column*50+boardWidth);
         rectangle.moveVertical(row*50);
         if (isVisible){
 
             rectangle.makeVisible();
         }
     }
-    public void recolocateTile(int[] from, int[] to){
+    public void relocateTile(int[] from, int[] to){
         int rowFrom=from[0], columnFrom=from[1], rowTo=to[0], columnTo=to[1];
-        if (!verificationRecolocate(rowFrom,columnFrom,rowTo,columnTo)){
+        if (!verificationRelocate(rowFrom,columnFrom,rowTo,columnTo)){
             return;
         }
-        String color= boardRectangles[rowFrom][columnFrom].getColor();
-        deleteTile(rowFrom,columnFrom);
-        addTile(rowTo,columnTo,color);
+        if(boardGlue[rowFrom][columnFrom]==0){
+            String color= boardRectanglesEdit[rowFrom][columnFrom].getColor();
+            deleteTile(rowFrom,columnFrom);
+            addTile(rowTo,columnTo,color);
+        }else{
+            showMessage("Error: The tile that you are trying to move is glued");
+        }
     
     }
-    public boolean verificationRecolocate(int rowOne, int columnOne, int rowTwo, int columnTwo){
+    private boolean verificationRelocate(int rowOne, int columnOne, int rowTwo, int columnTwo){
         if (!verifyRanges(rowOne,columnOne ) || !verifyRanges(rowTwo,columnTwo)){
             return false;
         }
         if (boardRectangles[rowOne][columnOne]==null){
-            JOptionPane.showMessageDialog(null, "Error: There is a null tile at position [" + rowOne + "][" + columnOne + "].", "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage("Error: There is a null tile at position [" + rowOne + "][" + columnOne + "].");
             return false;
         }if (boardRectangles[rowTwo][columnTwo]!=null){
-            JOptionPane.showMessageDialog(null, "Error: There is already a Rectangle at position [" + rowTwo + "][" + columnTwo + "].", "Error", JOptionPane.ERROR_MESSAGE);
+            showMessage("Error: There is already a Rectangle at position [" + rowTwo + "][" + columnTwo + "].");
             return false;
         }
         return true;   
         
         
     }
+    public void addGlue(int row, int column){
+        if (verifyRanges(row,column)){
+            return;
+        }
+        if (boardRectanglesEdit[row][column]!=null && boardGlue[row][column]!=2){
+            boardGlue[row][column]=2;
+            
+        }
+    }
+    private void stickAroundTiles(int row, int column){
+        int[][] positions={{0,-1},{0,1},{1,0},{-1,0}};
+        for (int[]directions: positions){
+            int y=row+directions[0];
+            int x=column+directions[1];
+            if (verifyRanges(y,x)){
+                boardGlue[y][x]=1;
+            }
+        }
+    }
+    public boolean isGoal(){
+        for (int i=0; i<arrangement.length; i++){
+            for (int j=0; j<arrangement[0].length; j++){
+                if (arrangement[i][j]!=ending[i][j]){
+                    return false;
+                }
+            }
+            
+        }
+        return true;
+    }
+    
+    public char[][] actualArrangement(){
+        return arrangement;
+    }
+    
+    public void finish(){
+        JOptionPane.showMessageDialog(null, "Programa Terminado", "Finish", JOptionPane.ERROR_MESSAGE);
+    }
+    
     public void makeVisible(){
         isVisible=true;
-        edges.makeVisible();
-        background.makeVisible();
-        for (Rectangle[] rectangles:boardRectangles){
-            for(Rectangle rectangle:rectangles){
-                if (rectangle!=null){
-                    rectangle.makeVisible();
+        edgesEdit.makeVisible();
+        backgroundEdit.makeVisible();
+        edgesEnding.makeVisible();
+        backgroundEnding.makeVisible();
+        for (int i=0; i<boardRectangles.length; i++){
+            for(int j=0; j<boardRectangles[0].length; j++){
+                if (boardRectanglesEdit[i][j]!=null){
+                    boardRectanglesEdit[i][j].makeVisible();
+                }if (boardRectanglesEnding[i][j]!=null){
+                    boardRectanglesEnding[i][j].makeVisible();
                 }
             }
         }
@@ -194,12 +279,16 @@ public class puzzle
     
     public void makeInvisible(){
         isVisible=false;
-        edges.makeInvisible();
-        background.makeInvisible();
-        for (Rectangle[] rectangles:boardRectangles){
-            for(Rectangle rectangle:rectangles){
-                if (rectangle!=null){
-                    rectangle.makeInvisible();
+        edgesEdit.makeInvisible();
+        backgroundEdit.makeInvisible();
+        edgesEnding.makeInvisible();
+        backgroundEnding.makeInvisible();
+        for (int i=0; i<boardRectangles.length; i++){
+            for(int j=0; j<boardRectangles[0].length; j++){
+                if (boardRectanglesEdit[i][j]!=null){
+                    boardRectangles[i][j].makeInvisible();
+                }if (boardRectanglesEnding[i][j]!=null){
+                    boardRectanglesEnding[i][j].makeInvisible();
                 }
             }
         }
