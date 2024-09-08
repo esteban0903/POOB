@@ -23,7 +23,7 @@ public class puzzle
     private Rectangle edgesEdit;
     private Rectangle backgroundEnding;
     private Rectangle edgesEnding;
-    
+        
     String[] colorNames = {"aqua", "blue", "cyan", "darkGray", "emerald", "fuchsia", 
     "green", "hotPink", "ivory", "jade", "khaki", "lavender", 
     "magenta", "navy", "orange", "purple", "quartz", "red", 
@@ -44,6 +44,7 @@ public class puzzle
             
             boardRectanglesEdit = new Rectangle[width][height];
             boardRectanglesEnding = new Rectangle[width][height];
+            boardGlue=new int[width][height];
             createBoard();
             createBoardEnding();
         }   
@@ -65,6 +66,7 @@ public class puzzle
             arrangement=new char[rows][columns];
             boardRectanglesEnding = new Rectangle[rows][columns];
             boardRectanglesEdit = new Rectangle[rows][columns];
+            boardGlue=new int[rows][columns];
             createBoard();
             createBoardEnding();
         }
@@ -93,6 +95,7 @@ public class puzzle
             arrangement=starting;
             boardRectanglesEnding = new Rectangle[rows][columns];
             boardRectanglesEdit = new Rectangle[rows][columns];
+            boardGlue=new int[rows][columns];
             createBoardEnding();
             createBoard();
             
@@ -170,6 +173,8 @@ public class puzzle
     public void deleteTile(int row, int column){
         if (!verifyRanges(row,column)){
             return;
+        }if (boardGlue[row][column]!=0){
+            showMessage("Error: The tile that you are trying to delete is glued");
         }if (arrangement[row][column] != '.'){
             boardRectanglesEdit[row][column].makeInvisible();
             arrangement[row][column]='.';
@@ -225,21 +230,45 @@ public class puzzle
         
     }
     public void addGlue(int row, int column){
-        if (verifyRanges(row,column)){
+        if (!verifyRanges(row,column)){
             return;
         }
-        if (boardRectanglesEdit[row][column]!=null && boardGlue[row][column]!=2){
+        if ((boardGlue[row][column])!=0){
+            showMessage("Error: The tile that you are to put glue is glued");
+            return;
+        }
+        if (boardRectanglesEdit[row][column]!=null ){
             boardGlue[row][column]=2;
+            stickAroundTiles(row,column,1);
             
+        }else{
+            showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
     }
-    private void stickAroundTiles(int row, int column){
+    
+    public void deleteGlue(int row, int column){
+        if (!verifyRanges(row,column)){
+            return;
+        }
+        if ((boardGlue[row][column])!=2){
+            showMessage("Error: The tile that you are to quit glue is not glued");
+            return;
+        }
+        if (boardRectanglesEdit[row][column]!=null ){
+            boardGlue[row][column]=0;
+            stickAroundTiles(row,column,0);
+            
+        }else{
+            showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
+        }
+    }
+    private void stickAroundTiles(int row, int column,int glued){
         int[][] positions={{0,-1},{0,1},{1,0},{-1,0}};
         for (int[]directions: positions){
             int y=row+directions[0];
             int x=column+directions[1];
             if (verifyRanges(y,x)){
-                boardGlue[y][x]=1;
+                boardGlue[y][x]=glued;
             }
         }
     }
