@@ -40,8 +40,12 @@ public class puzzle
             this.height=height;
             this.width=width;
             arrangement=new char[width][height];
+            ending=new char[width][height];
+            
             boardRectanglesEdit = new Rectangle[width][height];
+            boardRectanglesEnding = new Rectangle[width][height];
             createBoard();
+            createBoardEnding();
         }   
     }
     private void showMessage(String message){
