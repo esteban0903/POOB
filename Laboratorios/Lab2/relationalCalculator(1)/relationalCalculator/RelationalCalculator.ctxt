@@ -1,0 +1,26 @@
+#BlueJ class context
+comment0.target=RelationalCalculator
+comment0.text=\ Relational\ Calculator\r\n\ \r\n\ @author\ CIS\ 2024-02\r\n
+comment1.params=
+comment1.target=RelationalCalculator()
+comment10.params=variable
+comment10.target=java.lang.String\ toString(java.lang.String)
+comment11.params=
+comment11.target=boolean\ ok()
+comment2.params=name\ attributes
+comment2.target=void\ assign(java.lang.String,\ java.lang.String[])
+comment3.params=a\ unary\ tuple
+comment3.target=void\ update(java.lang.String,\ char,\ java.lang.String[])
+comment4.params=tuple\ a
+comment4.target=void\ insertTuple(java.lang.String[],\ java.lang.String)
+comment5.params=tuple\ a
+comment5.target=void\ deleteTuple(java.lang.String[],\ java.lang.String)
+comment6.params=a\ b\ operator\ c
+comment6.target=void\ assign(java.lang.String,\ java.lang.String,\ char,\ java.lang.String)
+comment7.params=b\ c
+comment7.target=void\ proyect(java.lang.String,\ java.lang.String)
+comment8.params=relationOne\ relationTwo
+comment8.target=java.util.ArrayList\ takeAttributesCommon(Relation,\ Relation)
+comment9.params=
+comment9.target=java.lang.String[]\ variables()
+numComments=12
