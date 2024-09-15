@@ -80,8 +80,31 @@ public class RelationTest
         songs.insert(ocrostico);        
         assertEquals(songs.columns(),4);
         assertEquals(songs.tuples(),1);
-    }    
+    } 
     
+    @Test
+    public void shouldPass() {
+        String[] attributes = { "song", "artist", "album", "year"};
+        Relation people = new Relation(attributes);
+        assertEquals(people.columns(), 4); 
+        assertTrue(people.tuples() == 0);  
+    }
+
+    @Test
+    public void shouldFail() {
+        String[] attributes = { "name", "age", "city" };
+        Relation people = new Relation(attributes);
+        assertEquals(people.columns(), 3);
+        assertTrue(people.tuples() > 0);
+    }
+    @Test
+    public void shouldErr() {
+        String[] attributes = { "song", "artist", "album", "year"};
+        Relation people = new Relation(attributes);
+        String[] person = null; 
+        people.insert(person);  
+        assertNull(person);  
+    }
     /**
      * Tears down the test fixture.
      *
