@@ -1,8 +1,8 @@
 #BlueJ package file
-dependency1.from=RelationalCalculator
+dependency1.from=RelationTest
 dependency1.to=Relation
 dependency1.type=UsesDependency
-dependency2.from=RelationTest
+dependency2.from=RelationalCalculator
 dependency2.to=Relation
 dependency2.type=UsesDependency
 editor.fx.0.height=830

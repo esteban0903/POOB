@@ -59,38 +59,103 @@ public class RelationalCalculator{
     //If this is not possible, the variable a does not change
     public void assign(String a, String b, char operator, String c){
         if(operator=='p'){
-            proyect(b,c);
+            proyect(a,b,c);
         }else if(operator=='s'){
-            
+            select(a,b,c);
         }else if(operator=='m'){
-            
+            multiply(a,b,c);
         }
     }   
-    private void proyect(String b,String c){
+    private void proyect(String a,String b,String c){
         Relation relationOne= variables.get(b);
         Relation relationTwo= variables.get(c);
-        ArrayList<String []> tuplesOne =  relationOne.getTuples();
-        ArrayList<String []> tuplesTwo =  relationTwo.getTuples();
-        String [] attributes = takeAttributesCommon(relationOne,relationTwo).toArray(new String[0]);
+        ArrayList<Integer> positions=new ArrayList<>();
+        String [] attributes = takeAttributesCommon(relationOne,relationTwo,positions).toArray(new String[0]);
         Relation newRelation = new Relation(attributes);
         if (attributes!=null){
-            for (int i=0; i< relationOne.tuples();i++){
-                for(int j=0; i<attributes.length;j++){
-                    if (tuplesOne.get(i).get(j).equalsIgnoreCase(tuplesTwo.get(i).get(j)){
-                        
-                    }
-                }
-            }
+            addTuplesCommon(newRelation,relationOne,relationTwo,positions);
+            variables.put(a,newRelation);
         }
+    
     }
-    private ArrayList<String> takeAttributesCommon(Relation relationOne, Relation relationTwo){
+    private ArrayList<String> takeAttributesCommon(Relation relationOne, Relation relationTwo, ArrayList<Integer> positions){
         ArrayList<String> attributes= new ArrayList<>();
-        for (int i=0; i< relationOne.tuples();i++){
+        for (int i=0; i < relationOne.tuples(); i++){
             if (relationOne.attributes()[i]==relationTwo.attributes()[i]){
                 attributes.add(relationOne.attributes()[i]);
+                positions.add(i);
             }
         }
         return attributes ;
+    }
+    private void addTuplesCommon(Relation newRelation,Relation relationOne,Relation relationTwo,ArrayList<Integer> positions){
+        ArrayList<String []> tuplesOne =  relationOne.getTuples();
+        ArrayList<String []> tuplesTwo =  relationTwo.getTuples();
+        for (int i=0; i< relationOne.tuples();i++){
+            boolean tupleEqual=true;
+            ArrayList<String> tuplesCommon=new ArrayList<>();
+            for(int j=0; i<positions.size();j++){
+                if (!tuplesOne.get(i)[j].equalsIgnoreCase(tuplesTwo.get(i)[j])){
+                    tupleEqual=false;
+                    tuplesCommon.add(tuplesOne.get(i)[j]);
+                }
+                newRelation.insert(tuplesCommon.toArray(new String[0]));
+            }
+        }
+    }
+    private void select(String a, String b, String c){
+        Relation relationOne= variables.get(b);
+        Relation relationTwo= variables.get(c);
+        ArrayList<Integer> positions=new ArrayList<>();
+        String [] attributes = takeAttributesCommon(relationOne,relationTwo,positions).toArray(new String[0]);
+        Relation newRelation = new Relation(attributes);
+        if (attributes!=null){
+            addFirtsTuplesCommon(newRelation,relationOne,relationTwo,positions);
+            variables.put(a,newRelation);
+        }
+    
+    }
+    private void addFirtsTuplesCommon(Relation newRelation,Relation relationOne,Relation relationTwo,ArrayList<Integer> positions){
+        ArrayList<String []> tuplesOne =  relationOne.getTuples();
+        ArrayList<String []> tuplesTwo =  relationTwo.getTuples();
+        for (int i=0; i< relationOne.tuples();i++){
+            boolean tupleEqual=true;
+            ArrayList<String> tuplesCommon=new ArrayList<>();
+            for(int j=0; i<positions.size();j++){
+                if (!tuplesOne.get(i)[j].equalsIgnoreCase(tuplesTwo.get(0)[j])){
+                    tupleEqual=false;
+                    tuplesCommon.add(tuplesOne.get(i)[j]);
+                }
+                newRelation.insert(tuplesCommon.toArray(new String[0]));
+            }
+        }
+    }
+    private void multiply(String a, String b, String c){
+        Relation relationOne= variables.get(b);
+        Relation relationTwo= variables.get(c);
+        String [] attributes = combineArrays(relationOne.attributes(),relationTwo.attributes());
+        Relation newRelation = new Relation(attributes);
+        if (attributes!=null){
+            addTuplesMultiplyng(relationOne,relationTwo);
+            variables.put(a,newRelation);
+        }
+    
+    }
+    private String[] combineArrays(String [] array1,String [] array2){
+        String[] result = new String[array1.length + array2.length];
+        System.arraycopy(array1, 0, result, 0, array1.length);
+        System.arraycopy(array2, 0, result, array1.length, array2.length);
+        return result;
+    }
+    private void addTuplesMultiplyng(Relation relationOne,Relation relationTwo){
+        ArrayList<String []> tuplesOne =  relationOne.getTuples();
+        ArrayList<String []> tuplesTwo =  relationTwo.getTuples();
+        ArrayList<String> tuplesMultiply=new ArrayList<>();
+        for (int i = 0; i < tuplesOne.size(); i++) {
+            for (int j = 0; j < tuplesTwo.size(); j++) {
+                String[] combinedTuple = combineArrays(tuplesOne.get(i), tuplesTwo.get(j));
+            }
+        }
     }
     //Consult the variables of a calculator
     public String[] variables(){
