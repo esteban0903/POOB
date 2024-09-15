@@ -224,7 +224,6 @@ public class RelationalCalculator{
         Relation relationOne= variables.get(b);
         Relation relationTwo= variables.get(c);
         String [] attributes = combineArrays(relationOne.attributes(),relationTwo.attributes());
-        System.out.println("Array: " + Arrays.toString(attributes));
         Relation newRelation = new Relation(attributes);
         if (attributes!=null){
             addTuplesMultiplyng(newRelation,relationOne,relationTwo);
