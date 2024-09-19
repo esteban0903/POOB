@@ -447,6 +447,47 @@ public class puzzle
             j=nextCol;
         }
     }
+    
+    public void exChange(){
+        moveBoards();
+        moveRectangles(boardRectanglesEdit,(50*width)+50);
+        moveRectangles(boardRectanglesEnding,-(50*width)-50);
+        changeMatrices();
+        changeMatrixColors();
+        
+    }
+    private void moveBoards(){
+        edgesEnding.moveHorizontal(boardWidth);
+        edgesEdit.moveHorizontal(boardWidth);
+        backgroundEnding.moveHorizontal(-boardWidth);
+        backgroundEdit.moveHorizontal(-boardWidth);
+    }
+    private void moveRectangles(Rectangle[][] matrix, int xMoving) {
+    for (int i = 0; i < matrix.length; i++) {              
+        for (int j = 0; j < matrix[i].length; j++) {      
+            Rectangle rectangle = matrix[i][j];
+            if (rectangle != null) {
+                rectangle.moveHorizontal(xMoving);
+            }
+        }
+    }
+    }
+    private void changeMatrices(){
+        for (int i = 0; i < boardRectanglesEdit.length; i++) {
+            for (int j = 0; j < boardRectanglesEdit[0].length; j++) {
+                Rectangle temp = boardRectanglesEdit[i][j];
+                boardRectanglesEdit[i][j] = boardRectanglesEnding[i][j];
+                boardRectanglesEnding[i][j] = temp;
+        }
+    }
+    }
+    private void changeMatrixColors(){
+        for (int i = 0; i < matrixColorsEdit.length; i++) {
+            for (int j = 0; j < matrixColorsEdit[0].length; j++) {
+                matrixColorsEdit[i][j] = ending[i][j];
+            }
+        }
+    }
     /**
     * Checks if the current board state matches the final state.
     * 
