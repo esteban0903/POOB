@@ -1,10 +1,30 @@
 import javax.swing.JOptionPane;
 import java.util.Arrays;
 /**
- * Write a description of class puzzle here.
+ * The `puzzle` class represents a board game where colored tiles are arranged in a grid.
+ * The goal is to rearrange the tiles to match a final configuration.
  * 
- * @author (your name) 
- * @version (a version number or a date)
+ * This class includes methods to add, move, and remove tiles, as well as check if 
+ * the goal state has been reached. It also handles board visibility and displays error messages.
+ * 
+ * Main attributes:
+ * - `height`, `width`: Dimensions of the board.
+ * - `arrangement`, `ending`: Matrices representing the initial and final arrangements of the tiles.
+ * - `boardRectangles`: Matrix of `Rectangle` objects representing the tiles on the board.
+ * - `boardGlue`: Indicates if a tile is glued and cannot be moved.
+ * - `isVisible`: Controls the visibility of the board and tiles.
+ * 
+ * Main methods:
+ * - `addTile(int row, int column, String color)`: Adds a tile at a specified position.
+ * - `deleteTile(int row, int column)`: Removes a tile from a specified position.
+ * - `relocateTile(int[] from, int[] to)`: Moves a tile from one position to another.
+ * - `addGlue(int row, int column)`, `deleteGlue(int row, int column)`: Adds or removes glue from a tile.
+ * - `isGoal()`: Checks if the current arrangement matches the final arrangement.
+ * - `makeVisible()`, `makeInvisible()`: Controls the visibility of the board.
+ * - `finish()`: Ends the program by displaying a message.
+ * 
+ * @author (Esteba Aguilera/Sebastian Beltran )
+ * @version (08/09/2024)
  */
 public class puzzle
 {
@@ -23,7 +43,7 @@ public class puzzle
     private Rectangle edgesEdit;
     private Rectangle backgroundEnding;
     private Rectangle edgesEnding;
-        
+    private boolean showError=true;
     String[] colorNames = {"aqua", "blue", "cyan", "darkGray", "emerald", "fuchsia", 
     "green", "hotPink", "ivory", "jade", "khaki", "lavender", 
     "magenta", "navy", "orange", "purple", "quartz", "red", 
@@ -31,7 +51,11 @@ public class puzzle
     "xanadu", "yellow", "zucchini" // Código generado por ChatGPT - OpenAI (2024)
     };
     /**
-    * Constructor for objects of class puzzle
+    * Constructor to create an object of the puzzle class with the specified dimensions.
+    * If the dimensions are invalid, an error message is displayed.
+    * 
+    * @param height Height of the board.
+    * @param width Width of the board.
     */
     public puzzle(int height, int width){
         if (height<1 || width>500){
@@ -49,11 +73,25 @@ public class puzzle
             createBoardEnding();
         }   
     }
+    /**
+    * Displays an error message in a dialog box if the board is currently visible.
+    * 
+    * This method checks if the puzzle board is visible (`isVisible` is true). 
+    * If so, it shows an error message in a modal dialog box using the `JOptionPane` class.
+    * 
+    * @param message The error message to be displayed in the dialog box.
+    */
     private void showMessage(String message){
-        if (isVisible){
+        if (isVisible && showError){
             JOptionPane.showMessageDialog(null, message, "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
+    /**
+    * Constructor to create an object of the puzzle class using an ending matrix.
+    * If the dimensions are invalid, an error message is displayed.
+    * 
+    * @param ending Matrix that defines the final state of the board.
+    */
     public puzzle(char ending[][]){
         int rows=ending.length;
         int columns=ending[0].length;
@@ -101,6 +139,9 @@ public class puzzle
             
         }
     }
+    /**
+    * Creates the initial board using the defined dimensions and arrays.
+    */
     private void createBoard(){
         backgroundEdit= new Rectangle();
         edgesEdit=new Rectangle();
@@ -112,7 +153,9 @@ public class puzzle
         edgesEdit.moveVertical(-5);
         fillBoard(arrangement);
     }
-    
+    /**
+    * Creates the final board using the defined dimensions and arrays.
+    */
     private void createBoardEnding(){
         boardWidth=(50*width)+50 ;
         backgroundEnding= new Rectangle();
@@ -132,7 +175,11 @@ public class puzzle
         matrixColorsEdit=arrangement;
         boardWidth=0;
     }
-    
+    /**
+    * Fills the board with tiles based on a given matrix.
+    * 
+    * @param matrixFill Matrix containing the tile configuration to fill the board.
+    */ 
     private void fillBoard(char [][]matrixFill){
         for (int i=0; i<matrixFill.length; i++){
             for(int j=0; j<matrixFill[0].length; j++){
@@ -144,15 +191,33 @@ public class puzzle
             }
         }
     }
+    /**
+    * Gets the color associated with a specific letter.
+    * 
+    * @param letter Letter for which the color is retrieved.
+    * @return Color corresponding to the letter.
+    */
     private String getLetterColor(char letter){
         return colorNames[getLetterIndex(letter)];
     }
-    
+    /**
+    * Gets the index in the color array based on the given letter.
+    * 
+    * @param letter Letter for which the index is retrieved.
+    * @return Index in the color array.
+    */
     private int getLetterIndex(char letter) {
         letter = Character.toUpperCase(letter);
         return letter - 'A';
     }
-    
+    /**
+    * Adds a tile to the board at the specified position with the given color.
+    * Displays an error message if the position is already occupied.
+    * 
+    * @param row Row where the tile will be added.
+    * @param column Column where the tile will be added.
+    * @param color Color of the tile.
+    */
     public void addTile( int row, int column, String color){
         if (!verifyRanges(row,column)){
             return;
@@ -169,7 +234,13 @@ public class puzzle
             showMessage( "Error: There is already a tile at position [" + row + "][" + column + "].");
         }
     }
-    
+    /**
+    * Deletes a tile at the specified position if it is not glued and is valid.
+    * Displays an error message if the tile cannot be deleted.
+    * 
+    * @param row Row of the tile to be deleted.
+    * @param column Column of the tile to be deleted.
+    */
     public void deleteTile(int row, int column){
         if (!verifyRanges(row,column)){
             return;
@@ -183,6 +254,13 @@ public class puzzle
             showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
     }
+    /**
+    * Verifies if a row and column are within the board limits.
+    * 
+    * @param row Row to be verified.
+    * @param column Column to be verified.
+    * @return true if the row and column are within the limits, false otherwise.
+    */
     private boolean verifyRanges(int row, int column){
         if (row>=height || row<0  || column>=width || column<0){
             showMessage("Error: The specified row or column is out of range.");
@@ -191,7 +269,13 @@ public class puzzle
             return true;
         }
     }
-    
+    /**
+    * Positions a tile on the board at the specified row and column.
+    * 
+    * @param row Row where the tile will be positioned.
+    * @param column Column where the tile will be positioned.
+    * @param rectangle Rectangle object representing the tile.
+    */
     private void positionTile(int row, int column, Rectangle rectangle){
         rectangle.moveHorizontal(column*50+boardWidth);
         rectangle.moveVertical(row*50);
@@ -200,6 +284,13 @@ public class puzzle
             rectangle.makeVisible();
         }
     }
+    /**
+    * Relocates a tile from one position to another on the board.
+    * Displays an error message if the move is not valid.
+    * 
+    * @param from Array containing the row and column of the starting position.
+    * @param to Array containing the row and column of the new position.
+    */
     public void relocateTile(int[] from, int[] to){
         int rowFrom=from[0], columnFrom=from[1], rowTo=to[0], columnTo=to[1];
         if (!verificationRelocate(rowFrom,columnFrom,rowTo,columnTo)){
@@ -214,6 +305,15 @@ public class puzzle
         }
     
     }
+    /**
+    * Verifies if a relocation move is valid.
+    * 
+    * @param rowOne Row of the starting position.
+    * @param columnOne Column of the starting position.
+    * @param rowTwo Row of the new position.
+    * @param columnTwo Column of the new position.
+    * @return true if the move is valid, false otherwise.
+    */
     private boolean verificationRelocate(int rowOne, int columnOne, int rowTwo, int columnTwo){
         if (!verifyRanges(rowOne,columnOne ) || !verifyRanges(rowTwo,columnTwo)){
             return false;
@@ -229,6 +329,13 @@ public class puzzle
         
         
     }
+    /**
+    * Adds glue to a tile at the specified position.
+    * Displays an error message if the tile is already glued.
+    * 
+    * @param row Row of the tile to be glued.
+    * @param column Column of the tile to be glued.
+    */
     public void addGlue(int row, int column){
         if (!verifyRanges(row,column)){
             return;
@@ -245,7 +352,13 @@ public class puzzle
             showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
     }
-    
+    /**
+    * Removes glue from a tile at the specified position.
+    * Displays an error message if the tile is not glued.
+    * 
+    * @param row Row of the tile from which glue will be removed.
+    * @param column Column of the tile from which glue will be removed.
+    */
     public void deleteGlue(int row, int column){
         if (!verifyRanges(row,column)){
             return;
@@ -262,6 +375,13 @@ public class puzzle
             showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
     }
+    /**
+    * Glues or unglues the tiles around a specific position on the board.
+    * 
+    * @param row Row of the central tile.
+    * @param column Column of the central tile.
+    * @param glued Value indicating whether the surrounding tiles should be glued or unglued (1 for glued, 0 for unglued).
+    */
     private void stickAroundTiles(int row, int column,int glued){
         int[][] positions={{0,-1},{0,1},{1,0},{-1,0}};
         for (int[]directions: positions){
@@ -272,6 +392,66 @@ public class puzzle
             }
         }
     }
+    
+    public void tilt(char direction){
+        showError=false;
+        if (direction=='l'){
+            tiltDirectionPositive(0,-1,boardRectanglesEdit);
+        }else if (direction=='r'){
+            tiltDirectionNegative(0,1,boardRectanglesEdit);
+        }else if(direction=='d'){
+            tiltDirectionNegative(1,0,boardRectanglesEdit);
+        }else if (direction=='u'){
+            tiltDirectionPositive(-1,0,boardRectanglesEdit);
+        }else{
+            showMessage("Error: You put a invalid direction");
+        }
+        showError=true;
+    }
+    private void tiltDirectionPositive(int row, int column, Rectangle[][] boardRectanglesEdit){
+        int rowLength = boardRectanglesEdit.length;
+        int columnLength= boardRectanglesEdit[0].length;
+        for (int i=0; i<rowLength;i++){
+            for (int j=0; j< columnLength;j++){
+                if (verifyRanges(i+row,j+column)){
+                    if (boardRectanglesEdit[i+row][j+column]==null && boardRectanglesEdit[i][j]!=null){
+                        moveTileContinuously(i,j,row,column);
+                    }
+                }
+            }
+        }
+    }
+    private void tiltDirectionNegative(int row, int column, Rectangle[][] boardRectanglesEdit){
+        int rowLength = boardRectanglesEdit.length;
+        int columnLength= boardRectanglesEdit[0].length;
+        for (int i=rowLength; i>-1;i--){
+            for (int j=columnLength; j>-1;j--){
+                if (verifyRanges(i+row,j+column)){
+                    if (boardRectanglesEdit[i+row][j+column]==null && boardRectanglesEdit[i][j]!=null){
+                        moveTileContinuously(i,j,row,column);
+                    }
+                }
+            }
+        }
+    }
+    private void moveTileContinuously(int i, int j , int row, int column){
+        int nextRow = i;
+        int nextCol = j;
+    
+        while (verifyRanges(nextRow + row, nextCol + column)
+               && boardRectanglesEdit[nextRow + row][nextCol + column] == null) {
+            nextRow += row;
+            nextCol += column;
+            relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
+            i=nextRow;
+            j=nextCol;
+        }
+    }
+    /**
+    * Checks if the current board state matches the final state.
+    * 
+    * @return true if the current state matches the final state, false otherwise.
+    */
     public boolean isGoal(){
         for (int i=0; i<arrangement.length; i++){
             for (int j=0; j<arrangement[0].length; j++){
@@ -283,15 +463,23 @@ public class puzzle
         }
         return true;
     }
-    
+    /**
+    * Returns the current arrangement of tiles on the board.
+    * 
+    * @return 2D char array representing the current arrangement of the board.
+    */
     public char[][] actualArrangement(){
         return arrangement;
     }
-    
+    /**
+    * Ends the program and displays a termination message.
+    */
     public void finish(){
         JOptionPane.showMessageDialog(null, "Programa Terminado", "Finish", JOptionPane.ERROR_MESSAGE);
     }
-    
+    /**
+    * Makes the board and all tiles visible.
+    */
     public void makeVisible(){
         isVisible=true;
         edgesEdit.makeVisible();
@@ -309,7 +497,9 @@ public class puzzle
         }
         
     }
-    
+    /**
+    * Makes the board and all tiles invisible.
+    */
     public void makeInvisible(){
         isVisible=false;
         edgesEdit.makeInvisible();
