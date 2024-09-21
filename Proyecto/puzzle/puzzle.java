@@ -222,20 +222,21 @@ public class puzzle
         if (!verifyRanges(row,column)){
             return;
         }if (boardRectangles[row][column] == null){
-            matrixColorsEdit[row][column]=color.charAt(0);
-            if (color=="white"){
-                matrixColorsEdit[row][column]='#';
-            }
-            Rectangle rectangle = new Rectangle();
-            rectangle.changeSize(50,50);
-            rectangle.changeColor(color);
-            boardRectangles[row][column]=rectangle;
-            positionTile(row,column,rectangle) ;
-            
-        
+            createRectangle(row, column, color);      
         }else{ 
             showMessage( "Error: There is already a tile at position [" + row + "][" + column + "].");
         }
+    }
+    public void createRectangle(int row, int column, String color){
+        matrixColorsEdit[row][column]=color.charAt(0);
+        if (color=="white"){
+            matrixColorsEdit[row][column]='#';
+        }
+        Rectangle rectangle = new Rectangle();
+        rectangle.changeSize(50,50);
+        rectangle.changeColor(color);
+        boardRectangles[row][column]=rectangle;
+        positionTile(row,column,rectangle) ;
     }
     /**
     * Deletes a tile at the specified position if it is not glued and is valid.
@@ -247,8 +248,12 @@ public class puzzle
     public void deleteTile(int row, int column){
         if (!verifyRanges(row,column)){
             return;
+        }if (arrangement[row][column]=='#'){
+            showMessage("Error: There is a hole in that position");
+            return;
         }if (boardGlue[row][column]!=0){
             showMessage("Error: The tile that you are trying to delete is glued");
+            return;
         }if (arrangement[row][column] != '.'){
             boardRectangles[row][column].makeInvisible();
             arrangement[row][column]='.';
@@ -267,9 +272,6 @@ public class puzzle
     private boolean verifyRanges(int row, int column){
         if (row>=height || row<0  || column>=width || column<0){
             showMessage("Error: The specified row or column is out of range.");
-            return false;
-        }else if (arrangement[row][column]=='#'){
-            showMessage("Error: There is a hole in that position");
             return false;
         }else{
             return true;
@@ -305,7 +307,9 @@ public class puzzle
         if(boardGlue[rowFrom][columnFrom]==0){
             String color= boardRectangles[rowFrom][columnFrom].getColor();
             deleteTile(rowFrom,columnFrom);
-            addTile(rowTo,columnTo,color);
+            if(arrangement[rowTo][columnTo]!='#'&& arrangement[rowFrom][columnFrom]!='#'){
+                addTile(rowTo,columnTo,color);
+            }
         }else{
             showMessage("Error: The tile that you are trying to move is glued");
         }
@@ -327,6 +331,8 @@ public class puzzle
         if (boardRectangles[rowOne][columnOne]==null){
             showMessage("Error: There is a null tile at position [" + rowOne + "][" + columnOne + "].");
             return false;
+        }if (arrangement[rowTwo][columnTwo]=='#'){
+            return true;
         }if (boardRectangles[rowTwo][columnTwo]!=null){
             showMessage("Error: There is already a Rectangle at position [" + rowTwo + "][" + columnTwo + "].");
             return false;
@@ -394,7 +400,9 @@ public class puzzle
             int y=row+directions[0];
             int x=column+directions[1];
             if (verifyRanges(y,x)){
-                boardGlue[y][x]=glued;
+                if(arrangement[y][x] !='#'){
+                    boardGlue[y][x]=glued;
+                }
             }
         }
     }
@@ -450,19 +458,20 @@ public class puzzle
             }
         }
     }
-    private void moveTileContinuously(int i, int j , int row, int column){
-        int nextRow = i;
-        int nextCol = j;
-    
-        while (verifyRanges(nextRow + row, nextCol + column)
-               && boardRectangles[nextRow + row][nextCol + column] == null) {
-            nextRow += row;
-            nextCol += column;
-            relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
-            i=nextRow;
-            j=nextCol;
-        }
+    private void moveTileContinuously(int i, int j, int row, int column) {
+    int nextRow = i;
+    int nextCol = j;
+
+    while (verifyRanges(nextRow + row, nextCol + column) 
+           && (boardRectangles[nextRow + row][nextCol + column] == null
+           || arrangement[nextRow + row][nextCol + column]!='#')) {
+        nextRow += row;
+        nextCol += column;
+        relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
+        i=nextRow;
+        j=nextCol;
     }
+}
     
     public void exChange(){
         moveBoards();
