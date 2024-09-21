@@ -28,26 +28,26 @@ import java.util.Arrays;
  */
 public class puzzle
 {
-    private int  height;
-    private int  width;
-    private char[][] ending;
+    private int  height;//
+    private int  width;//
+    private char[][] ending;//
     private Rectangle[][] boardRectangles;
-    private Rectangle[][] boardRectanglesEdit;
-    private Rectangle[][] boardRectanglesEnding;
+    private Rectangle[][] boardRectanglesEdit;//
+    private Rectangle[][] boardRectanglesEnding;//
     private char[][] matrixColorsEdit;
-    private char[][] arrangement;
-    private int[][] boardGlue;
-    private boolean isVisible;
-    private int boardWidth;
-    private Rectangle backgroundEdit;
-    private Rectangle edgesEdit;
-    private Rectangle backgroundEnding;
-    private Rectangle edgesEnding;
+    private char[][] arrangement;//
+    private int[][] boardGlue;//
+    private boolean isVisible;//
+    private int boardWidth;//
+    private Rectangle backgroundEdit;//
+    private Rectangle edgesEdit;//
+    private Rectangle backgroundEnding;//
+    private Rectangle edgesEnding;//
     private boolean showError=true;
     String[] colorNames = {"aqua", "blue", "cyan", "darkGray", "emerald", "fuchsia", 
     "green", "hotPink", "ivory", "jade", "khaki", "lavender", 
     "magenta", "navy", "orange", "purple", "quartz", "red", 
-    "silver", "turquoise", "ultramarine", "violet", "white", 
+    "silver", "turquoise", "ultramarine","wheat", "violet", 
     "xanadu", "yellow", "zucchini" // Código generado por ChatGPT - OpenAI (2024)
     };
     /**
@@ -223,6 +223,9 @@ public class puzzle
             return;
         }if (boardRectangles[row][column] == null){
             matrixColorsEdit[row][column]=color.charAt(0);
+            if (color=="white"){
+                matrixColorsEdit[row][column]='#';
+            }
             Rectangle rectangle = new Rectangle();
             rectangle.changeSize(50,50);
             rectangle.changeColor(color);
@@ -247,9 +250,9 @@ public class puzzle
         }if (boardGlue[row][column]!=0){
             showMessage("Error: The tile that you are trying to delete is glued");
         }if (arrangement[row][column] != '.'){
-            boardRectanglesEdit[row][column].makeInvisible();
+            boardRectangles[row][column].makeInvisible();
             arrangement[row][column]='.';
-            boardRectanglesEdit[row][column]=null;
+            boardRectangles[row][column]=null;
         }else{ 
             showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
@@ -264,6 +267,9 @@ public class puzzle
     private boolean verifyRanges(int row, int column){
         if (row>=height || row<0  || column>=width || column<0){
             showMessage("Error: The specified row or column is out of range.");
+            return false;
+        }else if (arrangement[row][column]=='#'){
+            showMessage("Error: There is a hole in that position");
             return false;
         }else{
             return true;
@@ -297,7 +303,7 @@ public class puzzle
             return;
         }
         if(boardGlue[rowFrom][columnFrom]==0){
-            String color= boardRectanglesEdit[rowFrom][columnFrom].getColor();
+            String color= boardRectangles[rowFrom][columnFrom].getColor();
             deleteTile(rowFrom,columnFrom);
             addTile(rowTo,columnTo,color);
         }else{
@@ -344,7 +350,7 @@ public class puzzle
             showMessage("Error: The tile that you are to put glue is glued");
             return;
         }
-        if (boardRectanglesEdit[row][column]!=null ){
+        if (boardRectangles[row][column]!=null ){
             boardGlue[row][column]=2;
             stickAroundTiles(row,column,1);
             
@@ -367,7 +373,7 @@ public class puzzle
             showMessage("Error: The tile that you are to quit glue is not glued");
             return;
         }
-        if (boardRectanglesEdit[row][column]!=null ){
+        if (boardRectangles[row][column]!=null ){
             boardGlue[row][column]=0;
             stickAroundTiles(row,column,0);
             
@@ -392,42 +398,52 @@ public class puzzle
             }
         }
     }
-    
+    public void makeHole(int row, int column){
+        if(!verifyRanges(row,column)){
+            return;
+        }
+        if(boardRectangles[row][column]==null){
+            matrixColorsEdit[row][column]='*';
+            addTile(row,column,"white");
+            
+            
+        }
+    }
     public void tilt(char direction){
         showError=false;
         if (direction=='l'){
-            tiltDirectionPositive(0,-1,boardRectanglesEdit);
+            tiltDirectionPositive(0,-1,boardRectangles);
         }else if (direction=='r'){
-            tiltDirectionNegative(0,1,boardRectanglesEdit);
+            tiltDirectionNegative(0,1,boardRectangles);
         }else if(direction=='d'){
-            tiltDirectionNegative(1,0,boardRectanglesEdit);
+            tiltDirectionNegative(1,0,boardRectangles);
         }else if (direction=='u'){
-            tiltDirectionPositive(-1,0,boardRectanglesEdit);
+            tiltDirectionPositive(-1,0,boardRectangles);
         }else{
             showMessage("Error: You put a invalid direction");
         }
         showError=true;
     }
-    private void tiltDirectionPositive(int row, int column, Rectangle[][] boardRectanglesEdit){
-        int rowLength = boardRectanglesEdit.length;
-        int columnLength= boardRectanglesEdit[0].length;
+    private void tiltDirectionPositive(int row, int column, Rectangle[][] boardRectangles){
+        int rowLength = boardRectangles.length;
+        int columnLength= boardRectangles[0].length;
         for (int i=0; i<rowLength;i++){
             for (int j=0; j< columnLength;j++){
                 if (verifyRanges(i+row,j+column)){
-                    if (boardRectanglesEdit[i+row][j+column]==null && boardRectanglesEdit[i][j]!=null){
+                    if (boardRectangles[i+row][j+column]==null && boardRectangles[i][j]!=null){
                         moveTileContinuously(i,j,row,column);
                     }
                 }
             }
         }
     }
-    private void tiltDirectionNegative(int row, int column, Rectangle[][] boardRectanglesEdit){
-        int rowLength = boardRectanglesEdit.length;
-        int columnLength= boardRectanglesEdit[0].length;
+    private void tiltDirectionNegative(int row, int column, Rectangle[][] boardRectangles){
+        int rowLength = boardRectangles.length;
+        int columnLength= boardRectangles[0].length;
         for (int i=rowLength; i>-1;i--){
             for (int j=columnLength; j>-1;j--){
                 if (verifyRanges(i+row,j+column)){
-                    if (boardRectanglesEdit[i+row][j+column]==null && boardRectanglesEdit[i][j]!=null){
+                    if (boardRectangles[i+row][j+column]==null && boardRectangles[i][j]!=null){
                         moveTileContinuously(i,j,row,column);
                     }
                 }
@@ -439,7 +455,7 @@ public class puzzle
         int nextCol = j;
     
         while (verifyRanges(nextRow + row, nextCol + column)
-               && boardRectanglesEdit[nextRow + row][nextCol + column] == null) {
+               && boardRectangles[nextRow + row][nextCol + column] == null) {
             nextRow += row;
             nextCol += column;
             relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});

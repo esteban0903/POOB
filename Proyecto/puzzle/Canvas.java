@@ -160,6 +160,8 @@ public class Canvas{
             graphic.setColor(new Color(238, 130, 238)); 
         else if(colorString.equals("white"))
             graphic.setColor(Color.white);
+        else if (colorString.equals("wheat"))
+            graphic.setColor(new Color(222, 184, 135)); 
         else if(colorString.equals("xanadu"))
             graphic.setColor(new Color(115, 134, 120)); 
         else if(colorString.equals("yellow"))
