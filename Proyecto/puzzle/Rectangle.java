@@ -1,4 +1,7 @@
 import java.awt.*;
+import javax.swing.*;
+import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * A rectangle that can be manipulated and that draws itself on a canvas.
@@ -200,5 +203,6 @@ public class Rectangle{
     public String getColor(){
         return color;
     }
+
 }
 

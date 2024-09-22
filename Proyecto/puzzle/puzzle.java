@@ -438,7 +438,8 @@ public class puzzle
         for (int i=0; i<rowLength;i++){
             for (int j=0; j< columnLength;j++){
                 if (verifyRanges(i+row,j+column)){
-                    if (boardRectangles[i+row][j+column]==null && boardRectangles[i][j]!=null){
+                    if ((arrangement[i+row][j+column]=='#'|| boardRectangles[i+row][j+column]==null) 
+                         && boardRectangles[i][j]!=null){
                         moveTileContinuously(i,j,row,column);
                     }
                 }
@@ -451,7 +452,8 @@ public class puzzle
         for (int i=rowLength; i>-1;i--){
             for (int j=columnLength; j>-1;j--){
                 if (verifyRanges(i+row,j+column)){
-                    if (boardRectangles[i+row][j+column]==null && boardRectangles[i][j]!=null){
+                    if ((arrangement[i+row][j+column]=='#'|| boardRectangles[i+row][j+column]==null) 
+                         && boardRectangles[i][j]!=null){
                         moveTileContinuously(i,j,row,column);
                     }
                 }
@@ -464,9 +466,10 @@ public class puzzle
 
     while (verifyRanges(nextRow + row, nextCol + column) 
            && (boardRectangles[nextRow + row][nextCol + column] == null
-           || arrangement[nextRow + row][nextCol + column]!='#')) {
+           || arrangement[nextRow + row][nextCol + column]=='#')) {
         nextRow += row;
         nextCol += column;
+        System.out.print(i + "columnFrom " + j + "rowto " + nextRow + "Columnto " + nextCol);
         relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
         i=nextRow;
         j=nextCol;
@@ -536,6 +539,19 @@ public class puzzle
     */
     public char[][] actualArrangement(){
         return arrangement;
+    }
+    public int missplacedTiles(){
+    int count = 0; 
+
+    for (int i = 0; i < boardRectangles.length; i++) {
+        for (int j = 0; j < boardRectangles[i].length; j++) {
+            if (arrangement[i][j] != ending[i][j]) {
+                count++; 
+            }
+        }
+    }
+    
+    return count; // Devolvemos el número de baldosas fuera de lugar
     }
     /**
     * Ends the program and displays a termination message.
