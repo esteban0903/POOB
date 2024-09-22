@@ -317,6 +317,7 @@ public class puzzle
         }
     
     }
+    
     /**
     * Verifies if a relocation move is valid.
     * 
@@ -550,6 +551,9 @@ public class puzzle
             for (int j = 0; j < arrangement[i].length; j++) {
                 if (boardGlue[i][j]==2 || boardGlue[i][j]==1 || arrangement[i][j]=='#'){
                      coordinates.add(new int[]{i, j});
+                     if (isVisible){
+                         boardRectangles[i][j].blink();
+                     }
                 }
             }
         }
@@ -621,12 +625,42 @@ public class puzzle
         }
         
     }
-    
+        public int getHeight() {
+        return height;
+    }
 
+    public int getWidth() {
+        return width;
+    }
 
-    
-    
+    public char[][] getEnding() {
+        return ending;
+    }
 
+    public Rectangle[][] getBoardRectanglesEdit() {
+        return boardRectanglesEdit;
+    }
 
-    
+    public Rectangle[][] getBoardRectanglesEnding() {
+        return boardRectanglesEnding;
+    }
+
+    public int[][] getBoardGlue() {
+        return boardGlue;
+    }
+    public Rectangle[][] getBoardRectangles() {
+        return boardRectangles;
+    }
+    public char[][] getMatrixColorsEdit() {
+    return matrixColorsEdit;
+    }
 }
+    
+
+
+    
+    
+
+
+    
+

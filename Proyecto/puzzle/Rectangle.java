@@ -203,6 +203,32 @@ public class Rectangle{
     public String getColor(){
         return color;
     }
+    public void blink() {
+    int duration=10000;
+    int period=500;
+    Timer timer = new Timer();
+    TimerTask task = new TimerTask() {
+        private long startTime = System.currentTimeMillis();
 
+        @Override
+        public void run() {
+            if (System.currentTimeMillis() - startTime >= duration) {
+                makeInvisible();
+                timer.cancel();
+            } else {
+                toggleVisibility();
+            }
+        }
+    };
+    timer.scheduleAtFixedRate(task, 0, period);
+    }
+
+    private void toggleVisibility() {
+        if (isVisible) {
+            makeInvisible();
+        } else {
+            makeVisible();
+        }
+}
 }
 
