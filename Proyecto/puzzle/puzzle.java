@@ -1,5 +1,7 @@
 import javax.swing.JOptionPane;
 import java.util.Arrays;
+import java.util.ArrayList;
+
 /**
  * The `puzzle` class represents a board game where colored tiles are arranged in a grid.
  * The goal is to rearrange the tiles to match a final configuration.
@@ -227,7 +229,7 @@ public class puzzle
             showMessage( "Error: There is already a tile at position [" + row + "][" + column + "].");
         }
     }
-    public void createRectangle(int row, int column, String color){
+    private void createRectangle(int row, int column, String color){
         matrixColorsEdit[row][column]=color.charAt(0);
         if (color=="white"){
             matrixColorsEdit[row][column]='#';
@@ -395,16 +397,18 @@ public class puzzle
     * @param glued Value indicating whether the surrounding tiles should be glued or unglued (1 for glued, 0 for unglued).
     */
     private void stickAroundTiles(int row, int column,int glued){
+        showError=false;
         int[][] positions={{0,-1},{0,1},{1,0},{-1,0}};
         for (int[]directions: positions){
             int y=row+directions[0];
             int x=column+directions[1];
             if (verifyRanges(y,x)){
-                if(arrangement[y][x] !='#'){
+                if(arrangement[y][x] !='#' && arrangement[y][x]!='.'){
                     boardGlue[y][x]=glued;
                 }
             }
         }
+        showError=true;
     }
     public void makeHole(int row, int column){
         if(!verifyRanges(row,column)){
@@ -539,6 +543,24 @@ public class puzzle
     */
     public char[][] actualArrangement(){
         return arrangement;
+    }
+    public int[][] fixedTiles(){
+        ArrayList<int[]> coordinates = new ArrayList<>();
+        for (int i = 0; i < arrangement.length; i++) { 
+            for (int j = 0; j < arrangement[i].length; j++) {
+                if (boardGlue[i][j]==2 || boardGlue[i][j]==1 || arrangement[i][j]=='#'){
+                     coordinates.add(new int[]{i, j});
+                }
+            }
+        }
+        return transformInt(coordinates);
+    }
+    private int[][] transformInt(ArrayList<int[]> array){
+        int[][] arrayInt = new int[array.size()][2];
+        for (int i = 0; i < array.size(); i++) {
+            arrayInt[i] = array.get(i);
+        }
+        return arrayInt;
     }
     public int missplacedTiles(){
     int count = 0; 
