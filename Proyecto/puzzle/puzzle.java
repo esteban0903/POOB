@@ -411,6 +411,14 @@ public class puzzle
         }
         showError=true;
     }
+    /**
+    * Creates a hole at the specified position in the grid.
+    * If the tile at the given row and column is null, it marks the position as a hole
+    * in the matrix and adds a white tile to represent the hole.
+    * 
+    * @param row the row index where the hole is to be created
+    * @param column the column index where the hole is to be created
+    */
     public void makeHole(int row, int column){
         if(!verifyRanges(row,column)){
             return;
@@ -422,6 +430,16 @@ public class puzzle
             
         }
     }
+    /**
+    * Tilts the grid in the specified direction by moving the tiles.
+    * 
+    * @param direction the direction to tilt the grid. Valid values are:
+    * 'l' for left,
+    * 'r' for right,
+    * 'd' for down,
+    * 'u' for up.
+    * If an invalid direction is provided, an error message is shown.
+    */
     public void tilt(char direction){
         showError=false;
         if (direction=='l'){
@@ -437,6 +455,14 @@ public class puzzle
         }
         showError=true;
     }
+    /**
+    * Tilts the grid in the positive direction (downwards or rightwards) based on the specified row and column shifts.
+    * Moves tiles continuously if they meet the criteria.
+    *
+    * @param row the number of rows to shift (positive for downwards, negative for upwards).
+    * @param column the number of columns to shift (positive for rightwards, negative for leftwards).
+    * @param boardRectangles the 2D array of Rectangle objects representing the grid.
+    */
     private void tiltDirectionPositive(int row, int column, Rectangle[][] boardRectangles){
         int rowLength = boardRectangles.length;
         int columnLength= boardRectangles[0].length;
@@ -451,6 +477,14 @@ public class puzzle
             }
         }
     }
+    /**
+    * Tilts the grid in the negative direction (upwards or leftwards) based on the specified row and column shifts.
+    * Moves tiles continuously if they meet the criteria.
+    *
+    * @param row the number of rows to shift (positive for upwards, negative for downwards).
+    * @param column the number of columns to shift (positive for leftwards, negative for rightwards).
+    * @param boardRectangles the 2D array of Rectangle objects representing the grid.
+    */
     private void tiltDirectionNegative(int row, int column, Rectangle[][] boardRectangles){
         int rowLength = boardRectangles.length;
         int columnLength= boardRectangles[0].length;
@@ -465,6 +499,15 @@ public class puzzle
             }
         }
     }
+    /**
+    * Moves a tile from its current position to a new position continuously in the specified direction
+    * until it encounters an obstacle or moves out of bounds.
+    *
+    * @param i the current row index of the tile.
+    * @param j the current column index of the tile.
+    * @param row the row increment for the movement (positive for downward, negative for upward).
+    * @param column the column increment for the movement (positive for rightward, negative for leftward).
+    */   
     private void moveTileContinuously(int i, int j, int row, int column) {
     int nextRow = i;
     int nextCol = j;
@@ -480,7 +523,11 @@ public class puzzle
         j=nextCol;
     }
     }
-    
+    /**
+    * Exchanges the state of the boards and updates matrices and colors.
+    * <p>
+    * Moves the edit and ending board rectangles, swaps the matrices, and updates the colors.
+    */
     public void exChange(){
         moveBoards();
         moveRectangles(boardRectanglesEdit,(50*width)+50);
@@ -489,12 +536,21 @@ public class puzzle
         changeMatrixColors();
         
     }
+    /**
+    * Moves the edge and background rectangles of both boards horizontally.
+    */
     private void moveBoards(){
         edgesEnding.moveHorizontal(boardWidth);
         edgesEdit.moveHorizontal(boardWidth);
         backgroundEnding.moveHorizontal(-boardWidth);
         backgroundEdit.moveHorizontal(-boardWidth);
     }
+    /**
+    * Moves rectangles in the given matrix horizontally by a specified distance.
+    * 
+    * @param matrix The matrix of rectangles to be moved.
+    * @param xMoving The distance to move the rectangles horizontally.
+    */
     private void moveRectangles(Rectangle[][] matrix, int xMoving) {
     for (int i = 0; i < matrix.length; i++) {              
         for (int j = 0; j < matrix[i].length; j++) {      
@@ -505,6 +561,9 @@ public class puzzle
         }
     }
     }
+    /**
+    * Swaps the contents of the boardRectanglesEdit and boardRectanglesEnding matrices.
+    */
     private void changeMatrices(){
         for (int i = 0; i < boardRectanglesEdit.length; i++) {
             for (int j = 0; j < boardRectanglesEdit[0].length; j++) {
@@ -514,6 +573,9 @@ public class puzzle
         }
     }
     }
+    /**
+    * Updates matrixColorsEdit with the colors from the ending matrix.
+    */
     private void changeMatrixColors(){
         for (int i = 0; i < matrixColorsEdit.length; i++) {
             for (int j = 0; j < matrixColorsEdit[0].length; j++) {
@@ -545,6 +607,10 @@ public class puzzle
     public char[][] actualArrangement(){
         return arrangement;
     }
+    /**
+    * Returns the coordinates of tiles that are fixed or glued.
+    * Tiles are considered fixed if they have glue or are marked as '#'.
+    */
     public int[][] fixedTiles(){
         ArrayList<int[]> coordinates = new ArrayList<>();
         for (int i = 0; i < arrangement.length; i++) { 
@@ -559,6 +625,12 @@ public class puzzle
         }
         return transformInt(coordinates);
     }
+    /**
+    * Converts an ArrayList of int arrays to a 2D int array.
+    * 
+    * @param array The ArrayList to be converted.
+    * @return A 2D int array representation of the input ArrayList.
+    */
     private int[][] transformInt(ArrayList<int[]> array){
         int[][] arrayInt = new int[array.size()][2];
         for (int i = 0; i < array.size(); i++) {
@@ -566,6 +638,9 @@ public class puzzle
         }
         return arrayInt;
     }
+    /**
+    * Counts the number of tiles that are misplaced between the arrangement and the ending states.
+    */
     public int missplacedTiles(){
     int count = 0; 
 
@@ -626,54 +701,81 @@ public class puzzle
         }
         
     }
+    /**
+    * Returns the height of the rectangle.
+     */
     public int getHeight() {
         return height;
     }
-
+    /**
+    * Returns the width of the rectangle.
+    */
     public int getWidth() {
         return width;
     }
-
+    /**
+    * Returns the ending state of the arrangement.
+    */
     public char[][] getEnding() {
         return ending;
     }
-
+    /**
+    * Returns the board rectangles for the edit state.
+    */
     public Rectangle[][] getBoardRectanglesEdit() {
         return boardRectanglesEdit;
     }
-
+    /**
+    * Returns the board rectangles for the ending state.
+    */
     public Rectangle[][] getBoardRectanglesEnding() {
         return boardRectanglesEnding;
     }
-
+    /**
+    * Returns the glue matrix for the board.
+    */
     public int[][] getBoardGlue() {
         return boardGlue;
     }
-    
+    /**
+    * Returns the board rectangles for the current state.
+    */    
     public Rectangle[][] getBoardRectangles() {
         return boardRectangles;
     }
-    
+    /**
+    * Returns the matrix of colors for the edit state.
+    */
     public char[][] getMatrixColorsEdit() {
     return matrixColorsEdit;
     }
-    
+    /**
+    * Checks if the rectangles are visible.
+    */
     public boolean isVisible() {
     return isVisible;
     }
-
+    /**
+    * Returns the edges rectangle for the edit state.
+    */
     public Rectangle getEdgesEdit() {
         return edgesEdit;
     }
-    
+    /**
+    * Returns the background rectangle for the edit state.
+    */
     public Rectangle getBackgroundEdit() {
         return backgroundEdit;
     }
-    
+    /**
+    * Returns the edges rectangle for the ending state.
+    */
     public Rectangle getEdgesEnding() {
         return edgesEnding;
     }
-    
+    /**
+    * Returns the background rectangle for the ending state.
+    */
     public Rectangle getBackgroundEnding() {
         return backgroundEnding;
     }
