@@ -185,8 +185,12 @@ public class Rectangle{
             canvas.erase(this);
         }
     }
+
     public boolean equals(Rectangle rectangle){
         return color.equals(rectangle.getColor());
+    }
+    public boolean getIsVisible() {
+        return isVisible;
     }
     public int getWidth(){
         return width;
@@ -204,24 +208,24 @@ public class Rectangle{
         return color;
     }
     public void blink() {
-    int duration=10000;
-    int period=500;
-    Timer timer = new Timer();
-    TimerTask task = new TimerTask() {
-        private long startTime = System.currentTimeMillis();
-
-        @Override
-        public void run() {
-            if (System.currentTimeMillis() - startTime >= duration) {
-                makeInvisible();
-                timer.cancel();
-            } else {
-                toggleVisibility();
+        int duration=10000;
+        int period=500;
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            private long startTime = System.currentTimeMillis();
+    
+            @Override
+            public void run() {
+                if (System.currentTimeMillis() - startTime >= duration) {
+                    makeInvisible();
+                    timer.cancel();
+                } else {
+                    toggleVisibility();
+                }
             }
+        };
+        timer.scheduleAtFixedRate(task, 0, period);
         }
-    };
-    timer.scheduleAtFixedRate(task, 0, period);
-    }
 
     private void toggleVisibility() {
         if (isVisible) {

@@ -252,6 +252,108 @@ public class puzzlec2Test
         p.makeHole(2, 2); 
     
         assertEquals("white", p.getBoardRectangles()[2][2].getColor()); 
+
+    }
+    @Test
+    public void testExChange() {
+        char[][] ending = new char[][] {{'a','b'}, {'c','d'}};
+        char[][] starting = new char[][] {{'w','x'}, {'y','z'}};
+        puzzle p = new puzzle(starting, ending);
+        
+        p.exChange();
+        assertArrayEquals(ending,p.actualArrangement());
+    }   
+    
+    @Test
+    public void testIsGoal() {
+        puzzle p = new puzzle(new char[][] {{'a','b'}, {'c','d'}},
+            new char[][] {{'a','b'}, {'c','d'}});
+            
+        p.isGoal();
+        
+        assertArrayEquals(p.getEnding(),p.actualArrangement());   
+    } 
+    @Test
+    public void testIsNotGoal() {
+        puzzle p = new puzzle(new char[][] {{'a','b'}, {'c','d'}},
+            new char[][] {{'a','b'}, {'c','c'}});
+            
+        p.isGoal();
+        
+        assertArrayEquals(p.getEnding(),p.actualArrangement());   
+    } 
+    
+    @Test
+    public void testActualArrangement() {
+        char[][] startingMatrix = {{'a', 'b'}, {'c', 'd'}};
+        char[][] startingMatrixx = {{'a', 'b'}, {'c', 'd'}};
+        assertArrayEquals(startingMatrix, startingMatrixx);
+
+    }
+    @Test
+    public void testFixedTiles() {
+        char[][] starting = {{'a', '.'},{'c', 'd'}};
+    
+        puzzle p = new puzzle(starting, starting); 
+        p.addGlue(0,0);
+        p.makeHole(0,1);
+        int[][] fixedTiles = p.fixedTiles();
+        int[][] expectedFixedTiles = {{0, 0},{0, 1},{1,0}};
+    
+        assertArrayEquals(expectedFixedTiles, fixedTiles); // Comprobamos que las coordenadas sean correctas
+    }
+    @Test
+    public void testMissplacedTiles() {
+        char[][] starting = {{'a', 'b'},{'c', 'd'}};
+        char[][] ending = {{'a', 'x'},{'c', 'y'}};
+    
+        puzzle p = new puzzle(starting, ending);
+        int missplacedCount = p.missplacedTiles();
+        assertEquals(2, missplacedCount); 
+    }
+    @Test
+    public void testMakeVisible() {
+        puzzle p = new puzzle(3, 3);
+        p.makeVisible();
+    
+        assertTrue(p.isVisible());
+        assertTrue(p.getEdgesEdit().getIsVisible());
+        assertTrue(p.getBackgroundEdit().getIsVisible());
+        assertTrue(p.getEdgesEnding().getIsVisible());
+        assertTrue(p.getBackgroundEnding().getIsVisible());
+    
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (p.getBoardRectanglesEdit()[i][j] != null) {
+                    assertTrue(p.getBoardRectanglesEdit()[i][j].getIsVisible());
+                }
+                if (p.getBoardRectanglesEnding()[i][j] != null) {
+                    assertTrue(p.getBoardRectanglesEnding()[i][j].getIsVisible());
+                }
+            }
+        }
+    }
+    @Test
+    public void testMakeInvisible() {
+        puzzle p = new puzzle(3, 3);
+        p.makeInvisible();
+    
+        assertFalse(p.isVisible());
+        assertFalse(p.getEdgesEdit().getIsVisible());
+        assertFalse(p.getBackgroundEdit().getIsVisible());
+        assertFalse(p.getEdgesEnding().getIsVisible());
+        assertFalse(p.getBackgroundEnding().getIsVisible());
+    
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                if (p.getBoardRectanglesEdit()[i][j] != null) {
+                    assertFalse(p.getBoardRectanglesEdit()[i][j].getIsVisible());
+                }
+                if (p.getBoardRectanglesEnding()[i][j] != null) {
+                    assertFalse(p.getBoardRectanglesEnding()[i][j].getIsVisible());
+                }
+            }
+        }
     }
     /**
      * Tears down the test fixture.

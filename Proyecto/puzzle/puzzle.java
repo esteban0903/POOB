@@ -479,7 +479,7 @@ public class puzzle
         i=nextRow;
         j=nextCol;
     }
-}
+    }
     
     public void exChange(){
         moveBoards();
@@ -577,7 +577,7 @@ public class puzzle
         }
     }
     
-    return count; // Devolvemos el número de baldosas fuera de lugar
+    return count; 
     }
     /**
     * Ends the program and displays a termination message.
@@ -605,6 +605,7 @@ public class puzzle
         }
         
     }
+    
     /**
     * Makes the board and all tiles invisible.
     */
@@ -625,7 +626,7 @@ public class puzzle
         }
         
     }
-        public int getHeight() {
+    public int getHeight() {
         return height;
     }
 
@@ -648,12 +649,36 @@ public class puzzle
     public int[][] getBoardGlue() {
         return boardGlue;
     }
+    
     public Rectangle[][] getBoardRectangles() {
         return boardRectangles;
     }
+    
     public char[][] getMatrixColorsEdit() {
     return matrixColorsEdit;
     }
+    
+    public boolean isVisible() {
+    return isVisible;
+    }
+
+    public Rectangle getEdgesEdit() {
+        return edgesEdit;
+    }
+    
+    public Rectangle getBackgroundEdit() {
+        return backgroundEdit;
+    }
+    
+    public Rectangle getEdgesEnding() {
+        return edgesEnding;
+    }
+    
+    public Rectangle getBackgroundEnding() {
+        return backgroundEnding;
+    }
+
+
 }
     
 
