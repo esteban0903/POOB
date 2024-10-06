@@ -1,0 +1,24 @@
+#BlueJ class context
+comment0.target=PuzzleContest
+comment0.text=\r\n\ Write\ a\ description\ of\ class\ PuzzleContest\ here.\r\n\ \r\n\ @author\ (your\ name)\ \r\n\ @version\ (a\ version\ number\ or\ a\ date)\r\n
+comment1.params=
+comment1.target=PuzzleContest()
+comment1.text=\r\n\ Constructor\ for\ objects\ of\ class\ PuzzleContest\r\n
+comment2.params=starting\ ending
+comment2.target=void\ simulate(char[][],\ char[][])
+comment3.params=starting\ ending
+comment3.target=boolean\ canSolve(char[][],\ char[][])
+comment3.text=\r\n\ An\ example\ of\ a\ method\ -\ replace\ this\ comment\ with\ your\ own\r\n\ \r\n\ @param\ \ y\ \ \ a\ sample\ parameter\ for\ a\ method\r\n\ @return\ \ \ \ \ the\ sum\ of\ x\ and\ y\ \r\n
+comment4.params=testingBoard\ direction
+comment4.target=char[][]\ tilt(char[][],\ char)
+comment5.params=row\ col\ board
+comment5.target=void\ tiltDirectionPositive(int,\ int,\ char[][])
+comment6.params=row\ col\ board
+comment6.target=void\ tiltDirectionNegative(int,\ int,\ char[][])
+comment7.params=i\ j\ row\ col\ board
+comment7.target=void\ moveTileContinuously(int,\ int,\ int,\ int,\ char[][])
+comment8.params=row\ col
+comment8.target=boolean\ verifyRanges(int,\ int)
+comment9.params=board
+comment9.target=char[][]\ copyBoard(char[][])
+numComments=10
