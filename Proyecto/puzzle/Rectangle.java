@@ -34,7 +34,14 @@ public class Rectangle{
         color = "magenta";
         isVisible = false;
     }
-    
+    public Rectangle(Rectangle another) {
+        this.height = another.height;
+        this.width = another.width;
+        this.xPosition = another.xPosition;
+        this.yPosition = another.yPosition;
+        this.color = another.color;
+        this.isVisible = another.isVisible; 
+    }
 
     /**
      * Make this rectangle visible. If it was already visible, do nothing.

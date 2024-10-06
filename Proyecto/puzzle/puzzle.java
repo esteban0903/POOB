@@ -467,10 +467,69 @@ public class puzzle
             return;
         }
         if(boardRectangles[row][column]==null){
-            matrixColorsEdit[row][column]='*';
+            matrixColorsEdit[row][column]='#';
             addTile(row,column,"white");
             
             
+        }
+    }
+    public void tilt(){
+        makeInvisible();
+        char[][] arrangementTest = createMatrixCopy(arrangement);
+        Rectangle[][] boardRectanglesTest = createRectangleCopy(boardRectangles);
+        int bestScore=height*width;
+        char bestDirection='l';
+        char [] directions= {'l','r','u','d'};
+        for (char direction : directions) {
+            tilt(direction);
+            int scoreDirection=missplacedTiles();
+            if (scoreDirection<bestScore){
+                bestScore=scoreDirection;
+                bestDirection=direction;
+            }
+            restoreOriginalState(arrangementTest, boardRectanglesTest);
+        }
+        tilt(bestDirection);
+        makeVisible();
+    }
+    private char[][] createMatrixCopy(char[][] originalMatrix) {
+        char[][] copy = new char[originalMatrix.length][originalMatrix[0].length];
+        for (int i = 0; i < originalMatrix.length; i++) {
+            for (int j = 0; j < originalMatrix[i].length; j++) {
+                copy[i][j] = originalMatrix[i][j];
+            }
+        }
+        return copy;
+    }
+    
+    private Rectangle[][] createRectangleCopy(Rectangle[][] originalRectangles) {
+        Rectangle[][] copy = new Rectangle[originalRectangles.length][originalRectangles[0].length];
+        for (int i = 0; i < originalRectangles.length; i++) {
+            for (int j = 0; j < originalRectangles[i].length; j++) {
+                if (originalRectangles[i][j] != null) {
+                    copy[i][j] = new Rectangle(originalRectangles[i][j]);
+                } else {
+                    copy[i][j] = null; 
+                }
+            }
+        }
+        return copy;
+    }
+    private void restoreOriginalState(char[][] arrangementTest, Rectangle[][] boardRectanglesTest){
+        for (int i = 0; i < arrangement.length; i++) {
+            for (int j = 0; j < arrangement[i].length; j++) {
+                arrangement[i][j] = arrangementTest[i][j];
+            }
+        }
+
+        for (int i = 0; i < boardRectangles.length; i++) {
+            for (int j = 0; j < boardRectangles[i].length; j++) {
+                if (boardRectanglesTest[i][j] != null) {
+                    boardRectangles[i][j] = new Rectangle(boardRectanglesTest[i][j]);  
+                } else {
+                    boardRectangles[i][j] = null;  
+                }
+            }
         }
     }
     /**
@@ -574,7 +633,7 @@ public class puzzle
         moveBoards();
         moveRectangles(boardRectanglesEdit,(50*width)+50);
         moveRectangles(boardRectanglesEnding,-(50*width)-50);
-        changeMatrices();
+        changeMatrices(boardRectanglesEdit,boardRectanglesEnding);
         changeMatrixColors();
         
     }
@@ -606,7 +665,7 @@ public class puzzle
     /**
     * Swaps the contents of the boardRectanglesEdit and boardRectanglesEnding matrices.
     */
-    private void changeMatrices(){
+    private void changeMatrices(Rectangle[][] boardRectanglesEdit, Rectangle[][] boardRectanglesEnding){
         for (int i = 0; i < boardRectanglesEdit.length; i++) {
             for (int j = 0; j < boardRectanglesEdit[0].length; j++) {
                 Rectangle temp = boardRectanglesEdit[i][j];

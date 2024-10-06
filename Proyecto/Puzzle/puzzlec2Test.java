@@ -190,6 +190,7 @@ public class puzzlec2Test
         assertEquals(0, p.getBoardGlue()[2][1]); 
         assertEquals(0, p.getBoardGlue()[2][3]); 
     }
+    
     @Test
     public void testShouldNotDeleteGlueWhenNoGlue() {
         puzzle p = new puzzle(5, 5);
@@ -198,6 +199,7 @@ public class puzzlec2Test
     
         assertEquals(-2, p.getBoardGlue()[2][2]); 
     }
+    
     @Test
     public void testShouldNotDeleteGlueOnEmptyTile() {
         puzzle p = new puzzle(5, 5);
@@ -205,6 +207,7 @@ public class puzzlec2Test
     
         assertEquals(-2, p.getBoardGlue()[3][3]); 
     }
+    
     @Test
     public void testShouldMakeHole() {
         puzzle p = new puzzle(5, 5);
@@ -213,6 +216,7 @@ public class puzzlec2Test
     
         assertEquals('#',p.actualArrangement()[1][1]); 
     }
+    
     @Test
     public void testShouldNotMakeHoleOnARectangleTile() {
         puzzle p = new puzzle(5, 5);
@@ -222,6 +226,7 @@ public class puzzlec2Test
         assertEquals('w',p.actualArrangement()[2][2]);
 
     }
+    
     @Test
     public void testShouldExChange() {
         char[][] ending = new char[][] {{'a','b'}, {'c','d'}};
@@ -241,6 +246,7 @@ public class puzzlec2Test
         
         assertArrayEquals(p.getEnding(),p.actualArrangement());   
     } 
+    
     @Test
     public void testShouldNotIsGoal() {
         puzzle p = new puzzle(new char[][] {{'a','b'}, {'c','d'}},
