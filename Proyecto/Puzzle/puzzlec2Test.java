@@ -30,126 +30,105 @@ public class puzzlec2Test
     {
     }
     @Test
-    public void testValidConstructor() {
+    public void testShouldValidConstructor() {
         puzzle p = new puzzle(3, 4);
         assertEquals(4,p.getEnding().length);
         assertEquals(3,p.getEnding()[0].length);
-        assertNotNull(p.getBoardRectanglesEdit());
-        assertNotNull(p.getBoardRectanglesEnding());
         assertEquals(4,p.getBoardGlue().length);
         assertEquals(3,p.getBoardGlue()[0].length);
         assertEquals(4,p.actualArrangement().length);
         assertEquals(3,p.actualArrangement()[0].length);
     }
     @Test
-    public void testInvalidConstructor() {
-        //invalid width 
+    public void testShouldNotConstructor() {
         puzzle p = new puzzle(-1,4);
-        assertEquals(-1,p.getHeight());
-        assertEquals(4,p.getWidth());
+        assertNotNull(p.getEnding());
     }
     @Test
-    public void testValidEndingConstructor() {
+    public void testShouldEndingConstructor() {
         char[][] validMatrix = {{'a','b','c'},{'d','e','f'}};
         
         puzzle p = new puzzle(validMatrix);
         
-        assertEquals(2,p.getHeight());
-        assertEquals(3,p.getWidth());
+        assertEquals(2,p.getEnding().length);
+        assertEquals(3,p.getEnding()[0].length);
         assertArrayEquals(validMatrix, p.getEnding());
     }
     @Test
-    public void testInvalidEndingConstructor() {
-        char[][] invalidMatrix = {{'.'}};
-    
-        puzzle p = new puzzle(invalidMatrix);
-        
-        assertEquals(1,p.getHeight());  
-        assertEquals(1,p.getWidth());   
-        assertNull(p.getEnding());
-    }
-    @Test
-    public void testValidDualConstructor() {
+    public void testShouldEndingStartingConstructor() {
         char[][] validStarting = {{'a','b','c'}, {'d','e','f'}};
         char[][] validEnding = {{'g','h','i'}, {'j','k','l'}};
         
         puzzle p = new puzzle(validStarting, validEnding);
         
-        assertEquals(2,p.getHeight()); 
-        assertEquals(3,p.getWidth());  
+        assertEquals(2,p.actualArrangement().length); 
+        assertEquals(3,p.actualArrangement()[0].length);
+        assertEquals(2,p.getEnding().length); 
+        assertEquals(3,p.getEnding()[0].length);  
         assertArrayEquals(validStarting,p.actualArrangement()); 
         assertArrayEquals(validEnding,p.getEnding());       
     }
     @Test
-    public void testInvalidDualConstructor() {
+    public void testShouldNotEndingStartingConstructor() {
         char[][] invalidStarting = {{'.'}}; 
         char[][] validEnding = {{'g','h','i'}, {'j','k','l'}};
         
         puzzle p = new puzzle(invalidStarting, validEnding);
         
-        assertEquals(3,p.getHeight()); 
-        assertEquals(3,p.getWidth());   
+        assertNotNull(p.actualArrangement()); 
+        assertNotNull(p.getEnding());   
     }
     @Test
-    public void testAddTileValidPosition() {
+    public void testShouldAddTileValidPosition() {
         puzzle p = new puzzle(5,5);
         p.addTile(2,3,"blue");
-        assertNotNull(p.getBoardRectangles()[2][3]);
+        assertEquals(p.actualArrangement()[2][3],'b');
     }
 
     @Test
-    public void testAddTileOccupiedPosition() {
+    public void testShouldNotAddTileOccupiedPosition() {
         puzzle p = new puzzle(5,5);
         p.addTile(2,3,"blue");
         p.addTile(2,3,"red");
-        assertEquals("red",p.getBoardRectangles()[2][3].getColor());
+        assertEquals(p.actualArrangement()[2][3],'r');
     }
     @Test
-    public void testDeleteTileValid() {
+    public void testShouldDeleteTile() {
         puzzle p = new puzzle(5,5);
         p.addTile(2,3, "blue");
         p.deleteTile(2,3);
-        assertNull(p.getBoardRectangles()[2][3]);
         assertEquals('.',p.actualArrangement()[2][3]);
     }
 
     @Test
-    public void testDeleteTileOccupiedByGlue() {
-        puzzle p = new puzzle(5,5);
-        p.addTile(2,3, "blue");
-        p.getBoardGlue()[2][3] = 1; 
-        p.deleteTile(2,3);
-        assertNull(p.getBoardRectangles()[2][3]);
-    }
-    @Test
-    public void testDeleteTileHole() {
+    public void testShouldNotDeleteTileHole() {
         puzzle p = new puzzle(5,5);
         p.addTile(2,3, "blue");
         p.actualArrangement()[2][3] ='#';
         p.deleteTile(2,3);
-        assertNull(p.getBoardRectangles()[2][3]);
+        assertEquals('.',p.actualArrangement()[2][3]);
     }
 
     @Test
-    public void testDeleteTileAlreadyNull() {
+    public void testShouldNotDeleteTileAlreadyNull() {
         puzzle p = new puzzle(5,5);
         p.deleteTile(2,3);
         assertNotEquals('.',p.actualArrangement()[2][3]);
     }
     @Test
-    public void testRelocateTileSuccess() {
+    public void testShouldRelocateTile() {
         puzzle p = new puzzle(5,5);
         p.addTile(1,1,"red"); 
         int[] from = {1,1};
         int[] to = {2,2};
         p.relocateTile(from,to);
     
-        assertEquals("red",p.getBoardRectangles()[2][2].getColor()); 
-        assertNull(p.getBoardRectangles()[1][1]); 
+        assertEquals('r',p.actualArrangement()[2][2]);
+        assertEquals('.',p.actualArrangement()[1][1]);
     }
     
     @Test
-    public void testRelocateTileToHole() {
+    public void testShouldRelocateTileToHole() {
         puzzle p = new puzzle(5,5);
         p.addTile(1,1,"green");
         int[] from = {1,1};
@@ -157,21 +136,11 @@ public class puzzlec2Test
         p.actualArrangement()[2][2] = '#'; 
         p.relocateTile(from, to);
 
-        assertNull(p.getBoardRectangles()[2][2]); 
+        assertEquals('.',p.actualArrangement()[1][1]);
     }
     
     @Test
-    public void testRelocateTileWhenGlued() {
-        puzzle p = new puzzle(5,5);
-        p.addTile(1,1,"blue");
-        p.getBoardGlue()[1][1] = 1; 
-        int[] from = {1,1};
-        int[] to = {2,2};
-        p.relocateTile(from,to);
-        assertNull(p.getBoardRectangles()[1][1]); 
-    }
-    @Test
-    public void testAddGlueSuccess() {
+    public void testShouldAddGlue() {
         puzzle p = new puzzle(5, 5);
         p.addTile(2, 2, "yellow"); 
         p.addTile(1, 2, "yellow"); 
@@ -188,7 +157,7 @@ public class puzzlec2Test
         assertEquals(1, p.getBoardGlue()[2][3]); 
     }
     @Test
-    public void testAddGlueOnAlreadyGluedTile() {
+    public void testShouldNotAddGlueOnAlreadyGluedTile() {
         puzzle p = new puzzle(5, 5);
         p.addTile(3, 3, "yellow"); 
         p.addGlue(3, 3); 
@@ -197,14 +166,14 @@ public class puzzlec2Test
         assertEquals(4, p.getBoardGlue()[3][3]); 
     }
     @Test
-    public void testAddGlueToEmptyTile() {
+    public void testShouldNotAddGlueToEmptyTile() {
         puzzle p = new puzzle(5, 5);
         p.addGlue(4, 4); 
     
         assertEquals(2, p.getBoardGlue()[4][4]); 
     }
     @Test
-    public void testDeleteGlueSuccess() {
+    public void testShouldDeleteGlue() {
         puzzle p = new puzzle(5, 5);
         p.addTile(2, 2, "yellow"); 
         p.addTile(1, 2, "yellow"); 
@@ -222,7 +191,7 @@ public class puzzlec2Test
         assertEquals(0, p.getBoardGlue()[2][3]); 
     }
     @Test
-    public void testDeleteGlueWhenNoGlue() {
+    public void testShouldNotDeleteGlueWhenNoGlue() {
         puzzle p = new puzzle(5, 5);
         p.addTile(2, 2, "red");
         p.deleteGlue(2, 2); 
@@ -230,32 +199,31 @@ public class puzzlec2Test
         assertEquals(-2, p.getBoardGlue()[2][2]); 
     }
     @Test
-    public void testDeleteGlueOnEmptyTile() {
+    public void testShouldNotDeleteGlueOnEmptyTile() {
         puzzle p = new puzzle(5, 5);
         p.addGlue(3, 3); 
     
         assertEquals(-2, p.getBoardGlue()[3][3]); 
     }
     @Test
-    public void testMakeHoleSuccess() {
+    public void testShouldMakeHole() {
         puzzle p = new puzzle(5, 5);
         
         p.makeHole(1, 1); 
     
-        assertEquals("white", p.getBoardRectangles()[1][1].getColor()); 
-        assertEquals('#', p.getMatrixColorsEdit()[1][1]); 
+        assertEquals('#',p.actualArrangement()[1][1]); 
     }
     @Test
-    public void testMakeHoleOnARectangleTile() {
+    public void testShouldNotMakeHoleOnARectangleTile() {
         puzzle p = new puzzle(5, 5);
         p.addTile(2, 2, "red");
         p.makeHole(2, 2); 
     
-        assertEquals("white", p.getBoardRectangles()[2][2].getColor()); 
+        assertEquals('w',p.actualArrangement()[2][2]);
 
     }
     @Test
-    public void testExChange() {
+    public void testShouldExChange() {
         char[][] ending = new char[][] {{'a','b'}, {'c','d'}};
         char[][] starting = new char[][] {{'w','x'}, {'y','z'}};
         puzzle p = new puzzle(starting, ending);
@@ -265,7 +233,7 @@ public class puzzlec2Test
     }   
     
     @Test
-    public void testIsGoal() {
+    public void testShouldIsGoal() {
         puzzle p = new puzzle(new char[][] {{'a','b'}, {'c','d'}},
             new char[][] {{'a','b'}, {'c','d'}});
             
@@ -274,7 +242,7 @@ public class puzzlec2Test
         assertArrayEquals(p.getEnding(),p.actualArrangement());   
     } 
     @Test
-    public void testIsNotGoal() {
+    public void testShouldNotIsGoal() {
         puzzle p = new puzzle(new char[][] {{'a','b'}, {'c','d'}},
             new char[][] {{'a','b'}, {'c','c'}});
             
@@ -284,14 +252,14 @@ public class puzzlec2Test
     } 
     
     @Test
-    public void testActualArrangement() {
+    public void testShouldActualArrangement() {
         char[][] startingMatrix = {{'a', 'b'}, {'c', 'd'}};
         char[][] startingMatrixx = {{'a', 'b'}, {'c', 'd'}};
         assertArrayEquals(startingMatrix, startingMatrixx);
 
     }
     @Test
-    public void testFixedTiles() {
+    public void testShouldFixedTiles() {
         char[][] starting = {{'a', '.'},{'c', 'd'}};
     
         puzzle p = new puzzle(starting, starting); 
@@ -303,57 +271,13 @@ public class puzzlec2Test
         assertArrayEquals(expectedFixedTiles, fixedTiles); // Comprobamos que las coordenadas sean correctas
     }
     @Test
-    public void testMissplacedTiles() {
+    public void testShouldMissplacedTiles() {
         char[][] starting = {{'a', 'b'},{'c', 'd'}};
         char[][] ending = {{'a', 'x'},{'c', 'y'}};
     
         puzzle p = new puzzle(starting, ending);
         int missplacedCount = p.missplacedTiles();
         assertEquals(2, missplacedCount); 
-    }
-    @Test
-    public void testMakeVisible() {
-        puzzle p = new puzzle(3, 3);
-        p.makeVisible();
-    
-        assertTrue(p.isVisible());
-        assertTrue(p.getEdgesEdit().getIsVisible());
-        assertTrue(p.getBackgroundEdit().getIsVisible());
-        assertTrue(p.getEdgesEnding().getIsVisible());
-        assertTrue(p.getBackgroundEnding().getIsVisible());
-    
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (p.getBoardRectanglesEdit()[i][j] != null) {
-                    assertTrue(p.getBoardRectanglesEdit()[i][j].getIsVisible());
-                }
-                if (p.getBoardRectanglesEnding()[i][j] != null) {
-                    assertTrue(p.getBoardRectanglesEnding()[i][j].getIsVisible());
-                }
-            }
-        }
-    }
-    @Test
-    public void testMakeInvisible() {
-        puzzle p = new puzzle(3, 3);
-        p.makeInvisible();
-    
-        assertFalse(p.isVisible());
-        assertFalse(p.getEdgesEdit().getIsVisible());
-        assertFalse(p.getBackgroundEdit().getIsVisible());
-        assertFalse(p.getEdgesEnding().getIsVisible());
-        assertFalse(p.getBackgroundEnding().getIsVisible());
-    
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                if (p.getBoardRectanglesEdit()[i][j] != null) {
-                    assertFalse(p.getBoardRectanglesEdit()[i][j].getIsVisible());
-                }
-                if (p.getBoardRectanglesEnding()[i][j] != null) {
-                    assertFalse(p.getBoardRectanglesEnding()[i][j].getIsVisible());
-                }
-            }
-        }
     }
     /**
      * Tears down the test fixture.

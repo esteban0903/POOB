@@ -61,7 +61,8 @@ public class puzzle
     */
     public puzzle(int height, int width){
         if (height<1 || width>500){
-            showMessage( "Invalid dimensions: Height = " + height + ", Width = " + width);
+            JOptionPane.showMessageDialog(null,"Invalid dimensions: Height = " + height + ", Width = " + width,"Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }else{
             this.height=height;
             this.width=width;
@@ -98,7 +99,8 @@ public class puzzle
         int rows=ending.length;
         int columns=ending[0].length;
         if ((rows<1 || columns>500)){
-            showMessage( "Invalid dimensions: Height = " + rows + ", Width = " + columns);
+            JOptionPane.showMessageDialog(null, "Invalid dimensions: Height = " + rows + ", Width = " + columns, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }else{
             height=rows;
             width=columns;
@@ -125,9 +127,14 @@ public class puzzle
     public puzzle(char starting[][], char ending[][]){
         int rows=starting.length;   
         int columns=starting[0].length;
-        
+        int rowsEnding=ending.length;   
+        int columnsEnding=ending[0].length;
         if (rows<1 || columns>500){
-            showMessage( "Invalid dimensions: Height = " + rows + ", Width = " + columns);
+            JOptionPane.showMessageDialog(null, "Invalid dimensions: Height = " + rows + ", Width = " + columns, "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }if (rows!= rowsEnding || columns !=columnsEnding){
+            JOptionPane.showMessageDialog(null,"The matrices have different dimensions", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
         }else{ 
             height=rows;
             width=columns;
@@ -253,9 +260,6 @@ public class puzzle
         }if (arrangement[row][column]=='#'){
             showMessage("Error: There is a hole in that position");
             return;
-        }if (boardGlue[row][column]!=0){
-            showMessage("Error: The tile that you are trying to delete is glued");
-            return;
         }if (arrangement[row][column] != '.'){
             boardRectangles[row][column].makeInvisible();
             arrangement[row][column]='.';
@@ -312,12 +316,51 @@ public class puzzle
             if(arrangement[rowTo][columnTo]!='#'&& arrangement[rowFrom][columnFrom]!='#'){
                 addTile(rowTo,columnTo,color);
             }
+        }else if(boardGlue[rowFrom][columnFrom]==2 ){
+            relocateGlue(rowFrom,columnFrom,rowTo,columnTo);
         }else{
-            showMessage("Error: The tile that you are trying to move is glued");
+            showMessage("Error: The tile that you are trying to move is glued but is not the support");
         }
     
     }
+    private void relocateGlue(int rowFrom,int columnFrom,int rowTo,int columnTo){
+        int[][] positions={{0,-1},{0,1},{1,0},{-1,0},{0,0}};
+        if (!verificationRelocateGlue(rowTo,columnTo)){
+            showMessage("The tiles that you are trying to move don't have space in the new position");
+            return;
+        }
+        for (int[]directions: positions){
+            int yOld=rowFrom+directions[0];
+            int xOld=columnFrom+directions[1];
+            int yNew=rowTo+directions[0];
+            int xNew=columnTo+directions[1];
+            if (verifyRanges(yOld,xOld) && verifyRanges(yNew,xNew)){
+                if(arrangement[yOld][xOld] !='#' && arrangement[yOld][xOld]!='.'){
+                    addTile(yNew,xNew,boardRectangles[yOld][xOld].getColor());
+                    deleteTile(yOld,xOld);
+                }
+            }
+        }
+        addGlue(rowTo,columnTo);
+        
+    }
     
+    private boolean verificationRelocateGlue(int row, int column){
+        showError=false;
+        int[][] positions={{0,-1},{0,1},{1,0},{-1,0},{0,0}};
+        for (int[]directions: positions){
+            int y=row+directions[0];
+            int x=column+directions[1];
+            if (verifyRanges(y,x)){
+                if(arrangement[y][x] !='.'&& arrangement[y][x]!= '#'){
+                    showError=true;
+                    return false;
+                }
+            }
+        }
+        showError=true;
+        return true;
+    }
     /**
     * Verifies if a relocation move is valid.
     * 
@@ -517,7 +560,6 @@ public class puzzle
            || arrangement[nextRow + row][nextCol + column]=='#')) {
         nextRow += row;
         nextCol += column;
-        System.out.print(i + "columnFrom " + j + "rowto " + nextRow + "Columnto " + nextCol);
         relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
         i=nextRow;
         j=nextCol;
@@ -702,34 +744,10 @@ public class puzzle
         
     }
     /**
-    * Returns the height of the rectangle.
-     */
-    public int getHeight() {
-        return height;
-    }
-    /**
-    * Returns the width of the rectangle.
-    */
-    public int getWidth() {
-        return width;
-    }
-    /**
     * Returns the ending state of the arrangement.
     */
     public char[][] getEnding() {
         return ending;
-    }
-    /**
-    * Returns the board rectangles for the edit state.
-    */
-    public Rectangle[][] getBoardRectanglesEdit() {
-        return boardRectanglesEdit;
-    }
-    /**
-    * Returns the board rectangles for the ending state.
-    */
-    public Rectangle[][] getBoardRectanglesEnding() {
-        return boardRectanglesEnding;
     }
     /**
     * Returns the glue matrix for the board.
@@ -738,49 +756,11 @@ public class puzzle
         return boardGlue;
     }
     /**
-    * Returns the board rectangles for the current state.
-    */    
-    public Rectangle[][] getBoardRectangles() {
-        return boardRectangles;
-    }
-    /**
     * Returns the matrix of colors for the edit state.
     */
     public char[][] getMatrixColorsEdit() {
-    return matrixColorsEdit;
+        return matrixColorsEdit;
     }
-    /**
-    * Checks if the rectangles are visible.
-    */
-    public boolean isVisible() {
-    return isVisible;
-    }
-    /**
-    * Returns the edges rectangle for the edit state.
-    */
-    public Rectangle getEdgesEdit() {
-        return edgesEdit;
-    }
-    /**
-    * Returns the background rectangle for the edit state.
-    */
-    public Rectangle getBackgroundEdit() {
-        return backgroundEdit;
-    }
-    /**
-    * Returns the edges rectangle for the ending state.
-    */
-    public Rectangle getEdgesEnding() {
-        return edgesEnding;
-    }
-    /**
-    * Returns the background rectangle for the ending state.
-    */
-    public Rectangle getBackgroundEnding() {
-        return backgroundEnding;
-    }
-
-
 }
     
 

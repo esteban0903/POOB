@@ -217,12 +217,17 @@ public class Rectangle{
             @Override
             public void run() {
                 if (System.currentTimeMillis() - startTime >= duration) {
-                    makeInvisible();
+                    SwingUtilities.invokeLater(() -> {
+                        makeVisible(); // Asegura que el rectángulo quede visible al final
+                    });
                     timer.cancel();
                 } else {
-                    toggleVisibility();
+                    SwingUtilities.invokeLater(() -> {
+                        toggleVisibility(); // Controla el titilar del rectángulo
+                    });
                 }
-            }
+
+        };
         };
         timer.scheduleAtFixedRate(task, 0, period);
         }
