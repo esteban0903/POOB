@@ -20,7 +20,6 @@ public class PuzzleContest
         puzzle board = new puzzle(starting, ending);
         if (canSolve(starting,ending)){;
             board.makeVisible();
-            System.out.println(tiltSequence);
             for (char direction : tiltSequence){
                 board.tilt(direction);
                 try { 

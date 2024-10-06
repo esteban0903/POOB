@@ -285,6 +285,80 @@ public class puzzlec2Test
         int missplacedCount = p.missplacedTiles();
         assertEquals(2, missplacedCount); 
     }
+    @Test
+    public void testShouldSolve(){
+        char[][] starting = {
+            {'.', 'r', '.', '.'},
+            {'r', 'g', 'y', 'b'},
+            {'.', 'b', '.', '.'},
+            {'.', 'y', 'r', '.'}};
+        char[][] ending = {
+            {'y', 'r', 'b', 'r'},
+            {'.', '.', 'y', 'r'},
+            {'.', '.', '.', 'g'},
+            {'.', '.', '.', 'b'}}; 
+        PuzzleContest test = new PuzzleContest();
+        assertEquals(true, test.canSolve(starting,ending));
+    }
+    @Test
+    public void testShouldNotSolve2(){
+        char[][] starting = {{'.', '.', '.', '.', 'x', '.', '.'}};
+        char[][] ending = {{'.', '.', '.', '.', 'x', '.', '.'}};
+        PuzzleContest test = new PuzzleContest();
+        assertEquals(true, test.canSolve(starting,ending));
+    }
+    @Test
+    public void testShouldNotSolve3(){
+        char[][] starting = {
+            {'y', 'r', '.'},
+            {'.', '.', 'b'},
+            {'r', 'y', '.'},
+            {'b', '.', '.'}};
+        char[][] ending = {
+            {'.', '.', '.'},
+            {'.', '.', 'b'},
+            {'.', 'r', 'y'},
+            {'b', 'y', 'b'}}; 
+        PuzzleContest test = new PuzzleContest();
+        assertEquals(true, test.canSolve(starting,ending));
+    }
+    @Test
+    public void testShouldSimulate(){
+        char[][] starting = {
+            {'.', 'r', '.', '.'},
+            {'r', 'g', 'y', 'b'},
+            {'.', 'b', '.', '.'},
+            {'.', 'y', 'r', '.'}};
+        char[][] ending = {
+            {'y', 'r', 'b', 'r'},
+            {'.', '.', 'y', 'r'},
+            {'.', '.', '.', 'g'},
+            {'.', '.', '.', 'b'}}; 
+        PuzzleContest test = new PuzzleContest();
+        test.simulate(starting,ending);
+    }
+    @Test
+    public void testShouldNotSimulate(){
+        char[][] starting = {{'.', '.', '.', '.', 'x', '.', '.'}};
+        char[][] ending = {{'.', '.', 'x', '.', '.', '.', '.'}};
+        PuzzleContest test = new PuzzleContest();
+        test.simulate(starting,ending);;
+    }
+    @Test
+    public void testShouldNotSimulate2(){
+        char[][] starting = {
+            {'y', 'r', '.'},
+            {'.', '.', 'b'},
+            {'r', 'y', '.'},
+            {'b', '.', '.'}};
+        char[][] ending = {
+            {'.', '.', '.'},
+            {'.', '.', 'b'},
+            {'.', 'r', 'y'},
+            {'b', 'y', 'b'}}; 
+        PuzzleContest test = new PuzzleContest();
+        test.simulate(starting,ending);
+    }
     /**
      * Tears down the test fixture.
      *
