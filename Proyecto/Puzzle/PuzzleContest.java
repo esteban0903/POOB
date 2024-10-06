@@ -18,11 +18,20 @@ public class PuzzleContest
     }
     public void simulate(char[][] starting, char[][] ending){
         puzzle board = new puzzle(starting, ending);
-        canSolve(starting,ending);
-        board.makeVisible();
-        System.out.println(tiltSequence);
-        for (char direction : tiltSequence){
-            board.tilt(direction);
+        if (canSolve(starting,ending)){;
+            board.makeVisible();
+            System.out.println(tiltSequence);
+            for (char direction : tiltSequence){
+                board.tilt(direction);
+                try { 
+                    Thread.sleep(2000);  // Buscado en internet, genera pausas de 1 segundo 
+                } catch (InterruptedException e) {
+                    e.printStackTrace();// java obliga a manejar thread con try/catch, 
+                    // se imprime la traza de pila (En internet se menciona que es buena practica)
+                }
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "Can't solve the game", "NoGame", JOptionPane.ERROR_MESSAGE);
         }
     }
 
