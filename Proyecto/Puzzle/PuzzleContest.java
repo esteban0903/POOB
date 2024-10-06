@@ -21,9 +21,9 @@ public class PuzzleContest
         if (canSolve(starting,ending)){;
             board.makeVisible();
             for (char direction : tiltSequence){
-                board.tilt(direction);
                 try { 
                     Thread.sleep(2000);  // Buscado en internet, genera pausas de 1 segundo 
+                    board.tilt(direction);
                 } catch (InterruptedException e) {
                     e.printStackTrace();// java obliga a manejar thread con try/catch, 
                     // se imprime la traza de pila (En internet se menciona que es buena practica)
