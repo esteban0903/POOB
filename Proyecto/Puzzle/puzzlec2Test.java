@@ -138,7 +138,6 @@ public class puzzlec2Test
 
         assertEquals('.',p.actualArrangement()[1][1]);
     }
-    
     @Test
     public void testShouldAddGlue() {
         puzzle p = new puzzle(5, 5);

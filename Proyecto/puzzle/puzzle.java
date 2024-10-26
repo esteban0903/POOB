@@ -39,6 +39,7 @@ public class puzzle
     private char[][] matrixColorsEdit;
     private char[][] arrangement;//
     private int[][] boardGlue;//
+    private String[][] types;
     private boolean isVisible;//
     private int boardWidth;//
     private Rectangle backgroundEdit;//
@@ -72,6 +73,7 @@ public class puzzle
             boardRectanglesEdit = new Rectangle[width][height];
             boardRectanglesEnding = new Rectangle[width][height];
             boardGlue=new int[width][height];
+            types=new String[width][height];
             createBoard();
             createBoardEnding();
         }   
@@ -109,6 +111,7 @@ public class puzzle
             boardRectanglesEnding = new Rectangle[rows][columns];
             boardRectanglesEdit = new Rectangle[rows][columns];
             boardGlue=new int[rows][columns];
+            types=new String[rows][columns];
             createBoard();
             createBoardEnding();
         }
@@ -143,6 +146,7 @@ public class puzzle
             boardRectanglesEnding = new Rectangle[rows][columns];
             boardRectanglesEdit = new Rectangle[rows][columns];
             boardGlue=new int[rows][columns];
+            types=new String[rows][columns];
             createBoardEnding();
             createBoard();
             
@@ -236,6 +240,24 @@ public class puzzle
             showMessage( "Error: There is already a tile at position [" + row + "][" + column + "].");
         }
     }
+    public void addTile(String type , int row, int column, String color){
+        if (!verifyRanges(row,column)){
+            return;
+        }if (!verificationType(type)){
+            showMessage( "Error: That not is a type of tile");
+        }if (boardRectangles[row][column] == null){
+            createRectangle(row, column, color);     
+            types[row][column]=type;
+        }else{ 
+            showMessage( "Error: There is already a tile at position [" + row + "][" + column + "].");
+        }
+    }
+    private boolean verificationType(String type){
+        type= type.toLowerCase();
+        return type.equals("normal")|| type.equals("fixed") || 
+               type.equals("rough") || type.equals("flying")
+               || type.equals("freelance");
+    }
     private void createRectangle(int row, int column, String color){
         matrixColorsEdit[row][column]=color.charAt(0);
         if (color=="white"){
@@ -260,10 +282,14 @@ public class puzzle
         }if (arrangement[row][column]=='#'){
             showMessage("Error: There is a hole in that position");
             return;
+        }if (types[row][column]=="fixed"){
+            showMessage("Error: The tile is fixed so you cant delete it");
+            return;
         }if (arrangement[row][column] != '.'){
             boardRectangles[row][column].makeInvisible();
             arrangement[row][column]='.';
             boardRectangles[row][column]=null;
+            types[row][column]=null;
         }else{ 
             showMessage("Error: There is a null tile at position [" + row + "][" + column + "].");
         }
@@ -309,6 +335,10 @@ public class puzzle
         int rowFrom=from[0], columnFrom=from[1], rowTo=to[0], columnTo=to[1];
         if (!verificationRelocate(rowFrom,columnFrom,rowTo,columnTo)){
             return;
+        }        
+        if(types[rowFrom][rowFrom]=="fixed"){
+            showMessage("Error: The tile is fixed so you cant relocate it");
+            return;
         }
         if(boardGlue[rowFrom][columnFrom]==0){
             String color= boardRectangles[rowFrom][columnFrom].getColor();
@@ -335,7 +365,7 @@ public class puzzle
             int yNew=rowTo+directions[0];
             int xNew=columnTo+directions[1];
             if (verifyRanges(yOld,xOld) && verifyRanges(yNew,xNew)){
-                if(arrangement[yOld][xOld] !='#' && arrangement[yOld][xOld]!='.'){
+                if(arrangement[yOld][xOld] !='#' && arrangement[yOld][xOld]!='.' && types[yOld][xOld]!="freelance"){
                     addTile(yNew,xNew,boardRectangles[yOld][xOld].getColor());
                     deleteTile(yOld,xOld);
                 }
@@ -356,6 +386,9 @@ public class puzzle
                     showError=true;
                     return false;
                 }
+            }else{
+                showError=true;
+                return false;
             }
         }
         showError=true;
@@ -400,6 +433,10 @@ public class puzzle
         }
         if ((boardGlue[row][column])!=0){
             showMessage("Error: The tile that you are to put glue is glued");
+            return;
+        }
+        if(types[row][column]=="freelance"){
+            showMessage("Error: The tile that you are to put glue is freelance");
             return;
         }
         if (boardRectangles[row][column]!=null ){
@@ -447,12 +484,15 @@ public class puzzle
             int y=row+directions[0];
             int x=column+directions[1];
             if (verifyRanges(y,x)){
-                if(arrangement[y][x] !='#' && arrangement[y][x]!='.'){
+                if(arrangement[y][x] !='#' && arrangement[y][x]!='.' && types[y][x]!="freelance"){
                     boardGlue[y][x]=glued;
                 }
             }
         }
         showError=true;
+    }
+    public int [][] actualGlue(){
+        return boardGlue;
     }
     /**
     * Creates a hole at the specified position in the grid.
@@ -619,7 +659,9 @@ public class puzzle
            || arrangement[nextRow + row][nextCol + column]=='#')) {
         nextRow += row;
         nextCol += column;
-        relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
+        if(types[i][j]!="rough"){
+            relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
+        }
         i=nextRow;
         j=nextCol;
     }

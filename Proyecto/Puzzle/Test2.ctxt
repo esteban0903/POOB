@@ -1,0 +1,19 @@
+#BlueJ class context
+comment0.target=Test2
+comment1.params=
+comment1.target=void\ shouldMoveRight()
+comment2.params=
+comment2.target=void\ shouldMoveLeft()
+comment3.params=
+comment3.target=void\ shouldMoveUp()
+comment4.params=
+comment4.target=void\ shouldmoveDown()
+comment5.params=
+comment5.target=void\ shouldMoveNotFixed()
+comment6.params=
+comment6.target=void\ shouldWorksWithHole()
+comment7.params=
+comment7.target=void\ shouldTiltSmart()
+comment8.params=puzzle
+comment8.target=void\ printBoard(puzzle)
+numComments=9
