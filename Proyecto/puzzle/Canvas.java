@@ -92,10 +92,10 @@ public class Canvas{
      // Note: this is a slightly backwards way of maintaining the shape
      // objects. It is carefully designed to keep the visible shape interfaces
      // in this project clean and simple for educational purposes.
-    public void draw(Object referenceObject, String color, Shape shape){
-        objects.remove(referenceObject);   // just in case it was already there
-        objects.add(referenceObject);      // add at the end
-        shapes.put(referenceObject, new ShapeDescription(shape, color));
+    public void draw(Object referenceObject, String color, Shape shape, String text, int textX, int textY){
+        objects.remove(referenceObject);   // Eliminar si ya existía
+        objects.add(referenceObject);      // Añadir al final
+        shapes.put(referenceObject, new ShapeDescription(shape, color, text, textX, textY));
         redraw();
     }
  
@@ -231,17 +231,39 @@ public class Canvas{
     private class ShapeDescription{
         private Shape shape;
         private String colorString;
-
-        public ShapeDescription(Shape shape, String color){
+        private String text; // Añadir el texto asociado al rectángulo
+        private int textX; // Coordenada X del texto
+        private int textY; // Coordenada Y del texto
+    
+        public ShapeDescription(Shape shape, String color, String text, int textX, int textY){
             this.shape = shape;
             colorString = color;
+            this.text = text; // Guardar el texto
+            this.textX = textX; // Guardar coordenadas del texto
+            this.textY = textY;
         }
-
+    
         public void draw(Graphics2D graphic){
             setForegroundColor(colorString);
             graphic.draw(shape);
             graphic.fill(shape);
+            
+            // Dibujar el texto si está disponible
+            if (text != null && !text.isEmpty()) {
+                graphic.setColor(Color.BLACK); // Color del texto
+                graphic.drawString(text, textX, textY);
+            }
         }
+    }
+    public void drawText(String text, int x, int y) {
+        if (graphic != null) {
+            graphic.setColor(Color.BLACK); 
+            graphic.drawString(text, x, y);  
+            canvas.repaint(); 
+        }
+    }
+    public Graphics2D getGraphics() {
+        return graphic; 
     }
 
 }

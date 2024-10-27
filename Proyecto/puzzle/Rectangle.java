@@ -22,6 +22,7 @@ public class Rectangle{
     private int yPosition;
     private String color;
     private boolean isVisible;
+    private String letter;
 
     /**
      * Create a new rectangle at default position with default color.
@@ -33,6 +34,7 @@ public class Rectangle{
         yPosition = 100;
         color = "magenta";
         isVisible = false;
+        letter = "";
     }
     public Rectangle(Rectangle another) {
         this.height = another.height;
@@ -41,6 +43,7 @@ public class Rectangle{
         this.yPosition = another.yPosition;
         this.color = another.color;
         this.isVisible = another.isVisible; 
+        this.letter=another.letter;
     }
 
     /**
@@ -168,20 +171,28 @@ public class Rectangle{
         color = newColor;
         draw();
     }
-
+    public void setLetter(String newLetter) {
+        this.letter = (newLetter != null) ? newLetter : "";
+    }
     /*
      * Draw the rectangle with current specifications on screen.
      */
 
     private void draw() {
-        if(isVisible) {
+        if (isVisible) {
             Canvas canvas = Canvas.getCanvas();
-            canvas.draw(this, color,
-                new java.awt.Rectangle(xPosition, yPosition, 
-                                       width, height));
-            canvas.wait(10);
+            Graphics2D graphic = canvas.getGraphics();  
+            
+            
+            FontMetrics fm = graphic.getFontMetrics();
+    
+            int textX = xPosition + (width - fm.stringWidth(letter)) / 2;
+            int textY = yPosition + (height - fm.getHeight()) / 2 + fm.getAscent();
+    
+            canvas.draw(this, color, new java.awt.Rectangle(xPosition, yPosition, width, height), letter, textX, textY);
         }
     }
+
 
     /*
      * Erase the rectangle on screen.
