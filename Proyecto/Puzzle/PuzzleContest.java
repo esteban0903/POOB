@@ -17,7 +17,7 @@ public class PuzzleContest
     public PuzzleContest(){
     }
     public void simulate(char[][] starting, char[][] ending){
-        puzzle board = new puzzle(starting, ending);
+        Puzzle board = new Puzzle(starting, ending);
         if (canSolve(starting,ending)){;
             board.makeVisible();
             for (char direction : tiltSequence){

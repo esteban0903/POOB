@@ -28,7 +28,7 @@ import java.util.ArrayList;
  * @author (Esteba Aguilera/Sebastian Beltran )
  * @version (08/09/2024)
  */
-public class puzzle
+public class Puzzle
 {
     private int  height;//
     private int  width;//
@@ -62,7 +62,7 @@ public class puzzle
     * @param height Height of the board.
     * @param width Width of the board.
     */
-    public puzzle(int height, int width){
+    public Puzzle(int height, int width){
         if (height<1 || width>500){
             JOptionPane.showMessageDialog(null,"Invalid dimensions: Height = " + height + ", Width = " + width,"Error", JOptionPane.ERROR_MESSAGE);
             return;
@@ -100,7 +100,7 @@ public class puzzle
     * 
     * @param ending Matrix that defines the final state of the board.
     */
-    public puzzle(char ending[][]){
+    public Puzzle(char ending[][]){
         int rows=ending.length;
         int columns=ending[0].length;
         if ((rows<1 || columns>500)){
@@ -131,7 +131,7 @@ public class puzzle
      * an error dialog is shown. Otherwise, the method initializes both `starting` and `ending` matrices
      * with the given dimensions.
      */
-    public puzzle(char starting[][], char ending[][]){
+    public Puzzle(char starting[][], char ending[][]){
         int rows=starting.length;   
         int columns=starting[0].length;
         int rowsEnding=ending.length;   
