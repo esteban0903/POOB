@@ -353,26 +353,30 @@ public class puzzle
         }
     
     }
-    private void relocateGlue(int rowFrom,int columnFrom,int rowTo,int columnTo){
-        int[][] positions={{0,-1},{0,1},{1,0},{-1,0},{0,0}};
-        if (!verificationRelocateGlue(rowTo,columnTo)){
+    private void relocateGlue(int rowFrom, int columnFrom, int rowTo, int columnTo) {
+        int[][] positions = {{0, -1}, {0, 1}, {1, 0}, {-1, 0}, {0, 0}};
+    
+        if (!verificationRelocateGlue(rowTo, columnTo)) {
             showMessage("The tiles that you are trying to move don't have space in the new position");
             return;
         }
-        for (int[]directions: positions){
-            int yOld=rowFrom+directions[0];
-            int xOld=columnFrom+directions[1];
-            int yNew=rowTo+directions[0];
-            int xNew=columnTo+directions[1];
-            if (verifyRanges(yOld,xOld) && verifyRanges(yNew,xNew)){
-                if(arrangement[yOld][xOld] !='#' && arrangement[yOld][xOld]!='.' && types[yOld][xOld]!="freelance"){
-                    addTile(yNew,xNew,boardRectangles[yOld][xOld].getColor());
-                    deleteTile(yOld,xOld);
+    
+        for (int[] directions : positions) {
+            int xOld = rowFrom + directions[0];
+            int yOld = columnFrom + directions[1];
+            int xNew = rowTo + directions[0];
+            int yNew = columnTo + directions[1];
+    
+            if (verifyRanges(xOld, yOld) && verifyRanges(xNew, yNew) && types[xOld][yOld] != null) {
+                if (arrangement[xOld][yOld] != '#' && arrangement[xOld][yOld] != '.' && !types[xOld][yOld].equals("freelance")) {
+                    System.out.println("Moving tile from [" + xOld + "," + yOld + "] to [" + xNew + "," + yNew + "]");
+                    addTile(xNew, yNew, boardRectangles[xOld][yOld].getColor());
+                    deleteTile(xOld, yOld);
                 }
             }
         }
-        addGlue(rowTo,columnTo);
-        
+    
+        addGlue(rowTo, columnTo);
     }
     
     private boolean verificationRelocateGlue(int row, int column){
@@ -382,6 +386,9 @@ public class puzzle
             int y=row+directions[0];
             int x=column+directions[1];
             if (verifyRanges(y,x)){
+                if(boardGlue[y][x]==2 ||boardGlue[y][x]==1){
+                    continue;
+                }
                 if(arrangement[y][x] !='.'&& arrangement[y][x]!= '#'){
                     showError=true;
                     return false;
@@ -585,13 +592,13 @@ public class puzzle
     public void tilt(char direction){
         showError=false;
         if (direction=='l'){
-            tiltDirectionPositive(0,-1,boardRectangles);
+            tiltDirectionPositive(0,-1);
         }else if (direction=='r'){
-            tiltDirectionNegative(0,1,boardRectangles);
+            tiltDirectionNegative(0,1);
         }else if(direction=='d'){
-            tiltDirectionNegative(1,0,boardRectangles);
+            tiltDirectionNegative(1,0);
         }else if (direction=='u'){
-            tiltDirectionPositive(-1,0,boardRectangles);
+            tiltDirectionPositive(-1,0);
         }else{
             showMessage("Error: You put a invalid direction");
         }
@@ -605,14 +612,21 @@ public class puzzle
     * @param column the number of columns to shift (positive for rightwards, negative for leftwards).
     * @param boardRectangles the 2D array of Rectangle objects representing the grid.
     */
-    private void tiltDirectionPositive(int row, int column, Rectangle[][] boardRectangles){
-        int rowLength = boardRectangles.length;
-        int columnLength= boardRectangles[0].length;
+    private void tiltDirectionPositive(int row, int column){
+        int rowLength = arrangement.length;
+        int columnLength= arrangement[0].length;
+        System.out.println("Esta es el tamaño " + rowLength + "," + columnLength + "]");
         for (int i=0; i<rowLength;i++){
             for (int j=0; j< columnLength;j++){
+                System.out.println("[" + i + "," + j + "]");
                 if (verifyRanges(i+row,j+column)){
-                    if ((arrangement[i+row][j+column]=='#'|| boardRectangles[i+row][j+column]==null) 
-                         && boardRectangles[i][j]!=null){
+                    if(boardGlue[i][j]==2){
+                        System.out.println("Relocating glued tile at [" + i + "," + j + "]");
+                        relocateGlue(i,j,i+2*row,j+2*column);
+                    }if(boardGlue[i][j]==1){
+                        continue;
+                    }if ((arrangement[i+row][j+column]=='#'|| arrangement[i+row][j+column]=='.') 
+                         && arrangement[i][j]!='.'){
                         moveTileContinuously(i,j,row,column);
                     }
                 }
@@ -627,14 +641,23 @@ public class puzzle
     * @param column the number of columns to shift (positive for leftwards, negative for rightwards).
     * @param boardRectangles the 2D array of Rectangle objects representing the grid.
     */
-    private void tiltDirectionNegative(int row, int column, Rectangle[][] boardRectangles){
-        int rowLength = boardRectangles.length;
-        int columnLength= boardRectangles[0].length;
+    private void tiltDirectionNegative(int row, int column){
+        int rowLength = arrangement.length;
+        int columnLength= arrangement[0].length;
         for (int i=rowLength; i>-1;i--){
             for (int j=columnLength; j>-1;j--){
+                System.out.println("[" + i + "," + j + "]");
                 if (verifyRanges(i+row,j+column)){
-                    if ((arrangement[i+row][j+column]=='#'|| boardRectangles[i+row][j+column]==null) 
-                         && boardRectangles[i][j]!=null){
+                    if(boardGlue[i][j]==2){
+                        System.out.println("Relocating glued tile at [" + i + "," + j + "]");
+                        System.out.println("Relocating glued to [" + i+(3*row) + "," + j+(3*column) + "]");
+                        if(verifyRanges(i+(3*row),j+(3*column))){
+                            relocateGlue(i,j,(i+3*row),j+(3*column));
+                        }
+                    }if(boardGlue[i][j]==1){
+                        continue;
+                    }if ((arrangement[i+row][j+column]=='#'|| arrangement[i+row][j+column]=='.') 
+                         && arrangement[i][j]!='.'){
                         moveTileContinuously(i,j,row,column);
                     }
                 }
@@ -659,9 +682,7 @@ public class puzzle
            || arrangement[nextRow + row][nextCol + column]=='#')) {
         nextRow += row;
         nextCol += column;
-        if(types[i][j]!="rough"){
-            relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
-        }
+        relocateTile(new int[]{i, j}, new int[]{nextRow, nextCol});
         i=nextRow;
         j=nextCol;
     }
