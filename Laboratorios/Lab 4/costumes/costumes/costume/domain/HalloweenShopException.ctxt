@@ -1,0 +1,7 @@
+#BlueJ class context
+comment0.target=HalloweenShopException
+comment0.text=\r\n\ Excepci\u00F3n\ personalizada\ para\ manejar\ errores\ espec\u00EDficos\ relacionados\ con\ \r\n\ la\ tienda\ de\ Halloween.\ Esta\ clase\ ayuda\ a\ identificar\ problemas\ particulares\r\n\ que\ pueden\ ocurrir\ durante\ la\ gesti\u00F3n\ de\ productos\ y\ precios\ en\ la\ tienda.\r\n
+comment1.params=message
+comment1.target=HalloweenShopException(java.lang.String)
+comment1.text=\r\n\ Construye\ una\ nueva\ HalloweenShopException\ con\ el\ mensaje\ detallado\ especificado.\r\n\ \r\n\ @param\ message\ Un\ mensaje\ descriptivo\ que\ proporciona\ detalles\ sobre\ la\ causa\ de\ la\ excepci\u00F3n.\r\n
+numComments=2

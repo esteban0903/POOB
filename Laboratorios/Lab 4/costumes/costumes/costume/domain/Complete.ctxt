@@ -1,0 +1,27 @@
+#BlueJ class context
+comment0.target=Complete
+comment1.params=name\ makeUp\ discount
+comment1.target=Complete(java.lang.String,\ int,\ int)
+comment1.text=\r\n\ Constructs\ a\ new\ complete\ custom\r\n\ @param\ name\ \r\n\ @param\ makeUp\r\n\ @param\ discount\ \r\n
+comment10.params=
+comment10.target=java.lang.String\ data()
+comment2.params=b
+comment2.target=void\ addBasic(Basic)
+comment2.text=\r\n\ Add\ a\ new\ basic\ piece\r\n\ @param\ b\r\n
+comment3.params=
+comment3.target=int\ price()
+comment4.params=unknown\ error
+comment4.target=int\ price(int,\ int)
+comment4.text=\r\n\ Calculates\ an\ estimate\ price\r\n\ For\ basics\ where\ the\ price\ cannot\ be\ known\ or\ has\ error,\ the\ unknown\ or\ the\ error\ value\ is\ assumed\r\n\ @param\ unknown\r\n\ @param\ error\r\n\ @return\ \r\n\ @throws\ HalloweenException\ COMPLETE_EMPTY,\ if\ it\ don't\ have\ basics.\ PRICE_ERROR,\ if\ the\ unknown\ or\ error\ value\ has\ error\r\n
+comment5.params=piece\ unknown\ error
+comment5.target=int\ calculatePiecePrice(Basic,\ int,\ int)
+comment6.params=maximum
+comment6.target=int\ price(boolean)
+comment6.text=\r\n\ Calculates\ an\ estimate\ price\r\n\ For\ basics\ where\ the\ price\ cannot\ be\ known,\ the\ maximum\ or\ the\ minimum\ value\ of\ the\ other\ basics\ is\ assumed\r\n\ @param\ maximum\r\n\ @return\ \r\n\ @throws\ CostumeShopException\ COMPLETE_EMPTY,\ if\ it\ don't\ have\ basics.\ PRICE_ERROR,\ if\ some\ basic\ has\ error\r\n
+comment7.params=maximum\ minPrice\ maxPrice
+comment7.target=int\ determineAssumedPrice(boolean,\ java.lang.Integer,\ java.lang.Integer)
+comment8.params=assumedPrice
+comment8.target=int\ calculateAdjustmentForUnknownPrices(int)
+comment9.params=knownTotal\ adjustment
+comment9.target=int\ calculateFinalPrice(int,\ int)
+numComments=11
