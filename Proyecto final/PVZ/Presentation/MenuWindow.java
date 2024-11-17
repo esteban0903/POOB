@@ -21,7 +21,7 @@ public class MenuWindow extends Window {
         add(playButton);
         add(loadButton);
         add(difficultyButton);
-        add(scores);
+        add(scores);    
         add(exitButton);
         configurePlayButton(playButton);
         configureExitButton(exitButton);
