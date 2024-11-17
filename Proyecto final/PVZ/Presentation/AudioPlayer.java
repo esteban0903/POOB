@@ -1,5 +1,6 @@
-import javax.sound.sampled.*;
-import java.io.File;
+package Presentation;
+    import javax.sound.sampled.*;
+    import java.io.File;
 
 public class AudioPlayer {
 

@@ -1,11 +1,10 @@
+package Presentation;
 
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
+
 import java.awt.Color;
 
-public class DifficultyWindow extends JFrame {
+public class DifficultyWindow extends Window {
 
     public static void main(String[] args) {
         new DifficultyWindow();
@@ -20,12 +19,7 @@ public class DifficultyWindow extends JFrame {
 
 
     public DifficultyWindow() {
-        setTitle("Dificultad");
-        setSize(1346, 765);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setContentPane(new JLabel(new ImageIcon("resources/difficultyWindow.jpg")));
-        setLayout(null);
+        super("Dificultad", "resources/difficultyWindow.jpg");
 
         add(easyButton);
         add(mediumButton);

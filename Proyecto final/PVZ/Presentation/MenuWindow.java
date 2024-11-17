@@ -1,10 +1,9 @@
-import javax.swing.ImageIcon;
+package Presentation;
+
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import java.awt.Color;
-public class MenuWindow extends JFrame {
+public class MenuWindow extends Window {
     public static void main(String[] args) {
         new MenuWindow();
     }
@@ -13,27 +12,24 @@ public class MenuWindow extends JFrame {
     private JButton playButton = GameController.createButton("Jugar", 570, 260, 200, 40, purple, Color.WHITE);
     private JButton loadButton = GameController.createButton("Cargar Partida", 570, 320, 200, 40, purple, Color.WHITE);
     private JButton difficultyButton = GameController.createButton("Dificultad", 570, 380, 200, 40, purple, Color.WHITE);
-    private JButton exitButton = GameController.createButton("Salir", 570, 440, 200, 40, purple, Color.WHITE);
+    private JButton scores = GameController.createButton("Puntajes", 570, 440, 200, 40, purple, Color.WHITE);
+    private JButton exitButton = GameController.createButton("Salir", 570, 500, 200, 40, purple, Color.WHITE);
 
     public MenuWindow() {
-        setTitle("Menú Principal");
-        setSize(1346, 765);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        setContentPane(new JLabel(new ImageIcon("resources/backgroundMainMenu.jpg")));
-        setLayout(null);
-        
+        super("Menu Principal", "resources/backgroundMainMenuu.jpg");
+
         add(playButton);
         add(loadButton);
         add(difficultyButton);
+        add(scores);
         add(exitButton);
+        configurePlayButton(playButton);
         configureExitButton(exitButton);
         configureDifficultyButton(difficultyButton);
-        setVisible(true);
+
+        showWindow();
         player.playMusic();
     }
-
 
 
     private void configureExitButton(JButton exitButton) {
@@ -48,4 +44,14 @@ public class MenuWindow extends JFrame {
             dispose();
         });
     }
+
+    private void configurePlayButton(JButton startButton) {
+        startButton.addActionListener(e -> {
+            player.stopMusic();
+            GameModeWindow gameModeWindow = new GameModeWindow();
+            gameModeWindow.setVisible(true);
+            dispose();
+        });
+    }
+    
 }
