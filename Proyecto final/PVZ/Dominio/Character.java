@@ -9,8 +9,9 @@ public abstract class Character {
     private boolean isAlive;   
     private ImageIcon image;
     private int cost;
+    private String type;
 
-    public Character(String name,int health, int x, int y, int cost, ImageIcon image) {
+    public Character(String name,int health, int x, int y, int cost, ImageIcon image, String type) {
         this.name = name;
         this.health = health;
         this.x = x;
@@ -18,6 +19,7 @@ public abstract class Character {
         this.isAlive=true;
         this.cost = cost;
         this.image = image;
+        this.type = type;
 
     }
     
@@ -55,6 +57,12 @@ public abstract class Character {
 
     public String getName(){
         return name;
+    }
+    public int getCost(){
+        return cost;
+    }
+    public String getType(){
+        return type;
     }
 
 }

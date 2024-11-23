@@ -8,11 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CharacterGUI extends JPanel {
+    public static CharacterGUI instance;
     private List<Character> characters = new ArrayList<>();
     private int cellSize;
     private Character[][] board;
 
     public CharacterGUI(int cellSize, int rows, int columns) {
+        CharacterGUI.instance = this;
         this.cellSize = cellSize;
         this.board = new Character[rows][columns];
         setOpaque(false);
@@ -56,5 +58,9 @@ public class CharacterGUI extends JPanel {
         int y = character.getCoordenatesY();
 
         g.drawImage(image, x, y, cellSize, cellSize, null);
+    }
+
+    public Character[][] getBoard(){
+        return board;
     }
 }

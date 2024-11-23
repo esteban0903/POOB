@@ -12,8 +12,8 @@ public class CharacterSelectionWindow extends Window {
     private final Map<String, JPanel> plantButtons; 
     private final Map<String, String> plantImages;  
     private final Map<String, String> selectedPlantsMap;  
-    private Color purple = new Color(34, 139, 34);
-    private JButton startGameButton = GameController.createButton("Iniciar Juego", 550, 640, 200, 40, purple, Color.WHITE);
+    private Color green = new Color(34, 139, 34); //color verde de boton
+    private JButton startGameButton = GameController.createButton("Iniciar Juego", 550, 640, 200, 40, green, Color.WHITE);
 
     public static void main(String[] args) {
         new CharacterSelectionWindow();
@@ -23,12 +23,11 @@ public class CharacterSelectionWindow extends Window {
         super("Selección de Plantas", "resources/characterSelection.jpg");
 
         plantButtons = new HashMap<>();
-        plantImages = Map.of(
-            "Peashooter", "resources/Peashooter.png",
-            "Sunflower", "resources/Sunflower.png",
-            "WallNut", "resources/WallNut.png"
-        );
-        
+        plantImages = new HashMap<>();
+        plantImages.put("Peashooter", "resources/Peashooter.png"); // para probar algunas plantas 
+        plantImages.put("Sunflower", "resources/Sunflower.png");
+        plantImages.put("Wallnut", "resources/Wallnut.png");
+    
         selectedPlantsMap = new HashMap<>();  
 
         initializePanels();
@@ -43,12 +42,13 @@ public class CharacterSelectionWindow extends Window {
 
     private void initializePanels() {
         //se usa FlowLayout porque necesitamos que se llenen horizontalmente
-        availablePlantsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 22, 25)); 
+
+        availablePlantsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 22, 25)); // se asignan separaciones manualmente
         availablePlantsPanel.setBounds(247, 235, 265, 260);
         availablePlantsPanel.setOpaque(false);
         add(availablePlantsPanel);
 
-        selectedPlantsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 18, 15));
+        selectedPlantsPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 18, 15)); // se asignan separaciones manualmente
         selectedPlantsPanel.setBounds(797, 235, 300, 250); 
         selectedPlantsPanel.setOpaque(false);
         add(selectedPlantsPanel);
