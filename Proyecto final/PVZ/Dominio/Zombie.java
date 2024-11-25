@@ -27,9 +27,18 @@ public class Zombie extends Character {
         this.damage_Time = damageTime;
         this.characterGUI = characterGUI;
     }
+    public void attack(Character plant) {
+        System.out.println(getName() + " está atacando a " + plant.getName() + plant.getHealth());
+        plant.takeDamage(10);
+    }
 
-    public void attack(Character enemy) {
-        enemy.takeDamage(10);
+    private void handleAttack(Character plant, int row, int col, CharacterGUI characterGUI) throws InterruptedException { 
+        attack(plant); 
+        if (plant.getHealth() <= 0) {
+            characterGUI.removeCharacter(plant, row, col); 
+        } else {
+            Thread.sleep(500); // El thread necesita la excepcion InterruptedException :)
+        }
     }
 
     @Override
@@ -44,36 +53,36 @@ public class Zombie extends Character {
         new Thread(() -> {
             try {
                 while (true) {
-                    Thread.sleep(500); // velocidad del zombie
+                    Thread.sleep(500); // Velocidad (revisar)
     
-                    // Obtén las coordenadas actuales
+                    // Posicion donde va el zombie
                     int currentRow = (getCoordenatesY() - GridGUI.GRID_Y_BASE) / characterGUI.getCellSize();
                     int currentCol = (getCoordenatesX() - GridGUI.GRID_X_BASE) / characterGUI.getCellSize();
     
-                    // Calcula la nueva posición basada en la dirección
+                    // Posicion a donde se movio el zombie
                     int[] newPosition = calculateNewPosition();
                     int newX = newPosition[0];
                     int newY = newPosition[1];
     
-                    // Calcula las nuevas celdas
+                    // Calcula la nueva posición del zombie en el tablero (matriz)
                     int newRow = (newY - GridGUI.GRID_Y_BASE) / characterGUI.getCellSize();
                     int newCol = (newX - GridGUI.GRID_X_BASE) / characterGUI.getCellSize();
     
-                    // Valida si el movimiento es permitido
-                    if (!isValidMove(newRow, newCol, characterGUI)) {
-                        System.out.println("Zombie detenido: encontró una planta o salió del tablero.");
-                        break; // Detén el movimiento si no es válido
+                    // Mirar si hay una planta
+                    if (characterGUI.hasPlantInCell(newRow, newCol)) {
+                        Character plant = characterGUI.getPlantInCell(newRow, newCol);
+                        handleAttack(plant, newRow, newCol, characterGUI);
+                        continue; // Vuelve a verificar después del ataque
                     }
     
-                    // Mueve el zombie a la nueva posición
                     setPosition(newX, newY);
     
-                    // Si cambia de celda, actualiza la matriz
+                    // Si el zombie se movio de casilla, lo cambia en la matriz
                     if (newRow != currentRow || newCol != currentCol) {
                         characterGUI.updatePositionInBoard(this, currentRow, currentCol, newRow, newCol);
                     }
     
-                    characterGUI.repaint(); // Redibuja el tablero
+                    characterGUI.repaint(); 
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -81,6 +90,7 @@ public class Zombie extends Character {
         }).start();
     }
     
+       
     private int[] calculateNewPosition() {
         int newX = getCoordenatesX();
         int newY = getCoordenatesY();
@@ -99,16 +109,9 @@ public class Zombie extends Character {
                 newY += speed;
                 break;
         }
-    
         return new int[]{newX, newY};
     }
     
-    private boolean isValidMove(int newRow, int newCol, CharacterGUI characterGUI) {
-        if (newRow < 0 || newRow >= characterGUI.getBoard().length ||  newCol < 0 || newCol >= characterGUI.getBoard()[0].length) {
-            return false;
-        }
-        return !characterGUI.hasPlantInCell(newRow, newCol);
-    }
 }
 
 

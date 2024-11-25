@@ -34,7 +34,7 @@ public class CharacterGUI extends JPanel {
     
         if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
             return false;
-        }
+        } 
         board[row][col].add(character);
         characters.add(character);
     
@@ -81,14 +81,29 @@ public class CharacterGUI extends JPanel {
         if (row < 0 || row >= board.length || col < 0 || col >= board[0].length) {
             return false; // Fuera del tablero
         }
-    
         List<Character> cellCharacters = board[row][col];
+
         for (Character character : cellCharacters) {
             if (character.getType().equalsIgnoreCase("Plant")) {
                 return true; // Encontro una plant 
             }
         }
         return false; // No encontro una plant 
+    }
+
+    public Character getPlantInCell(int row, int col) {
+        for (Character character : board[row][col]) {
+            if (character.getType().equals("Plant")) {
+                return character;
+            }
+        }
+        return null; // No hay planta en esta celda
+    }
+
+    public void removeCharacter(Character character, int row, int col) {
+        board[row][col].remove(character);
+        characters.remove(character);
+        repaint();
     }
     
 }

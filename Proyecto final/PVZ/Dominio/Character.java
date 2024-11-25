@@ -35,7 +35,7 @@ public abstract class Character {
     }
 
     public interface attackable{
-        public void attack(Character enemy);
+        public void attack();
     }
 
     public void setPosition(int x, int y){
@@ -63,6 +63,10 @@ public abstract class Character {
     }
     public String getType(){
         return type;
+    }
+
+    public int getHealth(){
+        return health;
     }
 
 }
