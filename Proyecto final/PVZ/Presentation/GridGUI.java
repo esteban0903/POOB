@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import javax.swing.*;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 public class GridGUI extends Window {
     public static final int CELL_SIZE = 80;
@@ -116,6 +117,7 @@ public class GridGUI extends Window {
     
                 if (characterPanel.addCharacter(selectedCharacter)) {
                     performCharacterActions(type, cost);
+                    showBoard();
                     selectedCharacter = null;
                 }
             }
@@ -139,36 +141,39 @@ public class GridGUI extends Window {
             sunGenerator.subtractSun(cost);
         }
         if (type.equals("Zombie")) {
-            ((BasicZombie) selectedCharacter).move();
+            ((BasicZombie) selectedCharacter).move(characterPanel);
         }
     } 
-}
+
 
 
    /*
      * Método para mostrar el estado del tablero en un cuadro de diálogo
      */
-    /*private void showBoard() {
+    private void showBoard() {
         StringBuilder boardState = new StringBuilder();
         boardState.append("Estado del Tablero:\n");
         boardState.append("-".repeat(characterPanel.getBoard()[0].length * 8 + 1)).append("\n"); // Bordes superiores
-
+    
         for (int row = 0; row < characterPanel.getBoard().length; row++) {
             for (int col = 0; col < characterPanel.getBoard()[0].length; col++) {
-                if (characterPanel.getBoard()[row][col] == null) {
+                List<Character> cell = characterPanel.getBoard()[row][col];
+                if (cell.isEmpty()) {
                     boardState.append("| Vacío "); // Celda vacía
                 } else {
-                    boardState.append(String.format("| %-6s", characterPanel.getBoard()[row][col].getName())); // Nombre del personaje
+                    StringBuilder cellContent = new StringBuilder("| ");
+                    for (Character character : cell) {
+                        cellContent.append(character.getName().charAt(0)); // Agrega la inicial del personaje
+                    }
+                    boardState.append(String.format("%-6s", cellContent.toString())); // Ajusta el formato
                 }
             }
             boardState.append("|\n"); // Cierra la fila
             boardState.append("-".repeat(characterPanel.getBoard()[0].length * 8 + 1)).append("\n"); // Bordes entre filas
         }
-
-        // Mostrar el estado del tablero en un cuadro de diálogo
+    
         JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
-    } 
+    }
+}
     
 
-
-    */ 
