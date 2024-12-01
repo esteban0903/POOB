@@ -3,12 +3,12 @@ package Dominio;
 import javax.swing.ImageIcon;
 
 public abstract class Character {   
-    private String name;
-    private int health;
+    protected String name;
+    protected int health;
     private int x,y;
     private boolean isAlive;   
-    private ImageIcon image;
-    private int cost;
+    protected ImageIcon image;
+    protected int cost;
     private String type;
 
     public Character(String name,int health, int x, int y, int cost, ImageIcon image, String type) {
@@ -25,8 +25,9 @@ public abstract class Character {
     
     public void takeDamage(int damage) {
         this.health -= damage;
-        if (this.health < 0) {
+        if (this.health <= 0) {
             this.health = 0;
+            this.isAlive = false;
         }
     }
 
@@ -34,9 +35,6 @@ public abstract class Character {
         return isAlive;
     }
 
-    public interface attackable{
-        public void attack();
-    }
 
     public void setPosition(int x, int y){
         this.x = x;
@@ -67,6 +65,27 @@ public abstract class Character {
 
     public int getHealth(){
         return health;
+    }
+
+
+    protected void setImage(ImageIcon image){
+        this.image = image;
+    }
+
+    protected void setName(String name){
+        this.name = name;
+    }
+
+    protected void setCost(int cost){
+        this.cost = cost;
+    }
+
+    protected void setCharacterName(String name){
+        this.name = name;
+    }
+
+    protected void setCharacterHealth(int health){
+        this.health = health;
     }
 
 }

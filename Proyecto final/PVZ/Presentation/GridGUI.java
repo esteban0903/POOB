@@ -1,179 +1,237 @@
-package Presentation;
+    package Presentation;
 
-import Dominio.BasicZombie;
-import Dominio.Character;
+    import Dominio.Character;
+    import Dominio.CharacterFactory;
+    import Dominio.Grid;
+import Dominio.Zombie;
+import Dominio.Plant;
 
-import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+    import javax.swing.*;
+    import java.awt.*;
+    import java.awt.event.ActionListener;
+    import java.awt.event.MouseAdapter;
+    import java.awt.event.MouseEvent;
+    import java.util.Map;
 
-import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.List;
-
-public class GridGUI extends Window {
-    public static final int CELL_SIZE = 80;
-    public static final int GRID_X_BASE = 220;  // coord de x del tablero (1 casilla)
-    public static final int GRID_Y_BASE = 140;  // coord de y del tablero (1 casilla)
+ public class GridGUI extends Window {
+    private JPanel gridPanel;
+    private CharacterGUI characterPanel;
     private SunGenerator sunGenerator;
+    private ZombieGenerator zombieGenerator;
     private JLabel sunCounterLabel;
-
-    AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
-    private JLayeredPane layeredPane; 
-    private JPanel gridPanel; 
-    private CharacterGUI characterPanel; 
     private Character selectedCharacter;
-
-    public static void main(String[] args) {
-        Map<String, String> characterTypes = new HashMap<>();
-        characterTypes.put("Peashooter", "resources/Peashooter.png"); // para probar algunas plantas 
-        characterTypes.put("Sunflower", "resources/Sunflower.png");
-        characterTypes.put("BasicZombie", "resources/BasicZombie.png");
-
-        new GridGUI(characterTypes);
-    }
+    private JLayeredPane layeredPane;
+    private JPanel shovel;
+    private boolean isShovelActive = false;
+    private Grid grid;
+    private int rows = 5;
+    private int cols = 10;
+    private static final int CELL_SIZE = 80;
+    private static final int GRID_X_BASE = 220;
+    private static final int GRID_Y_BASE = 140;
+    private static final AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
 
     public GridGUI(Map<String, String> characterTypes) {
         super("Plants vs Zombies", "resources/gridGame.jpg");
+        this.grid = new Grid(rows, cols, CELL_SIZE);
 
-        layeredPane = new JLayeredPane();
-        layeredPane.setBounds(0 , 0 , getWidth() , getHeight());
-        add(layeredPane);
-
-        sunCounterLabel = new JLabel("Suns: 0");
-        sunCounterLabel.setBounds(20, 20, 100, 30); // tamaño modificable (revisar)
-        sunCounterLabel.setForeground(Color.YELLOW);
-        layeredPane.add(sunCounterLabel, Integer.valueOf(4));
-
-        createGrid(5, 10, CELL_SIZE);
-
-        characterPanel = new CharacterGUI(CELL_SIZE, 5, 10); 
-        characterPanel.setBounds(0, 0, getWidth(), getHeight()); 
-        characterPanel.setOpaque(false);
-        layeredPane.add(characterPanel, Integer.valueOf(2));
-
+        createPanelBase(); 
+        createGrid(rows, cols);
+        createCounterSuns();
+        createSunGridGenerator();
+        createPanelCharacters();
+        createShovelButton();
         createCharacterButtons(characterTypes);
-        sunGenerator = new SunGenerator(gridPanel, CELL_SIZE, sunCounterLabel);
-
-        new Timer(3000, e -> sunGenerator.addRandomSun()).start();
+        createZombieGridGenerator();
         player.playMusic();
         showWindow();
+    }
+
+    private void createPanelBase() {
+        layeredPane = new JLayeredPane();
+        layeredPane.setBounds(0, 0, getWidth(), getHeight());
+        layeredPane.setOpaque(false);
+        getContentPane().add(layeredPane);
+        layeredPane.revalidate();
+        layeredPane.repaint();
+    }
+
+    private void createPanelCharacters() {
+        characterPanel = new CharacterGUI(grid, CELL_SIZE);
+        characterPanel.setBounds(0, 0, getWidth(), getHeight());
+        layeredPane.add(characterPanel, Integer.valueOf(2)); 
+    }
+
+    private void createCounterSuns() {
+        sunCounterLabel = new JLabel("Suns: 0");
+        sunCounterLabel.setBounds(20, 20, 100, 30);
+        sunCounterLabel.setForeground(Color.YELLOW);
+        layeredPane.add(sunCounterLabel, Integer.valueOf(4)); 
+    }
+
+    private void createSunGridGenerator() {
+        sunGenerator = new SunGenerator(grid, gridPanel, sunCounterLabel);
+        new Timer(2000, e -> sunGenerator.addRandomSun(50)).start();
+    }
+
+    private void createZombieGridGenerator() {
+        zombieGenerator = new ZombieGenerator(grid, characterPanel);
+        new Timer(5000, e -> zombieGenerator.addRandomZombie()).start();
+    }
+
+    private void createGrid(int rows, int cols) {
+        gridPanel = new JPanel(null);
+        gridPanel.setBounds(0, 0, getWidth(), getHeight());
+        gridPanel.setOpaque(false);
+
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                JPanel cell = new JPanel();
+                cell.setOpaque(false);
+                Point position = calculatePosition(row, col);
+                cell.setBounds(position.x, position.y, CELL_SIZE, CELL_SIZE + 20);
+                configureClickOnCell(row, col, cell);
+                gridPanel.add(cell);
+            }
+        }
+        layeredPane.add(gridPanel, Integer.valueOf(1));
     }
 
     private void createCharacterButtons(Map<String, String> characterTypes) {
         int sizeButtonX = 50;
         int sizeButtonY = 50;
+
         for (var entry : characterTypes.entrySet()) {
-            var buttonPanel = GameController.createButtonWithImage(entry.getValue(), e -> {
-                selectedCharacter = CharacterFactory.createCharacter(entry.getKey(), 0, 0, characterPanel);
-            }, entry.getKey(), 60, 60);
+            ActionListener action = createCharacterSelectionAction(entry.getKey());
+            JPanel buttonPanel = GameController.createButtonWithImage(entry.getValue(), action, entry.getKey(), 60, 60);
 
-            buttonPanel.setBounds(sizeButtonX, sizeButtonY, 70, 70);
+            buttonPanel.setBounds(sizeButtonX, sizeButtonY, 80, 80);
             buttonPanel.setOpaque(false);
-            layeredPane.add(buttonPanel, Integer.valueOf(3));
-            sizeButtonY += 100; 
+            layeredPane.add(buttonPanel, Integer.valueOf(3)); 
+
+            sizeButtonY += 100;
         }
     }
-    private void createGrid(int rows, int cols, int cellSize){
-        gridPanel = new JPanel(new GridLayout(rows, cols)); // va un gridLayout adentro del panel para dividir con una cuadricula
-        gridPanel.setBounds(GRID_X_BASE, GRID_Y_BASE, cols*cellSize, rows*cellSize + 100); //dimensiones teniendo en cuenta el fondo
-        gridPanel.setOpaque(false);
-        layeredPane.add(gridPanel, Integer.valueOf(1));
-        for (int row = 0 ; row < rows ; row++) {
-            for ( int col =0 ; col < cols ; col++){
-                JPanel cell = new JPanel();
-                cell.setOpaque(false);
-                if (col < 8 || col == 9) configureClickOnCell(row, col, cell, cellSize);
-                gridPanel.add(cell);
+
+    private ActionListener createCharacterSelectionAction(String characterType) {
+        return e -> {
+            isShovelActive = false; // Quita la pala si esta activada 
+            selectedCharacter = CharacterFactory.createCharacter(characterType, 0, 0, characterPanel);
+            System.out.println("Personaje seleccionado: " + characterType);
+        };
+    }
+
+    private void createShovelButton() {
+        ActionListener action = createShovelSelectionAction();
+        shovel = GameController.createButtonWithImage("resources/Shovel.png", action, "shovel", 60, 60);
+        shovel.setBounds(300, 20, 80, 80);
+        shovel.setOpaque(false);
+        layeredPane.add(shovel, Integer.valueOf(3));
+    }
+
+    private ActionListener createShovelSelectionAction() {
+        return e -> {
+            isShovelActive = !isShovelActive;
+    
+            if (isShovelActive) {
+                selectedCharacter = null; // quita cualquier personaje seleccionado si se usa la pala 
+                System.out.println("Pala activada.");
+            } else {
+                System.out.println("Pala desactivada.");
             }
-        }
-
+        };
     }
 
-    
-    public void configureClickOnCell(int row, int col, JPanel cell, int cellSize) {
-        cell.addMouseListener(new MouseAdapter() { // se crea el adaptador del mouse 
+    private void configureClickOnCell(int row, int col, JPanel cell) {
+        cell.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) { //para el click del mouse 
-                if (selectedCharacter == null) return;
-    
-                String type = selectedCharacter.getType();
-                int cost = selectedCharacter.getCost();
-    
-                if (!isPlacementValid(type, col)) {
-                    System.out.println("No se puede colocar en esa posición.");
+            public void mouseClicked(MouseEvent e) {
+                //pala
+                if (isShovelActive) {
+                    removePlantFromCell(row, col);
+                    isShovelActive = false; 
                     return;
                 }
+                
+                //personajes 
+                if (selectedCharacter != null) {
+                    String type = selectedCharacter.getType();
+                    int cost = selectedCharacter.getCost();
     
-                if (!hasEnoughResources(type, cost)) {
-                    System.out.println("No tienes suficientes recursos.");
-                    return;
-                }
+                    if (!checkPlacementConditions(type, cost, row, col)) return;
     
-                int x = GRID_X_BASE + col * cellSize;
-                int y = GRID_Y_BASE + row * (cellSize + 20);
-                selectedCharacter.setPosition(x, y);
-    
-                if (characterPanel.addCharacter(selectedCharacter)) {
-                    performCharacterActions(type, cost);
-                    showBoard();
-                    selectedCharacter = null;
+                    placeCharacterOnGrid(selectedCharacter, row, col);
+                    selectedCharacter = null; 
                 }
             }
         });
     }
 
-    private boolean isPlacementValid(String type, int col) {
-        if (type.equals("Plant") && col >= 8) return false;
-        if (type.equals("Zombie") && col != 9) return false;
-        return true;
+    private void removePlantFromCell(int row, int col) {
+        var characters = grid.getCharactersInCell(row, col);
+        if (characters != null) {
+            characters.removeIf(character -> character instanceof Plant);
+            characterPanel.repaint();
+            System.out.println("Planta eliminada en la celda (" + row + ", " + col + ").");
+        }
     }
 
-    private boolean hasEnoughResources(String type, int cost) {
-        if (type.equals("Plant") && sunGenerator.getSunCount() < cost) {
+    private boolean checkPlacementConditions(String type, int cost, int row, int col) {
+        if (!characterPanel.getGrid().isPlacementValid(type, col)) {
+            JOptionPane.showMessageDialog(null, "No se puede colocar en esta posicion");
             return false;
         }
+
+        if (!sunGenerator.hasEnoughSuns(cost)) {
+            JOptionPane.showMessageDialog(null, "No tienes suficientes soles");
+            return false;
+        }
+
         return true;
     }
-    private void performCharacterActions(String type, int cost) {
-        if (type.equals("Plant")) {
-            sunGenerator.subtractSun(cost);
-        }
-        if (type.equals("Zombie")) {
-            ((BasicZombie) selectedCharacter).move(characterPanel);
-        }
-    } 
 
+    private void placeCharacterOnGrid(Character character, int row, int col) {
+        Point position = calculatePosition(row, col);
+        character.setPosition(position.x, position.y);
 
+        if (characterPanel.getGrid().placeCharacter(character, row, col)) {
+            sunGenerator.subtractSun(character.getCost());
+            characterPanel.repaint();
+            characterPanel.showBoard();
 
-   /*
-     * Método para mostrar el estado del tablero en un cuadro de diálogo
-     */
-    private void showBoard() {
-        StringBuilder boardState = new StringBuilder();
-        boardState.append("Estado del Tablero:\n");
-        boardState.append("-".repeat(characterPanel.getBoard()[0].length * 8 + 1)).append("\n"); // Bordes superiores
-    
-        for (int row = 0; row < characterPanel.getBoard().length; row++) {
-            for (int col = 0; col < characterPanel.getBoard()[0].length; col++) {
-                List<Character> cell = characterPanel.getBoard()[row][col];
-                if (cell.isEmpty()) {
-                    boardState.append("| Vacío "); // Celda vacía
-                } else {
-                    StringBuilder cellContent = new StringBuilder("| ");
-                    for (Character character : cell) {
-                        cellContent.append(character.getName().charAt(0)); // Agrega la inicial del personaje
-                    }
-                    boardState.append(String.format("%-6s", cellContent.toString())); // Ajusta el formato
-                }
+            if (character instanceof Plant) {
+                ((Plant) character).startAction(characterPanel.getGrid(), sunGenerator);
+                ((Plant) character).startAction();
+                
             }
-            boardState.append("|\n"); // Cierra la fila
-            boardState.append("-".repeat(characterPanel.getBoard()[0].length * 8 + 1)).append("\n"); // Bordes entre filas
+            if (character instanceof Zombie) {
+                ((Zombie) character).move();
+            }
         }
-    
-        JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    private Point calculatePosition(int row, int col) {
+        int x = (GRID_X_BASE + col * CELL_SIZE);
+        int y = GRID_Y_BASE + row * (CELL_SIZE + 20);
+        return new Point(x, y);
+    }
+
+    public static void main(String[] args) {
+        Map<String, String> characterTypes = Map.of(
+            "Peashooter", "resources/Peashooter.png",
+            "Sunflower", "resources/Sunflower.png",
+            "WallNut", "resources/WallNut.png",
+            "BasicZombie", "resources/BasicZombie.png",
+            "ECIPlant", "resources/ECIPlant.png"
+        );
+        new GridGUI(characterTypes);
+    }
+
+    public static  int getGridYBase() {
+        return GRID_Y_BASE;
+    }
+
+    public static  int getGridXBase() {
+        return GRID_X_BASE;
     }
 }
-    
-

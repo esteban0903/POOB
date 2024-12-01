@@ -1,6 +1,8 @@
 package Dominio;
 import javax.swing.ImageIcon;
 
+import Presentation.CharacterGUI;
+
 public class ConeheadZombie extends Zombie {
     private static final ImageIcon IMAGE = new ImageIcon("resources/Zombie.png");
     private static final  int SPEED = 1; 
@@ -11,8 +13,8 @@ public class ConeheadZombie extends Zombie {
     private static final String NAME = "Conehead";
     private static final int DAMAGE = 10;
     private static final int DAMAGE_TIME = 500;
-    public ConeheadZombie(int x, int y) {
-        super(NAME, HEALTH, x, y, BRAIN_COST, SPEED, ARMOR, DIRECTION, DAMAGE, DAMAGE_TIME, IMAGE);
+    public ConeheadZombie(int x, int y, CharacterGUI characterGUI) {
+        super(NAME, HEALTH, x, y, BRAIN_COST, SPEED, ARMOR, DIRECTION, DAMAGE, DAMAGE_TIME, IMAGE, characterGUI);
     }
 
 }

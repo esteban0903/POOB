@@ -1,117 +1,138 @@
 package Dominio;
 
-import java.awt.Point;
-
 import javax.swing.ImageIcon;
+import javax.swing.Timer;
 
+import Presentation.AudioPlayer;
 import Presentation.CharacterGUI;
-import Presentation.GridGUI;
-public class Zombie extends Character {
-    private CharacterGUI characterGUI;
-    private int speed;
-    private int armor;
-    private String direction;
-    private int brainCost;
-    private int damage;
-    private int damage_Time;
-    private Projectile projectile;
-    private static final String TYPE = "Zombie";
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-    public Zombie(String name, int health, int x, int y, int brainCost, int speed, int armor, String direction, int damage, int damageTime, ImageIcon image, CharacterGUI characterGUI) {
+public class Zombie extends Character {
+    private int speed; // Velocidad en píxeles
+    private int armor;
+    private String direction; // Dirección de movimiento
+    private int damage; // Daño que inflige a las plantas
+    private CharacterGUI characterGUI; // Referencia a la interfaz gráfica
+    private static final String TYPE = "Zombie";
+    private static final int DAMAGE_TIME = 500;
+    private Timer attackTimer; // Timer para manejar el ataque periódico
+    private static final AudioPlayer player = new AudioPlayer("resources/Efects/attackZombie.wav");
+
+    public Zombie(String name, int health, int x, int y, int brainCost, int speed, int armor, String direction, int damage, ImageIcon image, CharacterGUI characterGUI) {
         super(name, health, x, y, brainCost, image, TYPE);
         this.speed = speed;
         this.armor = armor;
         this.direction = direction;
-        this.brainCost = brainCost;
         this.damage = damage;
-        this.damage_Time = damageTime;
         this.characterGUI = characterGUI;
-    }
-    public void attack(Character plant) {
-        System.out.println(getName() + " está atacando a " + plant.getName() + plant.getHealth());
-        plant.takeDamage(10);
+        this.attackTimer = null; // Inicialmente no hay Timer
     }
 
-    private void handleAttack(Character plant, int row, int col, CharacterGUI characterGUI) throws InterruptedException { 
-        attack(plant); 
-        if (plant.getHealth() <= 0) {
-            characterGUI.removeCharacter(plant, row, col); 
-        } else {
-            Thread.sleep(500); // El thread necesita la excepcion InterruptedException :)
+    public void attack(Character plant) {
+        System.out.println(getName() + " bajando vida " + plant.getHealth());
+        plant.takeDamage(damage);
+    }
+
+    private void startAttack(Character plant, int row, int col) {
+        if (attackTimer != null && attackTimer.isRunning()) {
+            return; 
         }
+
+        attackTimer = new Timer(DAMAGE_TIME, new ActionListener() { 
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant)) {
+                    attack(plant);
+                    player.playMusic();
+                    if (!plant.isAlive()) {
+                        System.out.println(plant.getName() + " ha sido eliminado.");
+                        characterGUI.getGrid().removeCharacter(plant, row, col);
+                        characterGUI.repaint();
+                        attackTimer.stop(); // Detener el Timer al eliminar la planta
+                        player.stopMusic();
+                    }
+                } else {
+                    attackTimer.stop(); // Detener el Timer si la planta no está viva o no está en la celda
+                }
+            }
+        });
+        attackTimer.start();
     }
 
     @Override
     public void setPosition(int x, int y) {
         super.setPosition(x, y);
-        if (characterGUI != null) {
-            characterGUI.repaint(); // Redibuja automáticamente
-        }
+        characterGUI.repaint();
     }
 
-    public void move(CharacterGUI characterGUI) {
+    public void move() {
         new Thread(() -> {
             try {
-                while (true) {
-                    Thread.sleep(500); // Velocidad (revisar)
-    
-                    // Posicion donde va el zombie
-                    int currentRow = (getCoordenatesY() - GridGUI.GRID_Y_BASE) / characterGUI.getCellSize();
-                    int currentCol = (getCoordenatesX() - GridGUI.GRID_X_BASE) / characterGUI.getCellSize();
-    
-                    // Posicion a donde se movio el zombie
-                    int[] newPosition = calculateNewPosition();
+                int step = 2; // Movimiento incremental en píxeles
+                while (isAlive()) {
+                    Thread.sleep(50); // Intervalo de actualización (20 FPS)
+
+                    // Calcular nueva posición en píxeles
+                    int[] newPosition = calculateNewPosition(step);
                     int newX = newPosition[0];
                     int newY = newPosition[1];
-    
-                    // Calcula la nueva posición del zombie en el tablero (matriz)
-                    int newRow = (newY - GridGUI.GRID_Y_BASE) / characterGUI.getCellSize();
-                    int newCol = (newX - GridGUI.GRID_X_BASE) / characterGUI.getCellSize();
-    
-                    // Mirar si hay una planta
-                    if (characterGUI.hasPlantInCell(newRow, newCol)) {
-                        Character plant = characterGUI.getPlantInCell(newRow, newCol);
-                        handleAttack(plant, newRow, newCol, characterGUI);
-                        continue; // Vuelve a verificar después del ataque
+
+                    // Determinar la celda lógica actual y futura
+                    int currentRow = characterGUI.getGrid().getRowFromY(getCoordenatesY());
+                    int currentCol = characterGUI.getGrid().getColFromX(getCoordenatesX());
+                    int newRow = characterGUI.getGrid().getRowFromY(newY);
+                    int newCol = characterGUI.getGrid().getColFromX(newX);
+
+                    // Verificar si la nueva posición está dentro del tablero
+                    if (!characterGUI.getGrid().isValidPosition(newRow, newCol)) {
+                        
+                        System.out.println(getName() + " alcanzó el límite del tablero." + newRow + newCol);
+                        break;
                     }
-    
+
+                    // Verificar si hay una planta en la celda futura
+                    if (currentRow == newRow && currentCol == newCol) {
+                        if (characterGUI.getGrid().hasPlantInCell(newRow, newCol)) {
+                            Character plant = characterGUI.getGrid().getPlantInCell(newRow, newCol);
+                            startAttack(plant, newRow, newCol); // Iniciar ataque periódico con Timer
+                            continue;
+                        }
+                    }
+
+                    // Actualizar posición del zombie
                     setPosition(newX, newY);
-    
-                    // Si el zombie se movio de casilla, lo cambia en la matriz
+
+                    // Si cruza el borde de una celda, actualizar la matriz lógica
                     if (newRow != currentRow || newCol != currentCol) {
-                        characterGUI.updatePositionInBoard(this, currentRow, currentCol, newRow, newCol);
+                        characterGUI.getGrid().moveCharacter(this, currentRow, currentCol, newRow, newCol);
                     }
-    
-                    characterGUI.repaint(); 
                 }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }).start();
     }
-    
-       
-    private int[] calculateNewPosition() {
+
+    private int[] calculateNewPosition(int step) {
         int newX = getCoordenatesX();
         int newY = getCoordenatesY();
-    
+
         switch (direction.toLowerCase()) {
             case "left":
-                newX -= speed;
+                newX -= step;
                 break;
             case "right":
-                newX += speed;
+                newX += step;
                 break;
             case "up":
-                newY -= speed;
+                newY -= step;
                 break;
             case "down":
-                newY += speed;
+                newY += step;
                 break;
         }
+
         return new int[]{newX, newY};
     }
-    
 }
-
-

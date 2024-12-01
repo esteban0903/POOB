@@ -27,6 +27,8 @@ public class CharacterSelectionWindow extends Window {
         plantImages.put("Peashooter", "resources/Peashooter.png"); // para probar algunas plantas 
         plantImages.put("Sunflower", "resources/Sunflower.png");
         plantImages.put("Wallnut", "resources/Wallnut.png");
+        plantImages.put("EciPlant", "resources/EciPlant.png");
+
     
         selectedPlantsMap = new HashMap<>();  
 

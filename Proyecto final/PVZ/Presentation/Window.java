@@ -6,22 +6,28 @@ public abstract class Window extends JFrame {
         setTitle(title);
         JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundPath));
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight()); 
-        setContentPane(backgroundLabel);  // Poner el fondo como fondo principal
+        setContentPane(backgroundLabel); // Poner el fondo como fondo principal
         configureInitialSettings();
     }
 
-    public void configureInitialSettings(){
+    public void configureInitialSettings() {
         setSize(1346, 765);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null);  
         setLayout(null);
 
+        setResizable(false); // Evitar que se pueda cambiar el tamaño de la ventana
+
+        // Deshabilitar el evento de maximización
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                setSize(1346, 765); // Mantener el tamaño original
+            }
+        });
     }
 
     public void showWindow() {
         setVisible(true);
     }
-    
-
 }
