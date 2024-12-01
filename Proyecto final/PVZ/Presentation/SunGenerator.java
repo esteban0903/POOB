@@ -46,6 +46,7 @@ public class SunGenerator {
         Sun sun = createSun(cell, sunValue);
 
         cell.add(sun.getPanel());
+        sun.makeSound();
         cell.revalidate();
         cell.repaint();
     }

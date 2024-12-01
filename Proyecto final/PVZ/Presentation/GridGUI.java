@@ -197,7 +197,7 @@ import Dominio.Plant;
         if (characterPanel.getGrid().placeCharacter(character, row, col)) {
             sunGenerator.subtractSun(character.getCost());
             characterPanel.repaint();
-            characterPanel.showBoard();
+            
 
             if (character instanceof Plant) {
                 ((Plant) character).startAction(characterPanel.getGrid(), sunGenerator);
