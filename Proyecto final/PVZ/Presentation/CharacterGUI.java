@@ -15,7 +15,7 @@ public class CharacterGUI extends JPanel {
     private int cellSize;
     public static final int GRID_X_BASE = 220;
     public static final int GRID_Y_BASE = 140;
-    private List<Projectile> projectiles; // Lista para almacenar los proyectiles activos
+    private List<Projectile> projectiles; 
 
     public CharacterGUI(Grid grid, int cellSize) {
         this.grid = grid; 
@@ -33,20 +33,25 @@ public class CharacterGUI extends JPanel {
     }
 
     public void addProjectile(Projectile projectile) {
-        projectiles.add(projectile); // Agregar un proyectil a la lista
-        repaint(); // Asegurar que se dibuje el nuevo proyectil
+        projectiles.add(projectile); 
+        repaint(); 
     }
 
     public void removeProjectile(Projectile projectile) {
-        projectiles.remove(projectile); // Eliminar proyectil de la lista
-        repaint(); // Actualizar la pantalla
+        projectiles.remove(projectile); 
+        repaint();
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
+        paintPlants(g);
+        paintZombies(g);
+        paintProjectiles(g);
+    }
 
-        // Dibujar todos los personajes del tablero en sus posiciones lógicas
+    public void paintPlants(Graphics g){
+        // Dibuja todos las plantas 
         for (int row = 0; row < grid.getRows(); row++) {
             for (int col = 0; col < grid.getColumns(); col++) {
                 List<Character> characters = grid.getCharactersInCell(row, col);
@@ -61,21 +66,22 @@ public class CharacterGUI extends JPanel {
                 }
             }
         }
-
-        // Dibujar zombies en sus coordenadas actuales
+    }
+    public void paintZombies(Graphics g){
+        // Dibujar los zombies ( va aparte pq estos usan otro metodo de pintar ya que se mueven )
         for (Character character : grid.getAllCharacters()) {
             if (character instanceof Zombie) {
                 paintCharacter(g, character);
             }
         }
+    }
 
-        // Dibujar proyectiles en sus coordenadas actuales
+    private void paintProjectiles(Graphics g) {
         for (Projectile projectile : projectiles) {
             ImageIcon icon = projectile.getImage();
             g.drawImage(icon.getImage(), projectile.getX(), projectile.getY(), cellSize / 2, cellSize / 2, null);
         }
     }
-
     public Grid getGrid() {
         return grid;
     }
@@ -83,7 +89,9 @@ public class CharacterGUI extends JPanel {
     public int getCellSize() {
         return cellSize;
     }
-    // este metodo es generado por gpt, solo es para realizar pruebas 
+
+
+    // ---------------METODO GENERADO POR GPT PARA PRUEBAS ----------------------- 
     public void showBoard() {
         StringBuilder boardState = new StringBuilder();
         boardState.append("Estado del Tablero:\n");

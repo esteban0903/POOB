@@ -1,17 +1,17 @@
-    package Presentation;
+package Presentation;
 
-    import Dominio.Character;
-    import Dominio.CharacterFactory;
-    import Dominio.Grid;
+import Dominio.Character;
+import Dominio.CharacterFactory;
+import Dominio.Grid;
 import Dominio.Zombie;
 import Dominio.Plant;
 
-    import javax.swing.*;
-    import java.awt.*;
-    import java.awt.event.ActionListener;
-    import java.awt.event.MouseAdapter;
-    import java.awt.event.MouseEvent;
-    import java.util.Map;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Map;
 
  public class GridGUI extends Window {
     private JPanel gridPanel;
@@ -26,18 +26,26 @@ import Dominio.Plant;
     private Grid grid;
     private int rows = 5;
     private int cols = 10;
+    private int sunCount;
+    private JButton pauseButton = GameController.createButton("Pausa", 1100, 30, 200, 40, Color.black, Color.white);
+    private PauseMenu pauseMenu; 
     private static final int CELL_SIZE = 80;
     private static final int GRID_X_BASE = 220;
     private static final int GRID_Y_BASE = 140;
     private static final AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
+    private boolean isPaused = GameConfig.getIsPaused();
+    private Timer sunTimer;
+    private Timer zombieTimer;
 
     public GridGUI(Map<String, String> characterTypes) {
         super("Plants vs Zombies", "resources/gridGame.jpg");
         this.grid = new Grid(rows, cols, CELL_SIZE);
+        this.sunCount = GameConfig.getInitialSuns();
 
         createPanelBase(); 
         createGrid(rows, cols);
         createCounterSuns();
+        createPauseButton();
         createSunGridGenerator();
         createPanelCharacters();
         createShovelButton();
@@ -56,6 +64,27 @@ import Dominio.Plant;
         layeredPane.repaint();
     }
 
+    private void createPauseButton(){
+        layeredPane.add(pauseButton, Integer.valueOf(4));
+        configurePauseButton(pauseButton);
+        createPauseMenu();
+    }
+
+    private void createPauseMenu() {
+        pauseMenu = new PauseMenu(this); 
+        getLayeredPane().add(pauseMenu, Integer.valueOf(1)); 
+    }
+
+    
+
+    private void configurePauseButton(JButton button) {
+        button.addActionListener(e -> {
+            pauseGame(); 
+            GameConfig.setIsPaused();
+            pauseMenu.setVisible(true); //muestra el menu de pausa 
+        });
+    }
+
     private void createPanelCharacters() {
         characterPanel = new CharacterGUI(grid, CELL_SIZE);
         characterPanel.setBounds(0, 0, getWidth(), getHeight());
@@ -63,20 +92,22 @@ import Dominio.Plant;
     }
 
     private void createCounterSuns() {
-        sunCounterLabel = new JLabel("Suns: 0");
+        sunCounterLabel = new JLabel("Suns: " + sunCount);
         sunCounterLabel.setBounds(20, 20, 100, 30);
         sunCounterLabel.setForeground(Color.YELLOW);
         layeredPane.add(sunCounterLabel, Integer.valueOf(4)); 
     }
 
     private void createSunGridGenerator() {
-        sunGenerator = new SunGenerator(grid, gridPanel, sunCounterLabel);
-        new Timer(2000, e -> sunGenerator.addRandomSun(50)).start();
+        sunGenerator = new SunGenerator(grid, gridPanel, sunCounterLabel, sunCount);
+        sunTimer = new Timer(2000, e -> { if (!isPaused) sunGenerator.addRandomSun(50);});
+        sunTimer.start();
     }
 
     private void createZombieGridGenerator() {
         zombieGenerator = new ZombieGenerator(grid, characterPanel);
-        new Timer(5000, e -> zombieGenerator.addRandomZombie()).start();
+        zombieTimer = new Timer(5000, e -> {if (!isPaused) zombieGenerator.addRandomZombie();});
+        zombieTimer.start();
     }
 
     private void createGrid(int rows, int cols) {
@@ -214,6 +245,23 @@ import Dominio.Plant;
         int x = (GRID_X_BASE + col * CELL_SIZE);
         int y = GRID_Y_BASE + row * (CELL_SIZE + 20);
         return new Point(x, y);
+    }
+
+    public void pauseGame() {
+        isPaused = true;
+        sunTimer.stop();
+        zombieTimer.stop();
+        player.stopMusic();
+        GameConfig.setIsPaused();
+        
+    }   
+
+    public void resumeGame() {
+        isPaused = false;
+        sunTimer.start();
+        zombieTimer.start();
+        player.playMusic();
+        GameConfig.setIsNotPaused();
     }
 
     public static void main(String[] args) {

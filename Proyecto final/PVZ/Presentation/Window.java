@@ -2,6 +2,7 @@ package Presentation;
 import javax.swing.*;
 
 public abstract class Window extends JFrame {
+    AudioPlayer player; 
     public Window(String title, String backgroundPath) {
         setTitle(title);
         JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundPath));
@@ -29,5 +30,9 @@ public abstract class Window extends JFrame {
 
     public void showWindow() {
         setVisible(true);
+    }
+
+    public void stopMusic() {
+        player.stopMusic();
     }
 }

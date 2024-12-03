@@ -13,8 +13,8 @@ public class CharacterSelectionWindow extends Window {
     private final Map<String, String> plantImages;  
     private final Map<String, String> selectedPlantsMap;  
     private Color green = new Color(34, 139, 34); //color verde de boton
-    private JButton startGameButton = GameController.createButton("Iniciar Juego", 550, 640, 200, 40, green, Color.WHITE);
-
+    private JButton startGameButton = GameController.createButton("Iniciar Juego", 250, 640, 200, 40, green, Color.WHITE);
+    private JButton returnButton = GameController.createButton("Volver", 850, 640, 200, 40, green, Color.WHITE);
     public static void main(String[] args) {
         new CharacterSelectionWindow();
     }
@@ -37,7 +37,9 @@ public class CharacterSelectionWindow extends Window {
         addAvailablePlants();
 
         add(startGameButton);
+        add(returnButton);
         configureStartGameButton();
+        configureReturnButton();
         player.playMusic();
         showWindow();
     }
@@ -142,6 +144,15 @@ public class CharacterSelectionWindow extends Window {
             GridGUI gridGUI = new GridGUI(selectedPlantsMap);  
             gridGUI.setVisible(true);
             player.stopMusic();
+            dispose();
+        });
+    }
+
+    public void configureReturnButton() {
+        returnButton.addActionListener(e -> {
+            GameModeWindow gameModeWindow  = new GameModeWindow ();
+            player.stopMusic();
+            gameModeWindow .setVisible(true);
             dispose();
         });
     }

@@ -1,33 +1,97 @@
 package Presentation;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
+
 import java.awt.Color;
 
 public class DifficultyWindow extends Window {
-
-    private Color orange = new Color(128, 0, 128); //color naranja  de boton
+    
+    private Color orange = new Color(128, 0, 128); // Color naranja para botones
     private Color white = Color.WHITE;
-    AudioPlayer player = new AudioPlayer("resources/musicDifficultyWindow.wav");
-    //los valores se asignan manualmente, x ,y ...
-    private JButton easyButton = GameController.createButton("Facil", 570, 220, 200, 40, orange , white);
-    private JButton mediumButton = GameController.createButton("Medio", 570, 280, 200, 40, orange , white);
-    private JButton hardButton = GameController.createButton("Dificil", 570, 340, 200, 40, orange , white);
-    private JButton backButton = GameController.createButton("Volver", 570, 400, 200, 40, orange , white);
+    private AudioPlayer player = new AudioPlayer("resources/musicDifficultyWindow.wav");
 
-
+    // Botones
+    private JButton sunConfigButton = GameController.createButton("Configurar Soles", 570, 220, 200, 40, orange, white);
+    private JButton modeButton = GameController.createButton("Seleccionar Modo", 570, 280, 200, 40, orange, white);
+    private JButton timeConfigButton = GameController.createButton("Configurar Tiempo", 570, 340, 200, 40, orange, white);
+    private JButton backButton = GameController.createButton("Volver", 570, 400, 200, 40, orange, white);
     public DifficultyWindow() {
-        super("Dificultad", "resources/difficultyWindow.jpg");
+        super("Configuración del Juego", "resources/difficultyWindow.jpg");
 
-        add(easyButton);
-        add(mediumButton);
-        add(hardButton);
+        add(sunConfigButton);
+        add(modeButton);
+        add(timeConfigButton);
         add(backButton);
-        setVisible(true);
-        configureReturnButton(backButton);
-        player.playMusic();
 
+        configureSunConfigButton(sunConfigButton);
+        configureModeButton(modeButton);
+        configureTimeConfigButton(timeConfigButton);
+        configureReturnButton(backButton);
+
+        
+        player.playMusic();
+        setVisible(true);
     }
-    public void configureReturnButton(JButton returnButton) {
+
+
+
+
+    private void configureSunConfigButton(JButton button) {
+        button.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog(this, "Ingrese la cantidad inicial de soles:", "Configuración de Soles", JOptionPane.QUESTION_MESSAGE);
+            try {
+                if (input != null) {
+                    int initialSuns = Integer.parseInt(input);
+                    GameConfig.getInstance().setInitialSuns(initialSuns);
+                    JOptionPane.showMessageDialog(this, "Soles iniciales configurados a: " + initialSuns, "Configuración Guardada", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    private void configureModeButton(JButton button) {
+        button.addActionListener(e -> {
+            String[] options = {"Modo 1", "Modo 2"};
+            int choice = JOptionPane.showOptionDialog(
+                this,
+                "Seleccione un modo de máquina:",
+                "Modo de Máquina",
+                JOptionPane.DEFAULT_OPTION,
+                JOptionPane.QUESTION_MESSAGE,
+                null,
+                options,
+                options[0]
+            );
+            if (choice != -1) {
+                String selectedMode = options[choice];
+                GameConfig.getInstance().setGameMode(selectedMode);
+                JOptionPane.showMessageDialog(this, "Modo seleccionado: " + selectedMode, "Configuración Guardada", JOptionPane.INFORMATION_MESSAGE);
+            }
+        });
+    }
+
+    private void configureTimeConfigButton(JButton button) {
+        button.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog(this, "Ingrese el tiempo de partida en minutos:", "Configuración de Tiempo", JOptionPane.QUESTION_MESSAGE);
+            try {
+                if (input != null) {
+                    int gameTime = Integer.parseInt(input);
+                    if (gameTime <= 0) {
+                        throw new NumberFormatException();
+                    }
+                    GameConfig.getInstance().setGameDuration(gameTime);
+                    JOptionPane.showMessageDialog(this, "Tiempo de partida configurado a: " + gameTime + " minutos", "Configuración Guardada", JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    private void configureReturnButton(JButton returnButton) {
         returnButton.addActionListener(e -> {
             MenuWindow menuWindow = new MenuWindow();
             player.stopMusic();

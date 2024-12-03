@@ -3,6 +3,7 @@ package Dominio;
 
 import javax.swing.ImageIcon;
 
+import Presentation.GameConfig;
 import Presentation.SunGenerator;
 
 public class Sunflower extends Plant {
@@ -20,6 +21,10 @@ public class Sunflower extends Plant {
         new Thread(() -> {
             try {
                 while (producing) {
+                    if (GameConfig.getIsPaused()) {
+                        Thread.sleep(50); // Esperar mientras está en pausa
+                        continue;
+                    }
                     Thread.sleep(sunProductionTime);
                     
                     int row = grid.getRowFromY(getCoordenatesY());

@@ -11,11 +11,11 @@ public class SunGenerator {
     private Grid grid; // Referencia al Grid para validaciones
     private int sunCount;
 
-    public SunGenerator(Grid grid, JPanel gridPanel, JLabel sunCounterLabel) {
+    public SunGenerator(Grid grid, JPanel gridPanel, JLabel sunCounterLabel, int sunCount) {
         this.grid = grid;
         this.gridPanel = gridPanel;
         this.sunCounterLabel = sunCounterLabel;
-        this.sunCount = 0;
+        this.sunCount = sunCount;
     }
 
     public void addRandomSun(int sunValue) {

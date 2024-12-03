@@ -11,11 +11,12 @@ public abstract class Plant extends Character{
         super(name, health, x, y, sunCost, image, TYPE);
     }
 
-    public void startAction(Grid grid, SunGenerator sunGenerator) { // para las plantas que generan soles 
+    public void startAction(Grid grid, SunGenerator sunGenerator) { 
         
     }
 
-    public void startAction() { // para cualquier otra planta 
-    }
+    public void startAction() { 
+
+    }   
 }
 

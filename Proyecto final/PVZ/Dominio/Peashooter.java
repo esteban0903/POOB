@@ -2,6 +2,7 @@ package Dominio;
 
 import javax.swing.ImageIcon;
 import Presentation.CharacterGUI;
+import Presentation.GameConfig;
 
 public class Peashooter extends Plant {
     private static final int DAMAGE = 20;
@@ -17,6 +18,10 @@ public class Peashooter extends Plant {
         new Thread(() -> {
             try {
                 while (isAlive()) {
+                    if (GameConfig.getIsPaused()) {
+                        Thread.sleep(50); // Esperar mientras está en pausa
+                        continue;
+                    }
                     Thread.sleep(SHOOT_INTERVAL);
                     
                     int currentRow = characterGUI.getGrid().getRowFromY(getCoordenatesY());
