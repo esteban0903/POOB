@@ -84,7 +84,6 @@ import java.util.Map;
             pauseGame(); 
             GameConfig.setIsPaused();
             pauseMenu.setVisible(true); //muestra el menu de pausa 
-            dispose();
         });
     }
 

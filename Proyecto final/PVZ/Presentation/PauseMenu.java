@@ -54,13 +54,13 @@ public class PauseMenu extends JPanel {
         });
 
     }
-
+/* 
     private void configuresafeButton(){
         safeButton.addActionListener(e -> {
             parentWindow.saveGame();
         });
     }
-
+*/
     private void addTextPauseLabel(){
         pauseLabel.setForeground(Color.WHITE);
         pauseLabel.setFont(new Font("Arial", Font.BOLD, 24));
