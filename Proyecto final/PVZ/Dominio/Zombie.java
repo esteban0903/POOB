@@ -10,7 +10,7 @@ import Presentation.GameConfig;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class Zombie extends Character {
+public abstract class Zombie extends Character {
     private int speed; 
     private int armor;
     private String direction; 
@@ -44,7 +44,7 @@ public class Zombie extends Character {
         attackTimer = new Timer(DAMAGE_TIME, new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant)) {
+                if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant) && !GameConfig.getIsPaused()) {
                     attack(plant);
                     player.playMusic();
                     if (!plant.isAlive()) {
@@ -56,6 +56,7 @@ public class Zombie extends Character {
                     }
                 } else {
                     attackTimer.stop(); // parar el timer si la planta se murio 
+                    player.stopMusic();
                 }
             }
         });

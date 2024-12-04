@@ -11,6 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.FileOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Map;
 
  public class GridGUI extends Window {
@@ -82,6 +84,7 @@ import java.util.Map;
             pauseGame(); 
             GameConfig.setIsPaused();
             pauseMenu.setVisible(true); //muestra el menu de pausa 
+            dispose();
         });
     }
 
@@ -282,4 +285,25 @@ import java.util.Map;
     public static  int getGridXBase() {
         return GRID_X_BASE;
     }
+/* 
+    public void saveGame() {
+    try {
+        // Crear un objeto para almacenar el estado del juego
+        GameState gameState = new GameState();
+        gameState.setSunCount(sunCount);
+        gameState.setGridState(grid.getState());
+        gameState.setTimerState(GameConfig.getGameDuration());
+        gameState.setCharacters(characterPanel.getGrid().getAllCharacters());
+
+        // Guardar el estado en un archivo
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savedGame.dat"))) {
+            out.writeObject(gameState);
+        }
+        JOptionPane.showMessageDialog(this, "¡Partida guardada con éxito!", "Guardar Partida", JOptionPane.INFORMATION_MESSAGE);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Error al guardar la partida.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    */
 }
