@@ -45,7 +45,6 @@ public class GameController {
         Image resizeImage = icon.getImage().getScaledInstance (width, height, Image.SCALE_SMOOTH);
         ImageIcon resizeIcon = new ImageIcon (resizeImage);
     
-        // Crear el botón con la nueva imagen redimensionada
         JButton boton = new JButton(resizeIcon);
         boton.setHorizontalTextPosition(SwingConstants.CENTER);
         boton.setVerticalTextPosition(SwingConstants.BOTTOM);
@@ -56,9 +55,8 @@ public class GameController {
         panel.add(boton);
         panel.setVisible(true);
     
-        // Ajustar el tamaño del panel al tamaño de la imagen más un margen
-        int panelWidth = width + 27 ;  // Margen adicional (por ejemplo, 10 píxeles)
-        int panelHeight = height+ 27; // Margen adicional (por ejemplo, 10 píxeles)
+        int panelWidth = width + 27 ;  
+        int panelHeight = height+ 27; 
         panel.setPreferredSize( new Dimension(panelWidth, panelHeight));
         boton.setPreferredSize( new Dimension(panelWidth, panelHeight));
     

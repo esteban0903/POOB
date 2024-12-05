@@ -57,7 +57,7 @@ public class CharacterGUI extends JPanel {
                 List<Character> characters = grid.getCharactersInCell(row, col);
 
                 for (Character character : characters) {
-                    if (!(character instanceof Zombie)) {
+                    if (!(character.isZombie())) {
                         ImageIcon icon = character.getImage();
                         int x = GRID_X_BASE + col * cellSize;
                         int y = GRID_Y_BASE + row * (cellSize + 20);
@@ -70,7 +70,7 @@ public class CharacterGUI extends JPanel {
     public void paintZombies(Graphics g){
         // Dibujar los zombies ( va aparte pq estos usan otro metodo de pintar ya que se mueven )
         for (Character character : grid.getAllCharacters()) {
-            if (character instanceof Zombie) {
+            if (character.isZombie()) {
                 paintCharacter(g, character);
             }
         }
@@ -88,6 +88,11 @@ public class CharacterGUI extends JPanel {
 
     public int getCellSize() {
         return cellSize;
+    }
+
+    public void resetGUI() {
+        projectiles.clear(); 
+        repaint();           
     }
 
 

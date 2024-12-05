@@ -19,7 +19,7 @@ public class Peashooter extends Plant {
             try {
                 while (isAlive()) {
                     if (GameConfig.getIsPaused()) {
-                        Thread.sleep(50); // Esperar mientras está en pausa
+                        Thread.sleep(SHOOT_INTERVAL); // revisar 
                         continue;
                     }
                     Thread.sleep(SHOOT_INTERVAL);
@@ -35,5 +35,8 @@ public class Peashooter extends Plant {
                 e.printStackTrace(); //gpt dijo que era bueno poner eso cuando bote error el thread
             }
         }).start();
+    }
+    public void stop(){
+        
     }
 }

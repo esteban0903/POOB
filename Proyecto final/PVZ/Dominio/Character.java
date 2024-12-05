@@ -88,6 +88,11 @@ public abstract class Character {
         this.health = health;
     }
 
+    public boolean isZombie(){
+        return false;
+    }
+    
+    public abstract void stop();
 
     
 }

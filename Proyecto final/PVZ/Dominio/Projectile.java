@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 
 import Presentation.AudioPlayer;
 import Presentation.CharacterGUI;
+import Presentation.GameConfig;
 
 public class Projectile {
     private int damage;
@@ -28,8 +29,13 @@ public class Projectile {
     public void startMoving() {
         new Thread(() -> {
             try {
+                
                 int distanceTraveled = 0;
                 while (distanceTraveled < range) {
+                    if (GameConfig.getIsPaused()) {
+                        Thread.sleep(50); 
+                        continue;
+                    }
                     Thread.sleep(50); 
                     x += speed; 
                     distanceTraveled += speed;
@@ -86,5 +92,9 @@ public class Projectile {
 
     public ImageIcon getImage() {
         return IMAGE;
+    }
+
+    public void stop(){
+        
     }
 }

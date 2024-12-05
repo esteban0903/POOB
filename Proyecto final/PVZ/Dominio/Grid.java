@@ -26,8 +26,10 @@ public class Grid {
 
     public boolean placeCharacter(Character character, int row, int col) {
         if (isValidPosition(row, col)) {
-            grid[row][col].add(character);
-            return true;
+            if( grid[row][col].size()<1){
+                grid[row][col].add(character);
+                return true;
+            }
         }
         return false;
     }
@@ -67,17 +69,16 @@ public class Grid {
     }
 
     public int getCellSize() {
-        return cellSize; // Devolver el tamaño de la celda
+        return cellSize; 
     }
 
     public int getRowFromY(int y) {
         int row = (y - GridGUI.getGridYBase()) / cellSize;
     
-        // Ajustar el valor de fila si está fuera de rango
         if (row < 0) {
-            row = 0; // Si es menor que 0, lo ajustamos a la primera fila
+            row = 0; 
         } else if (row >= rows) {
-            row = rows - 1; // Si excede el número de filas, lo ajustamos a la última fila
+            row = rows - 1;
         }
     
         return row;
@@ -92,7 +93,7 @@ public class Grid {
         if (characters == null) return false;
     
         for (Character character : characters) {
-            if (character instanceof Plant) {
+            if (!character.isZombie()) {
                 return true;
             }
         }
@@ -103,7 +104,7 @@ public class Grid {
         List<Character> characters = getCharactersInCell(row, col);
         if (characters != null) {
             for (Character character : characters) {
-                if (character instanceof Plant) {
+                if (!character.isZombie()) {
                     return character;
                 }
             }
@@ -115,7 +116,7 @@ public class Grid {
         List<Character> allCharacters = new ArrayList<>();
         for (int row = 0; row < rows; row++) {
             for (int col = 0; col < cols; col++) {
-                allCharacters.addAll(grid[row][col]); // Agregar todos los personajes de la celda
+                allCharacters.addAll(grid[row][col]); 
             }
         }
         return allCharacters;
@@ -138,7 +139,7 @@ public class Grid {
         List<Character> characters = getCharactersInCell(row, col);
         if (characters != null) {
             for (Character character : characters) {
-                if (character instanceof Zombie) return true;
+                if (character.isZombie()) return true;
             }
         }
         return false;
@@ -148,9 +149,30 @@ public class Grid {
         List<Character> characters = getCharactersInCell(row, col);
         if (characters != null) {
             for (Character character : characters) {
-                if (character instanceof Zombie) return character;
+                if (character.isZombie()) return character;
             }
         }
         return null;
+    }
+
+    public void stop() {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                for (Character character : grid[row][col]) {
+                    if (character.isZombie()) {
+                        ((Zombie) character).stop();
+                    }
+                }
+            }
+        }
+    }
+    
+
+    public void reset() {
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                grid[row][col].clear();
+            }
+        }
     }
 }

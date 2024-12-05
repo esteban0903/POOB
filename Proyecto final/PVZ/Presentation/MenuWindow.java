@@ -11,7 +11,7 @@ public class MenuWindow extends Window {
     private Color purple = new Color(0, 128, 128);
     private JButton playButton = GameController.createButton("Jugar", 570, 260, 200, 40, purple, Color.WHITE);
     private JButton loadButton = GameController.createButton("Cargar Partida", 570, 320, 200, 40, purple, Color.WHITE);
-    private JButton difficultyButton = GameController.createButton("Dificultad", 570, 380, 200, 40, purple, Color.WHITE);
+    private JButton difficultyButton = GameController.createButton("Configuracion", 570, 380, 200, 40, purple, Color.WHITE);
     private JButton scores = GameController.createButton("Puntajes", 570, 440, 200, 40, purple, Color.WHITE);
     private JButton exitButton = GameController.createButton("Salir", 570, 500, 200, 40, purple, Color.WHITE);
 

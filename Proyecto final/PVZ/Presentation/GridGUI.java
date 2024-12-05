@@ -11,9 +11,8 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.FileOutputStream;
-import java.io.ObjectOutputStream;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
  public class GridGUI extends Window {
     private JPanel gridPanel;
@@ -34,27 +33,27 @@ import java.util.Map;
     private static final int CELL_SIZE = 80;
     private static final int GRID_X_BASE = 220;
     private static final int GRID_Y_BASE = 140;
-    private static final AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
-    private boolean isPaused = GameConfig.getIsPaused();
+    private AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
+    private boolean isPaused;
     private Timer sunTimer;
     private Timer zombieTimer;
+    private Timer gameTimer;
+    private long gameTimeDuration;
+
 
     public GridGUI(Map<String, String> characterTypes) {
         super("Plants vs Zombies", "resources/gridGame.jpg");
         this.grid = new Grid(rows, cols, CELL_SIZE);
         this.sunCount = GameConfig.getInitialSuns();
-
+        this.isPaused = false;
         createPanelBase(); 
         createGrid(rows, cols);
         createCounterSuns();
-        createPauseButton();
-        createSunGridGenerator();
-        createPanelCharacters();
-        createShovelButton();
-        createCharacterButtons(characterTypes);
-        createZombieGridGenerator();
-        player.playMusic();
+        createButtons(characterTypes);
         showWindow();
+        startGame();
+
+        verifyGameStatus();
     }
 
     private void createPanelBase() {
@@ -64,6 +63,13 @@ import java.util.Map;
         getContentPane().add(layeredPane);
         layeredPane.revalidate();
         layeredPane.repaint();
+    }
+
+    private void createButtons(Map<String, String> characterTypes){
+        createPanelCharacters();
+        createShovelButton();
+        createPauseButton();
+        createCharacterButtons(characterTypes);
     }
 
     private void createPauseButton(){
@@ -77,13 +83,62 @@ import java.util.Map;
         getLayeredPane().add(pauseMenu, Integer.valueOf(1)); 
     }
 
-    
 
+    private void startGame(){
+        createSunGridGenerator();
+        createZombieGridGenerator();
+        player.playMusic();
+        gameTimer = new Timer(500, e -> verifyGameStatus());
+        gameTimer.start();
+        gameTimeDuration =  System.currentTimeMillis();
+    }
+
+    private boolean checkTime() {
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - gameTimeDuration;  
+        long elapsedMinutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime);
+        System.out.println(elapsedMinutes); 
+        System.out.println(GameConfig.getGameDuration()); 
+
+        if (elapsedMinutes >= GameConfig.getGameDuration()) {
+            gameTimer.stop();
+            return true;
+        }
+        return false;
+    } 
+
+
+    private void verifyGameStatus() {
+        String gameOverMessage = "";  
+
+        if (GameConfig.getIsGameOver()) {
+            System.out.println("entra1");
+            gameOverMessage = "Game Over"; 
+        } else if (checkTime()) {
+            System.out.println("entra");
+            gameOverMessage = "Ganaste";  
+        } else {
+            return; // retornar si no hace nada 
+        }
+    
+        pauseGame();
+        gameTimer.stop();
+        GameConfig.setIsPaused();
+
+        GameOverMenu gameOverMenu = new GameOverMenu(this, gameOverMessage);
+        layeredPane.add(gameOverMenu, Integer.valueOf(10));
+        layeredPane.revalidate();
+        layeredPane.repaint();
+        gameOverMenu.setVisible(true);           
+        
+    }
+
+    
     private void configurePauseButton(JButton button) {
         button.addActionListener(e -> {
             pauseGame(); 
             GameConfig.setIsPaused();
-            pauseMenu.setVisible(true); //muestra el menu de pausa 
+            pauseMenu.setVisible(true); 
         });
     }
 
@@ -102,13 +157,13 @@ import java.util.Map;
 
     private void createSunGridGenerator() {
         sunGenerator = new SunGenerator(grid, gridPanel, sunCounterLabel, sunCount);
-        sunTimer = new Timer(2000, e -> { if (!isPaused) sunGenerator.addRandomSun(50);});
+        sunTimer = new Timer(2000, e -> { if (!isPaused) {sunGenerator.addRandomSun(50);}} );
         sunTimer.start();
     }
 
     private void createZombieGridGenerator() {
         zombieGenerator = new ZombieGenerator(grid, characterPanel);
-        zombieTimer = new Timer(5000, e -> {if (!isPaused) zombieGenerator.addRandomZombie();});
+        zombieTimer = new Timer(10000, e -> {if (!isPaused) zombieGenerator.addRandomZombie();});
         zombieTimer.start();
     }
 
@@ -167,7 +222,7 @@ import java.util.Map;
             isShovelActive = !isShovelActive;
     
             if (isShovelActive) {
-                selectedCharacter = null; // quita cualquier personaje seleccionado si se usa la pala 
+                selectedCharacter = null; 
                 System.out.println("Pala activada.");
             } else {
                 System.out.println("Pala desactivada.");
@@ -203,14 +258,14 @@ import java.util.Map;
     private void removePlantFromCell(int row, int col) {
         var characters = grid.getCharactersInCell(row, col);
         if (characters != null) {
-            characters.removeIf(character -> character instanceof Plant);
+            characters.removeIf(character -> !character.isZombie());
             characterPanel.repaint();
             System.out.println("Planta eliminada en la celda (" + row + ", " + col + ").");
         }
     }
 
     private boolean checkPlacementConditions(String type, int cost, int row, int col) {
-        if (!characterPanel.getGrid().isPlacementValid(type, col)) {
+        if (!grid.isPlacementValid(type, col)) {
             JOptionPane.showMessageDialog(null, "No se puede colocar en esta posicion");
             return false;
         }
@@ -227,17 +282,17 @@ import java.util.Map;
         Point position = calculatePosition(row, col);
         character.setPosition(position.x, position.y);
 
-        if (characterPanel.getGrid().placeCharacter(character, row, col)) {
+        if (grid.placeCharacter(character, row, col)) {
             sunGenerator.subtractSun(character.getCost());
             characterPanel.repaint();
             
-
-            if (character instanceof Plant) {
-                ((Plant) character).startAction(characterPanel.getGrid(), sunGenerator);
+            //showBoard();
+            if (!character.isZombie()) {
+                ((Plant) character).startAction(grid, sunGenerator);
                 ((Plant) character).startAction();
                 
             }
-            if (character instanceof Zombie) {
+            if (character.isZombie()) {
                 ((Zombie) character).move();
             }
         }
@@ -284,25 +339,68 @@ import java.util.Map;
     public static  int getGridXBase() {
         return GRID_X_BASE;
     }
+
+    public void exitGame() {
+        player.stopMusic();
+        grid.stop();
+        grid.reset();
+        dispose();
+    }
+
+    
+// IDEAS DE GPT, aprender a guardar archivos, todavia no se 
 /* 
     public void saveGame() {
-    try {
-        // Crear un objeto para almacenar el estado del juego
-        GameState gameState = new GameState();
-        gameState.setSunCount(sunCount);
-        gameState.setGridState(grid.getState());
-        gameState.setTimerState(GameConfig.getGameDuration());
-        gameState.setCharacters(characterPanel.getGrid().getAllCharacters());
-
-        // Guardar el estado en un archivo
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("savedGame.dat"))) {
-            out.writeObject(gameState);
+        try {
+            // Crear un archivo para guardar el estado de la partida
+            FileOutputStream fileOut = new FileOutputStream("saved_game.ser");
+            ObjectOutputStream out = new ObjectOutputStream(fileOut);
+            
+            // Supongamos que tienes un GameState que representa el estado del juego
+           
+            
+            // Guardamos el estado del juego en el archivo
+     
+            
+            // Cerramos los streams
+            out.close();
+            fileOut.close();
+            
+            System.out.println("Juego guardado con éxito.");
+        } catch (IOException e) {
+            System.out.println("Error al guardar el juego: " + e.getMessage());
         }
-        JOptionPane.showMessageDialog(this, "¡Partida guardada con éxito!", "Guardar Partida", JOptionPane.INFORMATION_MESSAGE);
-    } catch (Exception e) {
-        e.printStackTrace();
-        JOptionPane.showMessageDialog(this, "Error al guardar la partida.", "Error", JOptionPane.ERROR_MESSAGE);
+    } 
+   */ 
+
+
+
+// gpt hizo esto, borrar para la entrega, solo es para probar 
+/* 
+    public void showBoard() {
+        StringBuilder boardState = new StringBuilder();
+        boardState.append("Estado del Tablero:\n");
+        boardState.append("-".repeat(grid.getColumns() * 8 + 1)).append("\n"); // Bordes superiores
+        
+        for (int row = 0; row < grid.getRows(); row++) {
+            for (int col = 0; col < grid.getColumns(); col++) {
+                List<Character> cellCharacters = grid.getCharactersInCell(row, col);
+                
+                if (cellCharacters == null || cellCharacters.isEmpty()) {
+                    boardState.append("| Vacío "); // Celda vacía
+                } else {
+                    StringBuilder cellContent = new StringBuilder("| ");
+                    for (Character character : cellCharacters) {
+                        cellContent.append(character.getType().charAt(0)); // Agrega la inicial del tipo de personaje
+                    }
+                    boardState.append(String.format("%-6s", cellContent.toString())); // Ajusta el formato
+                }
+            }
+            boardState.append("|\n"); // Cierra la fila
+            boardState.append("-".repeat(grid.getColumns() * 8 + 1)).append("\n"); // Bordes entre filas
+        }
+    
+        JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
     }
-}
-    */
+*/
 }

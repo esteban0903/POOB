@@ -8,7 +8,7 @@ import Dominio.Sun;
 public class SunGenerator {
     private JPanel gridPanel;
     private JLabel sunCounterLabel;
-    private Grid grid; // Referencia al Grid para validaciones
+    private Grid grid;
     private int sunCount;
 
     public SunGenerator(Grid grid, JPanel gridPanel, JLabel sunCounterLabel, int sunCount) {
@@ -21,10 +21,8 @@ public class SunGenerator {
     public void addRandomSun(int sunValue) {
         int rows = grid.getRows();
         int cols = grid.getColumns();
-
         int row = (int) (Math.random() * rows);
         int col = (int) (Math.random() * cols);
-
         addSunToCell(row, col, sunValue);
     }
 

@@ -8,4 +8,7 @@ public class WallNut extends Plant{
         super("WallNut", 4000, x, y, 50, new ImageIcon("resources/Wallnut.png"));
     }
 
+    public void stop(){
+        
+    }
 }

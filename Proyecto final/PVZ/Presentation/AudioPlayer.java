@@ -33,10 +33,9 @@ public class AudioPlayer {
 
     public void playSoundOnce() {
         if (audioClip != null) {
-            audioClip.setFramePosition(0); // Reinicia la reproducción al inicio del clip
-            audioClip.start(); // Reproduce el clip una vez
+            audioClip.setFramePosition(0); 
+            audioClip.start(); 
 
-            // Opción: Detener el clip automáticamente cuando termina
             audioClip.addLineListener(event -> {
                 if (event.getType() == LineEvent.Type.STOP) {
                     audioClip.stop();

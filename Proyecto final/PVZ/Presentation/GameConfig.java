@@ -3,16 +3,14 @@ package Presentation;
 public class GameConfig {
     private static GameConfig instance;
 
-    private static  int initialSuns; 
-    private static int gameDuration; 
-    private String gameMode; 
+    private static  int initialSuns = 0; 
+    private static int gameDuration = 1; 
+    private static String gameMode = "Modo 1"; 
     private static boolean isPaused= false;
+    private static boolean gameLost = false;
 
 
     private GameConfig() {
-        initialSuns = 0; 
-        gameDuration = 300;
-        this.gameMode = "Modo 1"; 
     }
 
 
@@ -31,7 +29,7 @@ public class GameConfig {
         initialSuns = suns;
     }
 
-    public int getGameDuration() {
+    public static  int getGameDuration() {
         return gameDuration;
     }
 
@@ -43,8 +41,8 @@ public class GameConfig {
         return gameMode;
     }
 
-    public void setGameMode(String gameMode) {
-        this.gameMode = gameMode;
+    public void setGameMode(String mode) {
+        gameMode = mode;
     }
 
     public static void setIsPaused() {
@@ -59,5 +57,15 @@ public class GameConfig {
         return isPaused;
     }
 
+    public static void setIsGameOver(){
+        gameLost = true;
+    }
 
+    public static boolean getIsGameOver(){
+        return gameLost;
+    }
+    
+    public static void setStartGame(){
+        gameLost = false;
+    }
 }

@@ -141,10 +141,13 @@ public class CharacterSelectionWindow extends Window {
 
     private void configureStartGameButton() {
         startGameButton.addActionListener(e -> {
-            GridGUI gridGUI = new GridGUI(selectedPlantsMap);  
-            gridGUI.setVisible(true);
             player.stopMusic();
             dispose();
+            GridGUI gridGUI = new GridGUI(selectedPlantsMap);  
+            gridGUI.setVisible(true);
+            GameConfig.setIsNotPaused();
+            System.out.print(GameConfig.getIsPaused());
+            GameConfig.setStartGame();
         });
     }
 
@@ -152,7 +155,7 @@ public class CharacterSelectionWindow extends Window {
         returnButton.addActionListener(e -> {
             GameModeWindow gameModeWindow  = new GameModeWindow ();
             player.stopMusic();
-            gameModeWindow .setVisible(true);
+            gameModeWindow.setVisible(true);
             dispose();
         });
     }

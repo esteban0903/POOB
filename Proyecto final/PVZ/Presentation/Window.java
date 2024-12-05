@@ -7,7 +7,7 @@ public abstract class Window extends JFrame {
         setTitle(title);
         JLabel backgroundLabel = new JLabel(new ImageIcon(backgroundPath));
         backgroundLabel.setBounds(0, 0, getWidth(), getHeight()); 
-        setContentPane(backgroundLabel); // Poner el fondo como fondo principal
+        setContentPane(backgroundLabel); 
         configureInitialSettings();
     }
 
@@ -17,13 +17,13 @@ public abstract class Window extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(null);
 
-        setResizable(false); // Evitar que se pueda cambiar el tamaño de la ventana
+        setResizable(false); 
 
-        // Deshabilitar el evento de maximización
+        //quita la opcion de maximizar la ventana 
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
-                setSize(1346, 765); // Mantener el tamaño original
+                setSize(1346, 765); 
             }
         });
     }
@@ -32,7 +32,4 @@ public abstract class Window extends JFrame {
         setVisible(true);
     }
 
-    public void stopMusic() {
-        player.stopMusic();
-    }
 }

@@ -72,7 +72,7 @@ public abstract class Zombie extends Character {
     public void move() {
         new Thread(() -> {
             try {
-                while (isAlive()) {
+                while (isAlive() && direction != null) {
                     if (GameConfig.getIsPaused()) {
                         Thread.sleep(50); 
                         continue;
@@ -107,7 +107,8 @@ public abstract class Zombie extends Character {
 
     private boolean hasReachedBoardLimit(int newRow, int newCol) {
         if (!characterGUI.getGrid().isValidPosition(newRow, newCol)) {
-            System.out.println(getName() + " alcanzó el límite del tablero.");
+            GameConfig.setIsGameOver();
+            System.out.println("Game Over");
             return true;
         }
         return false;
@@ -152,4 +153,19 @@ public abstract class Zombie extends Character {
 
         return new int[]{newX, newY};
     }
+    public void stop() {
+        if (this.attackTimer != null && this.attackTimer.isRunning()) {
+            this.attackTimer.stop();
+        }
+
+        this.direction = null;  
+    
+    
+    }
+
+    @Override
+    public final boolean isZombie(){
+        return true;
+    }
+
 }

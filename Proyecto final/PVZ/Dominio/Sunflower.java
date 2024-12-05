@@ -51,4 +51,8 @@ public class Sunflower extends Plant {
     protected void setSunProductionTime(int sunProductionTime) {
         this.sunProductionTime = sunProductionTime;
     }
+
+    public void stop(){
+        
+    }
 }
