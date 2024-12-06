@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 public class GameController {
 
     public static JButton createButton(String text , int x , int y, int width , int height, Color backgroundColor , Color foregroundColor) {
-        
+        AudioPlayer player = new AudioPlayer("resources/Efects/soundButton.wav");
         JButton button = new JButton(text);
         button.setBounds(x, y, width, height);
         button.setFocusPainted(false);
@@ -31,6 +31,8 @@ public class GameController {
                 button.setBorder(new LineBorder(Color.BLACK, 2, true));
             }
         });
+
+        button.addActionListener(e -> player.playSoundOnce());
         return button;
     }
 

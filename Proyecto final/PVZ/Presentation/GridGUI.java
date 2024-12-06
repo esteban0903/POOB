@@ -110,20 +110,21 @@ import java.util.concurrent.TimeUnit;
 
     private void verifyGameStatus() {
         String gameOverMessage = "";  
-
+        AudioPlayer gameFinishPlayer;
         if (GameConfig.getIsGameOver()) {
-            System.out.println("entra1");
             gameOverMessage = "Game Over"; 
+            gameFinishPlayer = new AudioPlayer("resources/Efects/loseSound.wav");
         } else if (checkTime()) {
-            System.out.println("entra");
             gameOverMessage = "Ganaste";  
+            gameFinishPlayer = new AudioPlayer("resources/Efects/winSound.wav");
         } else {
-            return; // retornar si no hace nada 
+            return; 
         }
     
         pauseGame();
         gameTimer.stop();
         GameConfig.setIsPaused();
+        gameFinishPlayer.playSoundOnce();
 
         GameOverMenu gameOverMenu = new GameOverMenu(this, gameOverMessage);
         layeredPane.add(gameOverMenu, Integer.valueOf(10));

@@ -5,7 +5,7 @@ import Presentation.CharacterGUI;
 
 public class BasicZombie extends Zombie {
     private static final ImageIcon IMAGE = new ImageIcon("resources/BasicZombie.png");
-    private static final int SPEED = 20; 
+    private static final int SPEED = 30; 
     private static final int ARMOR = 0;
     private static final String DIRECTION = "left"; 
     private static final int BRAIN_COST = 0;

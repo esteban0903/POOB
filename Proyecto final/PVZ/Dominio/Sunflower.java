@@ -8,7 +8,7 @@ import Presentation.SunGenerator;
 
 public class Sunflower extends Plant {
     protected int sunValue = 25; 
-    protected int sunProductionTime = 2000; 
+    protected int sunProductionTime = 10000; 
     private boolean producing;
 
     public Sunflower(int x, int y) {
