@@ -31,6 +31,10 @@ public abstract class Character {
         }
     }
 
+    public void move(){
+        
+    }
+
     public boolean isAlive() {
         return isAlive;
     }
@@ -89,6 +93,10 @@ public abstract class Character {
     }
 
     public boolean isZombie(){
+        return false;
+    }
+
+    public boolean isLawnMower(){
         return false;
     }
     

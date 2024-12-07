@@ -3,7 +3,9 @@ package Presentation;
 import java.util.Random;
 
 import Dominio.Grid;
-import Dominio.BasicZombie;
+import Dominio.ZombieFactory;
+import Dominio.Character;
+import Dominio.Zombie;
 
 public class ZombieGenerator {
     private Grid grid; 
@@ -24,17 +26,16 @@ public class ZombieGenerator {
     }
 
     public void addZombieToCell(int row, int col) {
-
-        // Coords del zombie 
+        // Coordenadas del zombi
         int x = col * grid.getCellSize() + GridGUI.getGridXBase();
         int y = row * (grid.getCellSize() + 20) + GridGUI.getGridYBase();
-
-        BasicZombie zombie = new BasicZombie(x, y, characterGUI);
-        zombie.move();
-
+    
+        // Crea un zombi de forma aleatoria usando ZombieFactory
+        Character zombie = ZombieFactory.createZombie(x, y, characterGUI);
+        zombie.move();  // Asume que todos los zombis tienen un método move
+    
+        // Coloca el zombi en la grilla y actualiza la interfaz
         grid.placeCharacter(zombie, row, col);
-        
-
         characterGUI.repaint();
     }
 }

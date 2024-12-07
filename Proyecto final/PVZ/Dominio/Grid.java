@@ -48,8 +48,13 @@ public class Grid {
     }
 
     public boolean isPlacementValid(String type, int col) {
-        if (type.equalsIgnoreCase("Plant") && col >= 8) return false; // plantas van de 0-8
-        if (type.equalsIgnoreCase("Zombie") && col < 8) return false; // Zombies en la ultima 
+        if (type.equalsIgnoreCase("Plant")) {
+            if(col==0) return false;
+            if (col >= 9) return false; // Restricción: Las plantas van de columnas 1 a 8
+        }
+        if (type.equalsIgnoreCase("Zombie") && col < 9) {
+            return false; // Restricción: Los zombis solo pueden estar en columnas 8 y superiores
+        }
         return true;
     }
 
@@ -99,6 +104,7 @@ public class Grid {
         }
         return false;
     }
+    
     
     public Character getPlantInCell(int row, int col) {
         List<Character> characters = getCharactersInCell(row, col);

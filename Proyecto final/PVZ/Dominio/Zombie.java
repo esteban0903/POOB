@@ -46,7 +46,7 @@ public abstract class Zombie extends Character {
         attackTimer = new Timer(damageTime, new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant) && !GameConfig.getIsPaused()) {
+                if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant) && !GameConfig.getIsPaused()&& isAlive()) {
                     attack(plant);
                     player.playMusic();
                     if (!plant.isAlive()) {
@@ -70,16 +70,16 @@ public abstract class Zombie extends Character {
         super.setPosition(x, y);
         characterGUI.repaint();
     }
-
+    @Override
     public void move() {
         new Thread(() -> {
             try {
                 while (isAlive() && direction != null) {
                     if (GameConfig.getIsPaused()) {
-                        Thread.sleep(50); 
+                        Thread.sleep(speed*50); 
                         continue;
                     }
-                    Thread.sleep(50); 
+                    Thread.sleep(speed*100); 
                     
                     //mover al zombie con su speed 
                     int[] newPosition = calculateNewPosition(speed);

@@ -7,6 +7,7 @@ import Dominio.Zombie;
 import Dominio.Plant;
 
 import javax.swing.*;
+import java.util.List;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -19,6 +20,7 @@ import java.util.concurrent.TimeUnit;
     private CharacterGUI characterPanel;
     private SunGenerator sunGenerator;
     private ZombieGenerator zombieGenerator;
+    private LawnMowerGenerator lawnMowerGenerator;
     private JLabel sunCounterLabel;
     private Character selectedCharacter;
     private JLayeredPane layeredPane;
@@ -31,7 +33,7 @@ import java.util.concurrent.TimeUnit;
     private JButton pauseButton = GameController.createButton("Pausa", 1100, 30, 200, 40, Color.black, Color.white);
     private PauseMenu pauseMenu; 
     private static final int CELL_SIZE = 80;
-    private static final int GRID_X_BASE = 220;
+    private static final int GRID_X_BASE = 140;
     private static final int GRID_Y_BASE = 140;
     private AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
     private boolean isPaused;
@@ -54,7 +56,7 @@ import java.util.concurrent.TimeUnit;
         setupProgressBar();
         showWindow();
         startGame();
-
+        showBoard();
         verifyGameStatus();
     }
 
@@ -89,6 +91,7 @@ import java.util.concurrent.TimeUnit;
     private void startGame(){
         createSunGridGenerator();
         createZombieGridGenerator();
+        createLawnMowerGridGenerator();
         player.playMusic();
         gameTimer = new Timer(500, e -> verifyGameStatus());
         gameTimer.start();
@@ -178,6 +181,10 @@ import java.util.concurrent.TimeUnit;
         zombieTimer.start();
     }
 
+    private void createLawnMowerGridGenerator() {
+        lawnMowerGenerator = new LawnMowerGenerator(grid, characterPanel);
+    }
+
     private void updateSpamZombiesByTimeGame() {
         long elapsedTime = System.currentTimeMillis() - gameTimeDuration; 
         long totalDuration = GameConfig.getGameDuration();  
@@ -188,10 +195,12 @@ import java.util.concurrent.TimeUnit;
         long timeSecondRound = adjustedGameTimeInMs / 3;
         long timeThirdRound = timeSecondRound * 2;
     
-        System.out.println("Tiempo total en milisegundos: " + elapsedTime + " delay: " + zombieTimer.getDelay());
+        //System.out.println("Tiempo total en milisegundos: " + elapsedTime + " delay: " + zombieTimer.getDelay());
     
-
-        if (elapsedTime < (20000 + timeSecondRound) && elapsedTime>20000) {  
+        if (elapsedTime < 20000){
+            return;
+        }
+        if (elapsedTime < (20000 + timeSecondRound)) {  
             if (zombieTimer.getDelay() != 10000) {  
                 resetZombieTimer(10000);  
             }
@@ -231,6 +240,7 @@ import java.util.concurrent.TimeUnit;
             for (int col = 0; col < cols; col++) {
                 JPanel cell = new JPanel();
                 cell.setOpaque(false);
+                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 Point position = calculatePosition(row, col);
                 cell.setBounds(position.x, position.y, CELL_SIZE, CELL_SIZE + 20);
                 configureClickOnCell(row, col, cell);
@@ -290,6 +300,7 @@ import java.util.concurrent.TimeUnit;
             @Override
             public void mouseClicked(MouseEvent e) {
                 //pala
+                showBoard();
                 if (isShovelActive) {
                     removePlantFromCell(row, col);
                     isShovelActive = false; 
@@ -431,7 +442,7 @@ import java.util.concurrent.TimeUnit;
 
 
 // gpt hizo esto, borrar para la entrega, solo es para probar 
-/* 
+
     public void showBoard() {
         StringBuilder boardState = new StringBuilder();
         boardState.append("Estado del Tablero:\n");
@@ -457,5 +468,5 @@ import java.util.concurrent.TimeUnit;
     
         JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
     }
-*/
+
 }

@@ -12,7 +12,7 @@ import java.util.List;
 public class CharacterGUI extends JPanel {
     private Grid grid;
     private int cellSize;
-    public static final int GRID_X_BASE = 220;
+    public static final int GRID_X_BASE = 140;
     public static final int GRID_Y_BASE = 140;
     private List<Projectile> projectiles; 
 
@@ -56,7 +56,7 @@ public class CharacterGUI extends JPanel {
                 List<Character> characters = grid.getCharactersInCell(row, col);
 
                 for (Character character : characters) {
-                    if (!(character.isZombie())) {
+                    if (!(character.isZombie()) && !character.isLawnMower()) {
                         ImageIcon icon = character.getImage();
                         int x = GRID_X_BASE + col * cellSize;
                         int y = GRID_Y_BASE + row * (cellSize + 20);
@@ -65,11 +65,12 @@ public class CharacterGUI extends JPanel {
                 }
             }
         }
+
     }
     public void paintZombies(Graphics g){
         // Dibujar los zombies ( va aparte pq estos usan otro metodo de pintar ya que se mueven )
         for (Character character : grid.getAllCharacters()) {
-            if (character.isZombie()) {
+            if (character.isZombie()|| character.isLawnMower()) {
                 paintCharacter(g, character);
             }
         }
