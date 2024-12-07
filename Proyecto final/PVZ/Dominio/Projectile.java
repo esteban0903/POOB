@@ -9,7 +9,6 @@ import Presentation.GameConfig;
 public class Projectile {
     private int damage;
     private int speed;
-    private String direction;
     private int range;
     private int x, y;
     private CharacterGUI characterGUI;
@@ -19,7 +18,6 @@ public class Projectile {
     public Projectile(int damage, int speed, String direction, int range, int x, int y, CharacterGUI characterGUI) {
         this.damage = damage;
         this.speed = speed;
-        this.direction = direction;
         this.range = range;
         this.x = x+50; //para que se pinte un poco despues ( se vea salir de la boca del peashooter)
         this.y = y;

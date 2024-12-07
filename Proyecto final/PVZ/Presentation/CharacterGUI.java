@@ -2,7 +2,6 @@ package Presentation;
 
 import Dominio.Grid;
 import Dominio.Projectile;
-import Dominio.Zombie;
 import Dominio.Character;
 
 import javax.swing.*;

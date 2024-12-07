@@ -4,6 +4,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.border.LineBorder;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
 
 import java.awt.*;
@@ -63,6 +64,15 @@ public class GameController {
         boton.setPreferredSize( new Dimension(panelWidth, panelHeight));
     
         return panel;
+    }
+
+    public static JProgressBar createProgressBar(int x, int y, int width, int height) {
+        JProgressBar progressBar = new JProgressBar(0, 100);
+        progressBar.setBounds(x, y, width, height);
+        progressBar.setStringPainted(true); // Muestra el porcentaje en la barra
+        progressBar.setValue(0);  // Inicializa en 0
+
+        return progressBar;
     }
         
 }

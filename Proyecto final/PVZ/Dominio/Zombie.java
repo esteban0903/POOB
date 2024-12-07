@@ -17,18 +17,20 @@ public abstract class Zombie extends Character {
     private int damage; 
     private CharacterGUI characterGUI;
     private static final String TYPE = "Zombie";
-    private static final int DAMAGE_TIME = 500;
+    private int damageTime;
     private Timer attackTimer; // timer para que el zombie ataque cada cierto tiempo 
     private static final AudioPlayer player = new AudioPlayer("resources/Efects/attackZombie.wav");
 
-    public Zombie(String name, int health, int x, int y, int brainCost, int speed, int armor, String direction, int damage, ImageIcon image, CharacterGUI characterGUI) {
+    public Zombie(String name, int health, int x, int y, int brainCost, int speed, int armor, String direction, int damage, ImageIcon image, CharacterGUI characterGUI, int damageTime) {
         super(name, health, x, y, brainCost, image, TYPE);
         this.speed = speed;
         this.armor = armor;
         this.direction = direction;
         this.damage = damage;
+        setCharacterHealth(health + armor);
         this.characterGUI = characterGUI;
         this.attackTimer = null; 
+        this.damageTime = damageTime;
     }
 
     public void attack(Character plant) {
@@ -41,7 +43,7 @@ public abstract class Zombie extends Character {
             return; 
         }
 
-        attackTimer = new Timer(DAMAGE_TIME, new ActionListener() { 
+        attackTimer = new Timer(damageTime, new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant) && !GameConfig.getIsPaused()) {

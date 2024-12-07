@@ -27,7 +27,7 @@ public class SunGenerator {
     }
 
     public void addSunToCell(int row, int col, int sunValue) {
-        if (!grid.isValidPosition(row, col)) {
+        if (!grid.isValidPosition(row, col-1)) {
             System.out.println("Posición inválida: fila " + row + ", columna " + col);
             return;
         }

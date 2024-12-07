@@ -39,7 +39,7 @@ public class MenuWindow extends Window {
     private void configureDifficultyButton(JButton difficultyButton) {
         difficultyButton.addActionListener(e -> {
             player.stopMusic();
-            DifficultyWindow difficultyWindow = new DifficultyWindow();
+            SettingsWindow difficultyWindow = new SettingsWindow();
             difficultyWindow.setVisible(true);
             dispose();
         });

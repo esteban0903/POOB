@@ -5,7 +5,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Color;
 
-public class DifficultyWindow extends Window {
+public class SettingsWindow extends Window {
     
     private Color orange = new Color(128, 0, 128); // Color naranja para botones
     private Color white = Color.WHITE;
@@ -16,7 +16,7 @@ public class DifficultyWindow extends Window {
     private JButton modeButton = GameController.createButton("Seleccionar Modo", 570, 280, 200, 40, orange, white);
     private JButton timeConfigButton = GameController.createButton("Configurar Tiempo", 570, 340, 200, 40, orange, white);
     private JButton backButton = GameController.createButton("Volver", 570, 400, 200, 40, orange, white);
-    public DifficultyWindow() {
+    public SettingsWindow() {
         super("Configuración del Juego", "resources/difficultyWindow.jpg");
 
         add(sunConfigButton);
@@ -101,6 +101,6 @@ public class DifficultyWindow extends Window {
     }
 
     public static void main(String[] args) {
-        new DifficultyWindow();
+        new SettingsWindow();
     }
 }

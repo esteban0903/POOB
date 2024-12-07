@@ -4,7 +4,7 @@ public class GameConfig {
     private static GameConfig instance;
 
     private static  int initialSuns = 0; 
-    private static int gameDuration = 1; 
+    private static int gameDuration = 5; 
     private static String gameMode = "Modo 1"; 
     private static boolean isPaused= false;
     private static boolean gameLost = false;

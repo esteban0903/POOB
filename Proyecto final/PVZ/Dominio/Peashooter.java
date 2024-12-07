@@ -6,11 +6,11 @@ import Presentation.GameConfig;
 
 public class Peashooter extends Plant {
     private static final int DAMAGE = 20;
-    private static final int SHOOT_INTERVAL = 2000; 
+    private static final int SHOOT_INTERVAL = 1500; 
     private CharacterGUI characterGUI;
 
     public Peashooter(int x, int y, CharacterGUI characterGUI) {
-        super("Peashooter", 30, x, y, 100, new ImageIcon("resources/Peashooter.png"));
+        super("Peashooter", 300, x, y, 100, new ImageIcon("resources/Peashooter.png"));
         this.characterGUI = characterGUI;
     }
     @Override

@@ -39,6 +39,7 @@ import java.util.concurrent.TimeUnit;
     private Timer zombieTimer;
     private Timer gameTimer;
     private long gameTimeDuration;
+    private JProgressBar progressBar;
 
 
     public GridGUI(Map<String, String> characterTypes) {
@@ -50,6 +51,7 @@ import java.util.concurrent.TimeUnit;
         createGrid(rows, cols);
         createCounterSuns();
         createButtons(characterTypes);
+        setupProgressBar();
         showWindow();
         startGame();
 
@@ -97,10 +99,15 @@ import java.util.concurrent.TimeUnit;
         long currentTime = System.currentTimeMillis();
         long elapsedTime = currentTime - gameTimeDuration;  
         long elapsedMinutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime);
-        System.out.println(elapsedMinutes); 
-        System.out.println(GameConfig.getGameDuration()); 
+      
+        long totalDuration = GameConfig.getGameDuration();
+        int percentageProgress = (int) ((elapsedTime * 100) / (totalDuration * 60 * 1000)); 
 
-        if (elapsedMinutes >= GameConfig.getGameDuration()) {
+        progressBar.setValue(percentageProgress); //actualiza el valor y pinta otra vez la barrita de progreso
+
+        updateSpamZombiesByTimeGame();
+
+        if (elapsedMinutes >= totalDuration) {
             gameTimer.stop();
             return true;
         }
@@ -134,7 +141,10 @@ import java.util.concurrent.TimeUnit;
         
     }
 
-    
+    private void setupProgressBar() {
+        progressBar = GameController.createProgressBar(550, 20, 400, 30); 
+        layeredPane.add(progressBar, Integer.valueOf(10));
+    }
     private void configurePauseButton(JButton button) {
         button.addActionListener(e -> {
             pauseGame(); 
@@ -158,15 +168,59 @@ import java.util.concurrent.TimeUnit;
 
     private void createSunGridGenerator() {
         sunGenerator = new SunGenerator(grid, gridPanel, sunCounterLabel, sunCount);
-        sunTimer = new Timer(2000, e -> { if (!isPaused) {sunGenerator.addRandomSun(50);}} );
+        sunTimer = new Timer(10000, e -> { if (!isPaused) {sunGenerator.addRandomSun(50);}} );
         sunTimer.start();
     }
 
     private void createZombieGridGenerator() {
         zombieGenerator = new ZombieGenerator(grid, characterPanel);
-        zombieTimer = new Timer(10000, e -> {if (!isPaused) zombieGenerator.addRandomZombie();});
+        zombieTimer = new Timer(20000, e -> {if (!isPaused) zombieGenerator.addRandomZombie();});
         zombieTimer.start();
     }
+
+    private void updateSpamZombiesByTimeGame() {
+        long elapsedTime = System.currentTimeMillis() - gameTimeDuration; 
+        long totalDuration = GameConfig.getGameDuration();  
+    
+        long totalGameTimeInMs = totalDuration * 60 * 1000; 
+        long adjustedGameTimeInMs = totalGameTimeInMs - 20000; 
+    
+        long timeSecondRound = adjustedGameTimeInMs / 3;
+        long timeThirdRound = timeSecondRound * 2;
+    
+        System.out.println("Tiempo total en milisegundos: " + elapsedTime + " delay: " + zombieTimer.getDelay());
+    
+
+        if (elapsedTime < (20000 + timeSecondRound) && elapsedTime>20000) {  
+            if (zombieTimer.getDelay() != 10000) {  
+                resetZombieTimer(10000);  
+            }
+        } else if (elapsedTime < (20000 + timeThirdRound)) { 
+            System.out.println("Tercera ronda: Zombies cada 7 segundos.");
+            if (zombieTimer.getDelay() != 7000) {  
+                resetZombieTimer(7000);  
+            }
+        } else {  
+            System.out.println("Cuarta ronda: Zombies cada 5 segundos.");
+            if (zombieTimer.getDelay() != 5000) {  
+                resetZombieTimer(5000);  
+            }
+        }
+    }
+    
+    private void resetZombieTimer(int delay) {
+        if (zombieTimer != null) {
+            zombieTimer.stop(); 
+        }
+    
+        zombieTimer = new Timer(delay, e -> {
+            if (!isPaused) {
+                zombieGenerator.addRandomZombie();
+            }
+        });
+        zombieTimer.start(); 
+    }
+    
 
     private void createGrid(int rows, int cols) {
         gridPanel = new JPanel(null);

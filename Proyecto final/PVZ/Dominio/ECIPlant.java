@@ -10,5 +10,6 @@ public class ECIPlant extends Sunflower {
         setCost(75); 
         setImage(new ImageIcon("resources/ECIPlant.png")); 
         setSunValue(50); 
+        setCharacterHealth(150);
     }
 }
