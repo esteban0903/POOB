@@ -1,8 +1,10 @@
 package Dominio;
 
+import java.io.Serializable;
+
 import javax.swing.ImageIcon;
 
-public abstract class Character {   
+public abstract class Character implements Serializable {   
     protected String name;
     protected int health;
     private int x,y;
@@ -32,7 +34,7 @@ public abstract class Character {
     }
 
     public void move(){
-        
+
     }
 
     public boolean isAlive() {

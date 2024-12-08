@@ -11,10 +11,10 @@ public class GameModeWindow extends Window {
     private Color orange = new Color(210, 105, 30);
     private Color white = Color.WHITE;
 
-    private JButton onePlayerButton = GameController.createButton("Un jugador", 590, 240, 200, 40, orange , white);
-    private JButton twoPlayerButton = GameController.createButton("Dos jugadores", 590, 300, 200, 40, orange , white);
-    private JButton playerMachineButton = GameController.createButton("CPU VS CPU", 590, 360, 200, 40, orange , white);
-    private JButton returnButton = GameController.createButton("Volver", 590, 420, 200, 40, orange , white);
+    private JButton onePlayerButton = AssistantGraphic.createButton("Un jugador", 590, 240, 200, 40, orange , white);
+    private JButton twoPlayerButton = AssistantGraphic.createButton("Dos jugadores", 590, 300, 200, 40, orange , white);
+    private JButton playerMachineButton = AssistantGraphic.createButton("CPU VS CPU", 590, 360, 200, 40, orange , white);
+    private JButton returnButton = AssistantGraphic.createButton("Volver", 590, 420, 200, 40, orange , white);
     public GameModeWindow() {   
         super("Modo de juego", "resources/gameModeWindoww.jpg");
 

@@ -13,7 +13,7 @@ public class Projectile {
     private int x, y;
     private CharacterGUI characterGUI;
     private static final ImageIcon IMAGE = new ImageIcon("resources/bullet.png");
-    private static final AudioPlayer player = new AudioPlayer("resources/Efects/ProjectilePlant.wav");
+    private transient static final AudioPlayer player = new AudioPlayer("resources/Efects/ProjectilePlant.wav");
 
     public Projectile(int damage, int speed, String direction, int range, int x, int y, CharacterGUI characterGUI) {
         this.damage = damage;

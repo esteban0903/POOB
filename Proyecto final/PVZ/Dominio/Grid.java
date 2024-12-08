@@ -1,11 +1,12 @@
 package Dominio;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 import Presentation.GridGUI;
 
-public class Grid {
+public class Grid implements Serializable {
     private List<Character>[][] grid;
     private int rows, cols;
     private int cellSize; 
@@ -173,6 +174,21 @@ public class Grid {
         }
     }
     
+    public void continueGame(){
+        for (int row = 0; row < rows; row++) {
+            for (int col = 0; col < cols; col++) {
+                for (Character character : grid[row][col]) {
+                    if (character.isZombie()&& !character.isLawnMower()) {
+                        ((Zombie) character).continuePlaying();
+                    }
+                    else if (!character.isZombie() && !character.isLawnMower()) {
+                        ((Plant) character).startAction();
+                        ((Plant) character).startAction();
+                    }
+                }
+            }
+        }
+    }
 
     public void reset() {
         for (int row = 0; row < rows; row++) {

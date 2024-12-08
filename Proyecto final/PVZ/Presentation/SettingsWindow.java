@@ -12,10 +12,10 @@ public class SettingsWindow extends Window {
     private AudioPlayer player = new AudioPlayer("resources/musicDifficultyWindow.wav");
 
     // Botones
-    private JButton sunConfigButton = GameController.createButton("Configurar Soles", 570, 220, 200, 40, orange, white);
-    private JButton modeButton = GameController.createButton("Seleccionar Modo", 570, 280, 200, 40, orange, white);
-    private JButton timeConfigButton = GameController.createButton("Configurar Tiempo", 570, 340, 200, 40, orange, white);
-    private JButton backButton = GameController.createButton("Volver", 570, 400, 200, 40, orange, white);
+    private JButton sunConfigButton = AssistantGraphic.createButton("Configurar Soles", 570, 220, 200, 40, orange, white);
+    private JButton modeButton = AssistantGraphic.createButton("Seleccionar Modo", 570, 280, 200, 40, orange, white);
+    private JButton timeConfigButton = AssistantGraphic.createButton("Configurar Tiempo", 570, 340, 200, 40, orange, white);
+    private JButton backButton = AssistantGraphic.createButton("Volver", 570, 400, 200, 40, orange, white);
     public SettingsWindow() {
         super("Configuración del Juego", "resources/difficultyWindow.jpg");
 

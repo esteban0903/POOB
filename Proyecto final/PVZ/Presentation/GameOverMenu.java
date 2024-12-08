@@ -6,7 +6,7 @@ import java.awt.*;
 public class GameOverMenu extends JPanel {
 
     private GridGUI parentWindow;
-    JButton mainMenuButton = GameController.createButton("Regresar al Menú Principal", 150, 100, 200, 40, new Color(128, 0, 128), Color.WHITE);
+    JButton mainMenuButton = AssistantGraphic.createButton("Regresar al Menú Principal", 150, 100, 200, 40, new Color(128, 0, 128), Color.WHITE);
     JLabel gameOverLabel;
     JPanel gameOverBox = new JPanel();
 

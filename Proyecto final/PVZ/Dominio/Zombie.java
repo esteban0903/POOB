@@ -19,7 +19,7 @@ public abstract class Zombie extends Character {
     private static final String TYPE = "Zombie";
     private int damageTime;
     private Timer attackTimer; // timer para que el zombie ataque cada cierto tiempo 
-    private static final AudioPlayer player = new AudioPlayer("resources/Efects/attackZombie.wav");
+    private transient static final AudioPlayer player = new AudioPlayer("resources/Efects/attackZombie.wav");
 
     public Zombie(String name, int health, int x, int y, int brainCost, int speed, int armor, String direction, int damage, ImageIcon image, CharacterGUI characterGUI, int damageTime) {
         super(name, health, x, y, brainCost, image, TYPE);
@@ -74,6 +74,7 @@ public abstract class Zombie extends Character {
     public void move() {
         new Thread(() -> {
             try {
+                System.out.println(direction);
                 while (isAlive() && direction != null) {
                     if (GameConfig.getIsPaused()) {
                         Thread.sleep(speed*50); 
@@ -163,6 +164,15 @@ public abstract class Zombie extends Character {
         this.direction = null;  
     
     
+    }
+
+    public void continuePlaying(){
+        setDirection("left");
+        move();
+    }
+
+    public void setDirection(String direction) {
+        this.direction = direction;
     }
 
     @Override

@@ -16,6 +16,9 @@ public class Sunflower extends Plant {
         this.producing = true;
     }
 
+    public void StartAction(){
+        
+    }
     @Override
     public void startAction(Grid grid, SunGenerator sunGenerator) {
         new Thread(() -> {

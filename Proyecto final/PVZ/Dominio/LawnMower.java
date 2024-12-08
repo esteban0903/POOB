@@ -13,11 +13,11 @@ public class LawnMower extends Character {
     private CharacterGUI characterGUI;
     private boolean activated = false; 
     boolean soundPlayed = false; 
-    AudioPlayer player = new AudioPlayer("resources/Efects/killLawnMoner.wav");
+    private transient AudioPlayer player = new AudioPlayer("resources/Efects/killLawnMoner.wav");
 
     public LawnMower(int x, int y, CharacterGUI characterGUI) {
         super("LawnMower", 3000, x, y, 0, IMAGE, TYPE);
-        this.characterGUI = characterGUI;
+        this.characterGUI = characterGUI;   
         move();
     }
 

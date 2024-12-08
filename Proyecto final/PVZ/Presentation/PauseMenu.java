@@ -6,9 +6,9 @@
     public class PauseMenu extends JPanel {
 
         private GridGUI parentWindow;
-        JButton resumeButton = GameController.createButton("Reanudar", 150, 100, 200, 40, new Color(128, 0, 128), Color.WHITE);
-        JButton safeButton = GameController.createButton("Guardar partida", 150, 160, 200, 40, new Color(128, 0, 128), Color.WHITE);
-        JButton mainMenuButton = GameController.createButton("Salir de la partida", 150, 220, 200, 40, new Color(128, 0, 128), Color.WHITE);
+        JButton resumeButton = AssistantGraphic.createButton("Reanudar", 150, 100, 200, 40, new Color(128, 0, 128), Color.WHITE);
+        JButton safeButton = AssistantGraphic.createButton("Guardar partida", 150, 160, 200, 40, new Color(128, 0, 128), Color.WHITE);
+        JButton mainMenuButton = AssistantGraphic.createButton("Salir de la partida", 150, 220, 200, 40, new Color(128, 0, 128), Color.WHITE);
         JLabel pauseLabel = new JLabel("Juego en Pausa");
         JPanel pauseBox = new JPanel();
         public PauseMenu(GridGUI parentWindow) {
@@ -24,6 +24,7 @@
             createBoxPause();
             addTextPauseLabel();
             configureResumeButton();
+            configureSafeButton();
             configureMainMenuButton();
 
             pauseBox.add(safeButton);
@@ -42,6 +43,12 @@
             resumeButton.addActionListener(e -> {
                 parentWindow.resumeGame(); 
                 setVisible(false); 
+            });
+        }
+
+        private void configureSafeButton(){
+            safeButton.addActionListener(e -> {
+                parentWindow.saveGame();
             });
         }
 

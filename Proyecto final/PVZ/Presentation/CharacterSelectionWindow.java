@@ -13,8 +13,8 @@ public class CharacterSelectionWindow extends Window {
     private final Map<String, String> plantImages;  
     private final Map<String, String> selectedPlantsMap;  
     private Color green = new Color(34, 139, 34); //color verde de boton
-    private JButton startGameButton = GameController.createButton("Iniciar Juego", 250, 640, 200, 40, green, Color.WHITE);
-    private JButton returnButton = GameController.createButton("Volver", 850, 640, 200, 40, green, Color.WHITE);
+    private JButton startGameButton = AssistantGraphic.createButton("Iniciar Juego", 250, 640, 200, 40, green, Color.WHITE);
+    private JButton returnButton = AssistantGraphic.createButton("Volver", 850, 640, 200, 40, green, Color.WHITE);
     public static void main(String[] args) {
         new CharacterSelectionWindow();
     }
@@ -63,7 +63,7 @@ public class CharacterSelectionWindow extends Window {
             int width = 30;  
             int height = 30; 
 
-            JPanel plantPanel = GameController.createButtonWithImage(plantImages.get(plant),null,plant,width,height);
+            JPanel plantPanel = AssistantGraphic.createButtonWithImage(plantImages.get(plant),null,plant,width,height);
 
             addActionToPlantPanel(plant, plantPanel);
             plantButtons.put(plant, plantPanel);
@@ -90,7 +90,7 @@ public class CharacterSelectionWindow extends Window {
         int width = 24;  
         int height = 25; 
 
-        JPanel selectedPlantPanel = GameController.createButtonWithImage(plantImages.get(plant),null,plant,width,height                   
+        JPanel selectedPlantPanel = AssistantGraphic.createButtonWithImage(plantImages.get(plant),null,plant,width,height                   
         );
 
         selectedPlantsMap.put(plant, plantImages.get(plant));

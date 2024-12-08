@@ -2,6 +2,7 @@ package Presentation;
 
 import Dominio.Character;
 import Dominio.CharacterFactory;
+import Dominio.GameController;
 import Dominio.Grid;
 import Dominio.Zombie;
 import Dominio.Plant;
@@ -30,7 +31,7 @@ import java.util.concurrent.TimeUnit;
     private int rows = 5;
     private int cols = 10;
     private int sunCount;
-    private JButton pauseButton = GameController.createButton("Pausa", 1100, 30, 200, 40, Color.black, Color.white);
+    private JButton pauseButton = AssistantGraphic.createButton("Pausa", 1100, 30, 200, 40, Color.black, Color.white);
     private PauseMenu pauseMenu; 
     private static final int CELL_SIZE = 80;
     private static final int GRID_X_BASE = 140;
@@ -42,6 +43,7 @@ import java.util.concurrent.TimeUnit;
     private Timer gameTimer;
     private long gameTimeDuration;
     private JProgressBar progressBar;
+    private Map<String, String> characterTypes;
 
 
     public GridGUI(Map<String, String> characterTypes) {
@@ -49,6 +51,7 @@ import java.util.concurrent.TimeUnit;
         this.grid = new Grid(rows, cols, CELL_SIZE);
         this.sunCount = GameConfig.getInitialSuns();
         this.isPaused = false;
+        this.characterTypes = characterTypes;
         createPanelBase(); 
         createGrid(rows, cols);
         createCounterSuns();
@@ -56,7 +59,7 @@ import java.util.concurrent.TimeUnit;
         setupProgressBar();
         showWindow();
         startGame();
-        showBoard();
+        //showBoard();
         verifyGameStatus();
     }
 
@@ -145,7 +148,7 @@ import java.util.concurrent.TimeUnit;
     }
 
     private void setupProgressBar() {
-        progressBar = GameController.createProgressBar(550, 20, 400, 30); 
+        progressBar = AssistantGraphic.createProgressBar(550, 20, 400, 30); 
         layeredPane.add(progressBar, Integer.valueOf(10));
     }
     private void configurePauseButton(JButton button) {
@@ -256,7 +259,7 @@ import java.util.concurrent.TimeUnit;
 
         for (var entry : characterTypes.entrySet()) {
             ActionListener action = createCharacterSelectionAction(entry.getKey());
-            JPanel buttonPanel = GameController.createButtonWithImage(entry.getValue(), action, entry.getKey(), 60, 60);
+            JPanel buttonPanel = AssistantGraphic.createButtonWithImage(entry.getValue(), action, entry.getKey(), 60, 60);
 
             buttonPanel.setBounds(sizeButtonX, sizeButtonY, 80, 80);
             buttonPanel.setOpaque(false);
@@ -276,7 +279,7 @@ import java.util.concurrent.TimeUnit;
 
     private void createShovelButton() {
         ActionListener action = createShovelSelectionAction();
-        shovel = GameController.createButtonWithImage("resources/Shovel.png", action, "shovel", 60, 60);
+        shovel = AssistantGraphic.createButtonWithImage("resources/Shovel.png", action, "shovel", 60, 60);
         shovel.setBounds(300, 20, 80, 80);
         shovel.setOpaque(false);
         layeredPane.add(shovel, Integer.valueOf(3));
@@ -411,6 +414,17 @@ import java.util.concurrent.TimeUnit;
         grid.stop();
         grid.reset();
         dispose();
+    }
+
+    public void saveGame() {
+        GameController.saveGame(grid, characterTypes); // Llama al método de GameController para guardar el Grid
+    }
+
+    public void setLoadGame(Grid grid) {
+        this.grid = grid;
+        characterPanel.setGrid(grid);
+        grid.continueGame();
+        isPaused = false;
     }
 
     

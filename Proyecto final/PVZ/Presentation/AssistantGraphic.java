@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-public class GameController {
+public class AssistantGraphic {
 
     public static JButton createButton(String text , int x , int y, int width , int height, Color backgroundColor , Color foregroundColor) {
         AudioPlayer player = new AudioPlayer("resources/Efects/soundButton.wav");

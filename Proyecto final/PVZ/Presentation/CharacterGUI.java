@@ -48,7 +48,7 @@ public class CharacterGUI extends JPanel {
         paintZombies(g);
         paintProjectiles(g);
     }
-
+    
     public void paintPlants(Graphics g){
         // Dibuja todos las plantas 
         for (int row = 0; row < grid.getRows(); row++) {
@@ -121,5 +121,10 @@ public class CharacterGUI extends JPanel {
         }
     
         JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
+    }
+
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+        repaint();
     }
 }       

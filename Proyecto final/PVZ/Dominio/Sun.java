@@ -3,7 +3,7 @@ package Dominio;
 import javax.swing.*;
 
 import Presentation.AudioPlayer;
-import Presentation.GameController;
+import Presentation.AssistantGraphic;
 
 
 public class Sun {
@@ -12,7 +12,7 @@ public class Sun {
     private static final AudioPlayer player = new AudioPlayer("resources/Efects/sunSound.wav");
 
     public Sun(String imagePath, int size, Runnable onClickAction) {
-        panel = GameController.createButtonWithImage(imagePath, e -> onClickAction.run(), "Sun", size-20, size-20);
+        panel = AssistantGraphic.createButtonWithImage(imagePath, e -> onClickAction.run(), "Sun", size-20, size-20);
 
     }
 
