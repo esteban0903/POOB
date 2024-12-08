@@ -303,7 +303,7 @@ import java.util.concurrent.TimeUnit;
             @Override
             public void mouseClicked(MouseEvent e) {
                 //pala
-                showBoard();
+                //showBoard();
                 if (isShovelActive) {
                     removePlantFromCell(row, col);
                     isShovelActive = false; 

@@ -53,15 +53,14 @@ public class MenuWindow extends Window {
 
     private void configureLoadButton(JButton loadButton) {
     loadButton.addActionListener(e -> {
-        player.stopMusic();  // Asumiendo que player es una instancia de AudioPlayer
-        Object[] gameData = GameController.loadGame();  // Se espera que gameData contenga Grid y Map
+        player.stopMusic();  
+        Object[] gameData = GameController.loadGame();
 
         if (gameData != null) {
             Grid loadedGrid = (Grid) gameData[0];
             Map<String, String> loadedCharacterTypes = (Map<String, String>) gameData[1];
 
-            // Suponiendo que GridGUI puede inicializarse con estos parámetros o tienes métodos para configurarlos después
-            GridGUI gridGUI = new GridGUI(loadedCharacterTypes); // Asumiendo que el constructor admite estos parámetros
+            GridGUI gridGUI = new GridGUI(loadedCharacterTypes); 
             gridGUI.setLoadGame(loadedGrid);
             gridGUI.setVisible(true);
             dispose();  
