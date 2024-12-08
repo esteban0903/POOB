@@ -20,7 +20,7 @@ public class GameController {
                  ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
                 out.writeObject(grid);
                 out.writeObject(characterTypes);
-                JOptionPane.showMessageDialog(null, "Juego guardado con éxito en " + file.getPath());
+                JOptionPane.showMessageDialog(null, "Juego guardado con exito en " + file.getPath());
             } catch (IOException e) {
                 JOptionPane.showMessageDialog(null, "Error al guardar el juego: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }

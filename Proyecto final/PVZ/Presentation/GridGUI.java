@@ -428,34 +428,7 @@ import java.util.concurrent.TimeUnit;
     }
 
     
-// IDEAS DE GPT, aprender a guardar archivos, todavia no se 
-/* 
-    public void saveGame() {
-        try {
-            // Crear un archivo para guardar el estado de la partida
-            FileOutputStream fileOut = new FileOutputStream("saved_game.ser");
-            ObjectOutputStream out = new ObjectOutputStream(fileOut);
-            
-            // Supongamos que tienes un GameState que representa el estado del juego
-           
-            
-            // Guardamos el estado del juego en el archivo
-     
-            
-            // Cerramos los streams
-            out.close();
-            fileOut.close();
-            
-            System.out.println("Juego guardado con éxito.");
-        } catch (IOException e) {
-            System.out.println("Error al guardar el juego: " + e.getMessage());
-        }
-    } 
-   */ 
-
-
-
-// gpt hizo esto, borrar para la entrega, solo es para probar 
+ 
 
     public void showBoard() {
         StringBuilder boardState = new StringBuilder();

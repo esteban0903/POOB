@@ -5,7 +5,6 @@ import java.util.Random;
 import Dominio.Grid;
 import Dominio.ZombieFactory;
 import Dominio.Character;
-import Dominio.Zombie;
 
 public class ZombieGenerator {
     private Grid grid; 
@@ -31,6 +30,7 @@ public class ZombieGenerator {
         int y = row * (grid.getCellSize() + 20) + GridGUI.getGridYBase();
     
         // Crea un zombi de forma aleatoria usando ZombieFactory
+        
         Character zombie = ZombieFactory.createZombie(x, y, characterGUI);
         zombie.move();  // Asume que todos los zombis tienen un método move
     

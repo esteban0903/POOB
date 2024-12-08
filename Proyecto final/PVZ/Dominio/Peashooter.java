@@ -32,7 +32,7 @@ public class Peashooter extends Plant {
                     projectile.startMoving();
                 }
             } catch (InterruptedException e) {
-                e.printStackTrace(); //gpt dijo que era bueno poner eso cuando bote error el thread
+                e.printStackTrace(); 
             }
         }).start();
     }

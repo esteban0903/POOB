@@ -120,7 +120,7 @@ public class CharacterGUI extends JPanel {
             boardState.append("-".repeat(grid.getColumns() * 8 + 1)).append("\n"); // Bordes entre filas
         }
     
-        JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tableroo", JOptionPane.INFORMATION_MESSAGE);
     }
 
     public void setGrid(Grid grid) {
