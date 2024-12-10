@@ -360,7 +360,7 @@ import javax.swing.*;
             sunGenerator.subtractSun(character.getCost());
             characterPanel.repaint();
             
-            showBoard();
+            //showBoard(); mostrar tablero 
             if (!character.isZombie()) {
                 ((Plant) character).startAction(grid, sunGenerator);
                 ((Plant) character).startAction();

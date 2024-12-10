@@ -1,4 +1,4 @@
-package Dominio;
+/*package Dominio;
 
 import java.util.concurrent.TimeUnit;
 import javax.swing.Timer;
@@ -49,3 +49,4 @@ public class TimeController {
         return percentageProgress;
     }
 }
+*/
