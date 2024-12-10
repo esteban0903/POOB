@@ -7,26 +7,29 @@ import javax.swing.JOptionPane;
 
 public class SettingsWindow extends Window {
     
-    private Color orange = new Color(128, 0, 128); // Color naranja para botones
+    private Color purple = new Color(128, 0, 128); // Color naranja para botones
     private Color white = Color.WHITE;
     private AudioPlayer player = new AudioPlayer("resources/Music/SoundTrack/musicDifficultyWindow.wav");
 
     // Botones
-    private JButton sunConfigButton = AssistantGraphic.createButton("Configurar Soles", 570, 220, 200, 40, orange, white);
-    private JButton modeButton = AssistantGraphic.createButton("Seleccionar Modo", 570, 280, 200, 40, orange, white);
-    private JButton timeConfigButton = AssistantGraphic.createButton("Configurar Tiempo", 570, 340, 200, 40, orange, white);
-    private JButton backButton = AssistantGraphic.createButton("Volver", 570, 400, 200, 40, orange, white);
+    private JButton sunConfigButton = AssistantGraphic.createButton("Configurar Soles", 570, 220, 200, 40, purple, white);
+    private JButton modeButton = AssistantGraphic.createButton("Seleccionar Modo", 570, 280, 200, 40, purple, white);
+    private JButton timeConfigButton = AssistantGraphic.createButton("Configurar Tiempo", 570, 340, 200, 40, purple, white);
+    private JButton roundConfigButton = AssistantGraphic.createButton("Numero de rondas ", 570, 400, 200, 40, purple, white);
+    private JButton backButton = AssistantGraphic.createButton("Volver", 570, 460, 200, 40, purple, white);
     public SettingsWindow() {
         super("Configuración del Juego", "resources/Backgrounds/difficultyWindow.jpg");
 
         add(sunConfigButton);
         add(modeButton);
         add(timeConfigButton);
+        add(roundConfigButton);
         add(backButton);
 
         configureSunConfigButton(sunConfigButton);
         configureModeButton(modeButton);
         configureTimeConfigButton(timeConfigButton);
+        configureRoundConfigButton(roundConfigButton);
         configureReturnButton(backButton);
 
         
@@ -67,7 +70,7 @@ public class SettingsWindow extends Window {
             );
             if (choice != -1) {
                 String selectedMode = options[choice];
-                GameConfig.getInstance().setGameMode(selectedMode);
+                GameConfig.setGameMode(selectedMode);
                 JOptionPane.showMessageDialog(this, "Modo seleccionado: " + selectedMode, "Configuración Guardada", JOptionPane.INFORMATION_MESSAGE);
             }
         });
@@ -82,11 +85,30 @@ public class SettingsWindow extends Window {
                     if (gameTime <= 0) {
                         throw new NumberFormatException();
                     }
-                    GameConfig.getInstance().setGameDuration(gameTime);
+                    GameConfig.setGameDuration(gameTime);
                     JOptionPane.showMessageDialog(this, "Tiempo de partida configurado a: " + gameTime + " minutos", "Configuración Guardada", JOptionPane.INFORMATION_MESSAGE);
                 }
             } catch (NumberFormatException ex) {
                 JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido mayor a 0.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+    }
+
+    private void configureRoundConfigButton(JButton button) {
+        button.addActionListener(e -> {
+            String input = JOptionPane.showInputDialog(this, "Ingrese la cantidad de rondas a jugar:", "Configuracion de rondas", JOptionPane.QUESTION_MESSAGE);
+            try {
+                if (input != null) {
+                    int rounds = Integer.parseInt(input);
+                    if(rounds>0){
+                        GameConfig.setRounds(rounds);
+                        JOptionPane.showMessageDialog(this, "Soles iniciales configurados a: " + rounds, "Configuración Guardada", JOptionPane.INFORMATION_MESSAGE);
+                    }else{
+                        JOptionPane.showMessageDialog(this, "Numero de rondas invalido","Error",JOptionPane.ERROR_MESSAGE);
+                    }    
+                }
+            } catch (NumberFormatException ex) {
+                JOptionPane.showMessageDialog(this, "Por favor, ingrese un número válido.", "Error", JOptionPane.ERROR_MESSAGE);
             }
         });
     }

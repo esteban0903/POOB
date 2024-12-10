@@ -10,6 +10,7 @@ public class Grid implements Serializable {
     private final int ROWS;
     private final int COLS;
     private final int CELL_SIZE; 
+    private TimeController timeController;
 
     @SuppressWarnings("unchecked") // gpt me sugirio agregar esto para la linea 18, puede generar errores 
     public Grid(int ROWS, int COLS, int CELL_SIZE) {
@@ -23,6 +24,7 @@ public class Grid implements Serializable {
                 grid[row][col] = new ArrayList<>();
             }
         }
+        this.timeController = new TimeController();
     }
 
     public boolean placeCharacter(Character character, int row, int col) {
@@ -192,5 +194,9 @@ public class Grid implements Serializable {
                 grid[row][col].clear();
             }
         }
+    }
+
+    public int getPercentageProgress(){
+        return timeController.getPercentageProgress();
     }
 }

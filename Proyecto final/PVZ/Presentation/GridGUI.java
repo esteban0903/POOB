@@ -44,6 +44,8 @@ import javax.swing.*;
     private long gameTimeDuration;
     private JProgressBar progressBar;
     private Map<String, String> characterTypes;
+    private int numberOfRounds;
+    private long totalDuration;
 
 
     public GridGUI(Map<String, String> characterTypes) {
@@ -52,6 +54,8 @@ import javax.swing.*;
         this.sunCount = GameConfig.getInitialSuns();
         this.isPaused = false;
         this.characterTypes = characterTypes;
+        this.numberOfRounds = GameConfig.getRounds();
+        this.totalDuration =  GameConfig.getGameDuration();
         createPanelBase(); 
         createGrid(rows, cols);
         createCounterSuns();
@@ -106,7 +110,6 @@ import javax.swing.*;
         long elapsedTime = currentTime - gameTimeDuration;  
         long elapsedMinutes = TimeUnit.MILLISECONDS.toMinutes(elapsedTime);
       
-        long totalDuration = GameConfig.getGameDuration();
         int percentageProgress = (int) ((elapsedTime * 100) / (totalDuration * 60 * 1000)); 
 
         progressBar.setValue(percentageProgress); //actualiza el valor y pinta otra vez la barrita de progreso
@@ -134,7 +137,7 @@ import javax.swing.*;
             System.out.println(GameConfig.getPuntaje());
         } else {
             return; 
-        }
+    }
     
         pauseGame();
         gameTimer.stop();
@@ -192,35 +195,36 @@ import javax.swing.*;
 
     private void updateSpamZombiesByTimeGame() {
         long elapsedTime = System.currentTimeMillis() - gameTimeDuration; 
-        long totalDuration = GameConfig.getGameDuration();  
-    
-        long totalGameTimeInMs = totalDuration * 60 * 1000; 
-        long adjustedGameTimeInMs = totalGameTimeInMs - 20000; 
-    
-        long timeSecondRound = adjustedGameTimeInMs / 3;
-        long timeThirdRound = timeSecondRound * 2;
-    
-        //System.out.println("Tiempo total en milisegundos: " + elapsedTime + " delay: " + zombieTimer.getDelay());
-    
-        if (elapsedTime < 20000){
-            return;
+        long totalDurationMil = totalDuration * 60 * 1000;  
+        long initialDelay = 20000;  // primeros 20 segundos 
+        long gameDurationForRounds = totalDurationMil - initialDelay; //tiempo partida sin los 20 segundos 
+        long durationPerRound = gameDurationForRounds / numberOfRounds;  //duracion de las rondas 
+        //System.out.println(durationPerRound);
+        if (elapsedTime < initialDelay) {
+            return;  
         }
-        if (elapsedTime < (20000 + timeSecondRound)) {  
-            if (zombieTimer.getDelay() != 10000) {  
-                resetZombieTimer(10000);  
-            }
-        } else if (elapsedTime < (20000 + timeThirdRound)) { 
-            //System.out.println("Tercera ronda: Zombies cada 7 segundos.");
-            if (zombieTimer.getDelay() != 7000) {  
-                resetZombieTimer(7000);  
-            }
-        } else {  
-            //System.out.println("Cuarta ronda: Zombies cada 5 segundos.");
-            if (zombieTimer.getDelay() != 5000) {  
-                resetZombieTimer(5000);  
-            }
+    
+        int currentRound = (int) ((elapsedTime - initialDelay) / durationPerRound) + 1;
+        if (currentRound > numberOfRounds) {
+            currentRound = numberOfRounds;  
+        }
+    
+        int newDelay = calculateZombieSpawnDelay(currentRound, numberOfRounds);
+    
+        if (zombieTimer.getDelay() != newDelay) {
+            System.out.println(newDelay);
+            resetZombieTimer(newDelay);
         }
     }
+    
+    private int calculateZombieSpawnDelay(int currentRound, int totalRounds) {
+        int maxDelay = 15000;  // Maximo tiempo de spawn de zombies 
+        int minDelay = 7000;   // Minimo tiempo de spawn 
+        int delayDecreasePerRound = (maxDelay - minDelay) / (totalRounds - 1);
+        return maxDelay - (delayDecreasePerRound * (currentRound - 1));
+    }
+    
+    
     
     private void resetZombieTimer(int delay) {
         if (zombieTimer != null) {
@@ -331,7 +335,6 @@ import javax.swing.*;
         if (characters != null) {
             characters.removeIf(character -> !character.isZombie());
             characterPanel.repaint();
-            System.out.println("Planta eliminada en la celda (" + row + ", " + col + ").");
         }
     }
 
@@ -459,5 +462,6 @@ import javax.swing.*;
     
         JOptionPane.showMessageDialog(null, boardState.toString(), "Estado del Tablero", JOptionPane.INFORMATION_MESSAGE);
     }
+
 
 }

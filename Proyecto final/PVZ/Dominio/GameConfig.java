@@ -4,12 +4,13 @@ public class GameConfig {
     private static GameConfig instance;
 
     private static  int initialSuns = 100; 
-    private static int gameDuration = 1; 
+    private static int gameDuration = 2; 
     private static String gameMode = "Modo 1"; 
     private static boolean isPaused= false;
     private static boolean gameLost = false;
     private static int puntaje = 0;
     private static String namePlayer = "Player 1";
+    private static int rounds = 3;
 
 
     private GameConfig() {
@@ -27,7 +28,7 @@ public class GameConfig {
         return initialSuns;
     }
 
-    public void setInitialSuns(int suns) {
+    public static void setInitialSuns(int suns) {
         initialSuns = suns;
     }
 
@@ -43,7 +44,7 @@ public class GameConfig {
         return gameMode;
     }
 
-    public void setGameMode(String mode) {
+    public static void setGameMode(String mode) {
         gameMode = mode;
     }
 
@@ -85,5 +86,13 @@ public class GameConfig {
 
     public static String getName(){
         return namePlayer;
+    }
+
+    public static int getRounds(){
+        return rounds;
+    }
+
+    public static void setRounds(int newRounds){
+        rounds = newRounds;
     }
 }
