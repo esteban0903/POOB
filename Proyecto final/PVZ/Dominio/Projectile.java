@@ -1,19 +1,18 @@
 package Dominio;
 
-import javax.swing.ImageIcon;
-
 import Presentation.AudioPlayer;
 import Presentation.CharacterGUI;
-import Presentation.GameConfig;
+import java.io.Serializable;
+import javax.swing.ImageIcon;
 
-public class Projectile {
+public class Projectile implements Serializable {
     private int damage;
     private int speed;
     private int range;
     private int x, y;
     private CharacterGUI characterGUI;
-    private static final ImageIcon IMAGE = new ImageIcon("resources/bullet.png");
-    private transient static final AudioPlayer player = new AudioPlayer("resources/Efects/ProjectilePlant.wav");
+    private static final ImageIcon IMAGE = new ImageIcon("resources/Characters/bullet.png");
+    private transient static AudioPlayer player = new AudioPlayer("resources/Music/Efects/ProjectilePlant.wav");
 
     public Projectile(int damage, int speed, String direction, int range, int x, int y, CharacterGUI characterGUI) {
         this.damage = damage;
@@ -77,6 +76,7 @@ public class Projectile {
 
     private void killZombie(Character zombie, int currentRow, int currentCol) {
             characterGUI.getGrid().removeCharacter(zombie, currentRow, currentCol);
+            GameConfig.setPuntaje(100);
             characterGUI.repaint();     
     }
 

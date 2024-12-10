@@ -5,37 +5,36 @@ import javax.swing.Timer;
 
 import Presentation.AudioPlayer;
 import Presentation.CharacterGUI;
-import Presentation.GameConfig;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public abstract class Zombie extends Character {
-    private int speed; 
-    private int armor;
+    private final int SPEED; 
+    private final int ARMOR;
     private String direction; 
-    private int damage; 
+    private final int DAMAGE; 
     private CharacterGUI characterGUI;
     private static final String TYPE = "Zombie";
-    private int damageTime;
+    private final int DAMAGE_TIME;
     private Timer attackTimer; // timer para que el zombie ataque cada cierto tiempo 
-    private transient static final AudioPlayer player = new AudioPlayer("resources/Efects/attackZombie.wav");
+    private transient static final AudioPlayer player = new AudioPlayer("resources/Music/Efects/attackZombie.wav");
 
-    public Zombie(String name, int health, int x, int y, int brainCost, int speed, int armor, String direction, int damage, ImageIcon image, CharacterGUI characterGUI, int damageTime) {
+    public Zombie(String name, int health, int x, int y, int brainCost, int SPEED, int ARMOR, String direction, int DAMAGE, ImageIcon image, CharacterGUI characterGUI, int DAMAGE_TIME) {
         super(name, health, x, y, brainCost, image, TYPE);
-        this.speed = speed;
-        this.armor = armor;
+        this.SPEED = SPEED;
+        this.ARMOR = ARMOR;
         this.direction = direction;
-        this.damage = damage;
-        setCharacterHealth(health + armor);
+        this.DAMAGE = DAMAGE;
+        setCharacterHealth(health + ARMOR);
         this.characterGUI = characterGUI;
         this.attackTimer = null; 
-        this.damageTime = damageTime;
+        this.DAMAGE_TIME = DAMAGE_TIME;
     }
 
     public void attack(Character plant) {
         System.out.println(getName() + " bajando vida " + plant.getHealth());
-        plant.takeDamage(damage);
+        plant.takeDamage(DAMAGE);
     }
 
     private void startAttack(Character plant, int row, int col) {
@@ -43,7 +42,7 @@ public abstract class Zombie extends Character {
             return; 
         }
 
-        attackTimer = new Timer(damageTime, new ActionListener() { 
+        attackTimer = new Timer(DAMAGE_TIME, new ActionListener() { 
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (plant.isAlive() && characterGUI.getGrid().getCharactersInCell(row, col).contains(plant) && !GameConfig.getIsPaused()&& isAlive()) {
@@ -77,13 +76,13 @@ public abstract class Zombie extends Character {
                 System.out.println(direction);
                 while (isAlive() && direction != null) {
                     if (GameConfig.getIsPaused()) {
-                        Thread.sleep(speed*50); 
+                        Thread.sleep(SPEED*50); 
                         continue;
                     }
-                    Thread.sleep(speed*100); 
+                    Thread.sleep(SPEED*100); 
                     
-                    //mover al zombie con su speed 
-                    int[] newPosition = calculateNewPosition(speed);
+                    //mover al zombie con su SPEED 
+                    int[] newPosition = calculateNewPosition(SPEED);
                     int newX = newPosition[0];
                     int newY = newPosition[1];
 

@@ -1,25 +1,25 @@
 package Dominio;
 
+import Presentation.GridGUI;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import Presentation.GridGUI;
-
 public class Grid implements Serializable {
-    private List<Character>[][] grid;
-    private int rows, cols;
-    private int cellSize; 
+    private final List<Character>[][] grid;
+    private final int ROWS;
+    private final int COLS;
+    private final int CELL_SIZE; 
 
     @SuppressWarnings("unchecked") // gpt me sugirio agregar esto para la linea 18, puede generar errores 
-    public Grid(int rows, int cols, int cellSize) {
-        this.rows = rows;
-        this.cols = cols;
-        this.cellSize = cellSize; 
-        this.grid = new ArrayList[rows][cols];
+    public Grid(int ROWS, int COLS, int CELL_SIZE) {
+        this.ROWS = ROWS;
+        this.COLS = COLS;
+        this.CELL_SIZE = CELL_SIZE; 
+        this.grid = new ArrayList[ROWS][COLS];
 
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 grid[row][col] = new ArrayList<>();
             }
         }
@@ -45,18 +45,14 @@ public class Grid implements Serializable {
     }
 
     public boolean isValidPosition(int row, int col) {
-        return row >= 0 && row < rows && col >= 0 && col < cols;
+        return row >= 0 && row < ROWS && col >= 0 && col < COLS;
     }
 
     public boolean isPlacementValid(String type, int col) {
         if (type.equalsIgnoreCase("Plant")) {
-            if(col==0) return false;
-            if (col >= 9) return false; // Restricción: Las plantas van de columnas 1 a 8
+            return !(col ==0 || col >=9);
         }
-        if (type.equalsIgnoreCase("Zombie") && col < 9) {
-            return false; // Restricción: Los zombis solo pueden estar en columnas 8 y superiores
-        }
-        return true;
+        return !(type.equalsIgnoreCase("Zombie") && col < 9);
     }
 
     public List<Character> getCharactersInCell(int row, int col) {
@@ -67,31 +63,31 @@ public class Grid implements Serializable {
     }
 
     public int getRows() {
-        return rows;
+        return ROWS;
     }
 
     public int getColumns() {
-        return cols;
+        return COLS;
     }
 
     public int getCellSize() {
-        return cellSize; 
+        return CELL_SIZE; 
     }
 
     public int getRowFromY(int y) {
-        int row = (y - GridGUI.getGridYBase()) / cellSize;
+        int row = (y - GridGUI.getGridYBase()) / CELL_SIZE;
     
         if (row < 0) {
             row = 0; 
-        } else if (row >= rows) {
-            row = rows - 1;
+        } else if (row >= ROWS) {
+            row = ROWS - 1;
         }
     
         return row;
     }
 
     public int getColFromX(int x) {
-        return (x - GridGUI.getGridXBase()) / cellSize;
+        return (x - GridGUI.getGridXBase()) / CELL_SIZE;
     }
 
     public boolean hasPlantInCell(int row, int col) {
@@ -121,8 +117,8 @@ public class Grid implements Serializable {
 
     public List<Character> getAllCharacters() {
         List<Character> allCharacters = new ArrayList<>();
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 allCharacters.addAll(grid[row][col]); 
             }
         }
@@ -163,8 +159,8 @@ public class Grid implements Serializable {
     }
 
     public void stop() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 for (Character character : grid[row][col]) {
                     if (character.isZombie()) {
                         ((Zombie) character).stop();
@@ -175,8 +171,8 @@ public class Grid implements Serializable {
     }
     
     public void continueGame(){
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 for (Character character : grid[row][col]) {
                     if (character.isZombie()&& !character.isLawnMower()) {
                         ((Zombie) character).continuePlaying();
@@ -191,8 +187,8 @@ public class Grid implements Serializable {
     }
 
     public void reset() {
-        for (int row = 0; row < rows; row++) {
-            for (int col = 0; col < cols; col++) {
+        for (int row = 0; row < ROWS; row++) {
+            for (int col = 0; col < COLS; col++) {
                 grid[row][col].clear();
             }
         }

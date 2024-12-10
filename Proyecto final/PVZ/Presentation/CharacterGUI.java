@@ -1,34 +1,33 @@
 package Presentation;
 
+import Dominio.Character;
 import Dominio.Grid;
 import Dominio.Projectile;
-import Dominio.Character;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.*;
 
 public class CharacterGUI extends JPanel {
     private Grid grid;
-    private int cellSize;
+    private final int CELL_SIZE;
     public static final int GRID_X_BASE = 140;
     public static final int GRID_Y_BASE = 140;
     private List<Projectile> projectiles; 
 
-    public CharacterGUI(Grid grid, int cellSize) {
+    public CharacterGUI(Grid grid, int CELL_SIZE) {
         this.grid = grid; 
-        this.cellSize = cellSize;
+        this.CELL_SIZE = CELL_SIZE;
         this.projectiles = new ArrayList<>();
         setOpaque(false);
-        setPreferredSize(new Dimension(cellSize * grid.getColumns(), (cellSize + 20) * grid.getRows()));
+        setPreferredSize(new Dimension(CELL_SIZE * grid.getColumns(), (CELL_SIZE + 20) * grid.getRows()));
     }
 
     public void paintCharacter(Graphics g, Character character) {
         ImageIcon icon = character.getImage();
         int x = character.getCoordenatesX();
         int y =  character.getCoordenatesY(); 
-        g.drawImage(icon.getImage(), x, y, cellSize, cellSize, null);
+        g.drawImage(icon.getImage(), x, y, CELL_SIZE, CELL_SIZE, null);
     }
 
     public void addProjectile(Projectile projectile) {
@@ -58,9 +57,9 @@ public class CharacterGUI extends JPanel {
                 for (Character character : characters) {
                     if (!(character.isZombie()) && !character.isLawnMower()) {
                         ImageIcon icon = character.getImage();
-                        int x = GRID_X_BASE + col * cellSize;
-                        int y = GRID_Y_BASE + row * (cellSize + 20);
-                        g.drawImage(icon.getImage(), x, y, cellSize, cellSize, null);
+                        int x = GRID_X_BASE + col * CELL_SIZE;
+                        int y = GRID_Y_BASE + row * (CELL_SIZE + 20);
+                        g.drawImage(icon.getImage(), x, y, CELL_SIZE, CELL_SIZE, null);
                     }
                 }
             }
@@ -79,7 +78,7 @@ public class CharacterGUI extends JPanel {
     private void paintProjectiles(Graphics g) {
         for (Projectile projectile : projectiles) {
             ImageIcon icon = projectile.getImage();
-            g.drawImage(icon.getImage(), projectile.getX(), projectile.getY(), cellSize / 2, cellSize / 2, null);
+            g.drawImage(icon.getImage(), projectile.getX(), projectile.getY(), CELL_SIZE / 2, CELL_SIZE / 2, null);
         }
     }
     public Grid getGrid() {
@@ -87,7 +86,7 @@ public class CharacterGUI extends JPanel {
     }
 
     public int getCellSize() {
-        return cellSize;
+        return CELL_SIZE;
     }
 
     public void resetGUI() {

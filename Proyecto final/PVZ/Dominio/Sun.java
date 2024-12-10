@@ -1,23 +1,22 @@
 package Dominio;
 
-import javax.swing.*;
-
-import Presentation.AudioPlayer;
 import Presentation.AssistantGraphic;
+import Presentation.AudioPlayer;
+import javax.swing.*;
 
 
 public class Sun {
-    private JPanel panel;
+    private final JPanel PANEL;
     private int value = 25; // valor del sol al dar el click 
-    private static final AudioPlayer player = new AudioPlayer("resources/Efects/sunSound.wav");
+    private static final AudioPlayer player = new AudioPlayer("resources/Music/Efects/sunSound.wav");
 
     public Sun(String imagePath, int size, Runnable onClickAction) {
-        panel = AssistantGraphic.createButtonWithImage(imagePath, e -> onClickAction.run(), "Sun", size-20, size-20);
+        PANEL = AssistantGraphic.createButtonWithImage(imagePath, e -> onClickAction.run(), "Sun", size-20, size-20);
 
     }
 
     public JPanel getPanel() {
-        return panel;
+        return PANEL;
     }
 
 

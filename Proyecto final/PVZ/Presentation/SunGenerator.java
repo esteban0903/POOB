@@ -1,9 +1,8 @@
 package Presentation;
 
-import javax.swing.*;
-
 import Dominio.Grid;
 import Dominio.Sun;
+import javax.swing.*;
 
 public class SunGenerator {
     private JPanel gridPanel;
@@ -28,14 +27,14 @@ public class SunGenerator {
 
     public void addSunToCell(int row, int col, int sunValue) {
         if (!grid.isValidPosition(row, col-1)) {
-            System.out.println("Posición inválida: fila " + row + ", columna " + col);
+            //System.out.println("Posición inválida: fila " + row + ", columna " + col);
             return;
         }
 
         // Calcular índice del componente
         int index = row * grid.getColumns() + col;
         if (index >= gridPanel.getComponentCount()) {
-            System.out.println("Índice inválido: " + index + ", total de componentes: " + gridPanel.getComponentCount());
+            //System.out.println("Índice inválido: " + index + ", total de componentes: " + gridPanel.getComponentCount());
             return;
         }
 
@@ -50,7 +49,7 @@ public class SunGenerator {
     }
 
     private Sun createSun(JPanel cell, int sunValue) {
-        return new Sun("resources/sun.png", grid.getCellSize(), () -> {
+        return new Sun("resources/Characters/sun.png", grid.getCellSize(), () -> {
             if (cell.getComponentCount() > 0) {
                 cell.remove(cell.getComponent(0));
                 sunCount += sunValue;

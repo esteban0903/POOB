@@ -1,13 +1,15 @@
-package Presentation;
+package Dominio;
 
 public class GameConfig {
     private static GameConfig instance;
 
-    private static  int initialSuns = 0; 
-    private static int gameDuration = 5; 
+    private static  int initialSuns = 100; 
+    private static int gameDuration = 1; 
     private static String gameMode = "Modo 1"; 
     private static boolean isPaused= false;
     private static boolean gameLost = false;
+    private static int puntaje = 0;
+    private static String namePlayer = "Player 1";
 
 
     private GameConfig() {
@@ -67,5 +69,21 @@ public class GameConfig {
     
     public static void setStartGame(){
         gameLost = false;
+    }
+
+    public static int getPuntaje() {
+        return puntaje;
+    }
+
+    public static void setPuntaje(int newPuntaje) {
+        puntaje = newPuntaje;
+    }
+
+    public static void setName(String name) {
+        namePlayer = name;
+    }
+
+    public static String getName(){
+        return namePlayer;
     }
 }

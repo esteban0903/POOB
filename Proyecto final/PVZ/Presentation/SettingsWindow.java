@@ -1,15 +1,15 @@
 package Presentation;
 
+import Dominio.GameConfig;
+import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
-
-import java.awt.Color;
 
 public class SettingsWindow extends Window {
     
     private Color orange = new Color(128, 0, 128); // Color naranja para botones
     private Color white = Color.WHITE;
-    private AudioPlayer player = new AudioPlayer("resources/musicDifficultyWindow.wav");
+    private AudioPlayer player = new AudioPlayer("resources/Music/SoundTrack/musicDifficultyWindow.wav");
 
     // Botones
     private JButton sunConfigButton = AssistantGraphic.createButton("Configurar Soles", 570, 220, 200, 40, orange, white);
@@ -17,7 +17,7 @@ public class SettingsWindow extends Window {
     private JButton timeConfigButton = AssistantGraphic.createButton("Configurar Tiempo", 570, 340, 200, 40, orange, white);
     private JButton backButton = AssistantGraphic.createButton("Volver", 570, 400, 200, 40, orange, white);
     public SettingsWindow() {
-        super("Configuración del Juego", "resources/difficultyWindow.jpg");
+        super("Configuración del Juego", "resources/Backgrounds/difficultyWindow.jpg");
 
         add(sunConfigButton);
         add(modeButton);

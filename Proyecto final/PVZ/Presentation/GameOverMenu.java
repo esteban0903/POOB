@@ -1,18 +1,23 @@
 package Presentation;
 
-import javax.swing.*;
+import Dominio.GameConfig;
 import java.awt.*;
+import javax.swing.*;
 
 public class GameOverMenu extends JPanel {
 
     private GridGUI parentWindow;
-    JButton mainMenuButton = AssistantGraphic.createButton("Regresar al Menú Principal", 150, 100, 200, 40, new Color(128, 0, 128), Color.WHITE);
+    JButton mainMenuButton = AssistantGraphic.createButton("Regresar al Menú Principal", 150, 200, 200, 40, new Color(128, 0, 128), Color.WHITE);
     JLabel gameOverLabel;
+    JLabel scoreLabel;
+    JLabel nameLabel;
     JPanel gameOverBox = new JPanel();
 
     public GameOverMenu(GridGUI parentWindow, String gameOverMessage) {
         this.parentWindow = parentWindow; 
         gameOverLabel = new JLabel(gameOverMessage);
+        scoreLabel = new JLabel("Puntaje: " + GameConfig.getPuntaje());
+        nameLabel = new JLabel("Jugador: " + GameConfig.getName());
         configureMenu();
     }
 
@@ -24,6 +29,7 @@ public class GameOverMenu extends JPanel {
         // Diseño del panel de Game Over
         createBoxGameOver();
         addTextGameOverLabel();
+        addScoreAndNameLabels();
         addButtons();
         configureNotActionClick();
     }
@@ -42,8 +48,19 @@ public class GameOverMenu extends JPanel {
         gameOverBox.add(gameOverLabel);
     }
 
+    private void addScoreAndNameLabels() {
+        scoreLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        scoreLabel.setForeground(Color.CYAN);
+        scoreLabel.setBounds(50, 80, 400, 30);
+        nameLabel.setFont(new Font("Arial", Font.PLAIN, 20));
+        nameLabel.setForeground(Color.YELLOW);
+        nameLabel.setBounds(50, 120, 400, 30);
+        
+        gameOverBox.add(scoreLabel);
+        gameOverBox.add(nameLabel);
+    }
+    
     private void addButtons() {
-        mainMenuButton.setBounds(150, 100, 200, 40);
         mainMenuButton.addActionListener(e -> returnToMainMenu());
         gameOverBox.add(mainMenuButton);
     }

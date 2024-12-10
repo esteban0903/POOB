@@ -1,12 +1,13 @@
 package Presentation;
 
-import javax.swing.*;
+import Dominio.GameConfig;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
+import javax.swing.*;
 
 public class CharacterSelectionWindow extends Window {
-    AudioPlayer player = new AudioPlayer("resources/characterSelect.wav");
+    AudioPlayer player = new AudioPlayer("resources/Music/SoundTrack/characterSelect.wav");
     private JPanel availablePlantsPanel;
     private JPanel selectedPlantsPanel;
     private final Map<String, JPanel> plantButtons; 
@@ -20,14 +21,14 @@ public class CharacterSelectionWindow extends Window {
     }
 
     public CharacterSelectionWindow() {
-        super("Selección de Plantas", "resources/characterSelection.jpg");
+        super("Selección de Plantas", "resources/Backgrounds/characterSelection.jpg");
 
         plantButtons = new HashMap<>();
         plantImages = new HashMap<>();
-        plantImages.put("Peashooter", "resources/Peashooter.png"); // para probar algunas plantas 
-        plantImages.put("Sunflower", "resources/Sunflower.png");
-        plantImages.put("Wallnut", "resources/Wallnut.png");
-        plantImages.put("EciPlant", "resources/EciPlant.png");
+        plantImages.put("Peashooter", "resources/Characters/Peashooter.png"); // para probar algunas plantas 
+        plantImages.put("Sunflower", "resources/Characters/Sunflower.png");
+        plantImages.put("Wallnut", "resources/Characters/Wallnut.png");
+        plantImages.put("EciPlant", "resources/Characters/EciPlant.png");
 
     
         selectedPlantsMap = new HashMap<>();  
@@ -153,9 +154,9 @@ public class CharacterSelectionWindow extends Window {
 
     public void configureReturnButton() {
         returnButton.addActionListener(e -> {
-            GameModeWindow gameModeWindow  = new GameModeWindow ();
+            NameInputWindow nameInputWindow  = new NameInputWindow ();
             player.stopMusic();
-            gameModeWindow.setVisible(true);
+            nameInputWindow.setVisible(true);
             dispose();
         });
     }

@@ -1,10 +1,8 @@
 package Dominio;
 
 
-import javax.swing.ImageIcon;
-
-import Presentation.GameConfig;
 import Presentation.SunGenerator;
+import javax.swing.ImageIcon;
 
 public class Sunflower extends Plant {
     protected int sunValue = 25; 
@@ -12,7 +10,7 @@ public class Sunflower extends Plant {
     private boolean producing;
 
     public Sunflower(int x, int y) {
-        super("Sunflower", 300, x, y, 50, new ImageIcon("resources/Sunflower.png"));
+        super("Sunflower", 300, x, y, 50, new ImageIcon("resources/Characters/Sunflower.png"));
         this.producing = true;
     }
 
@@ -54,7 +52,7 @@ public class Sunflower extends Plant {
     protected void setSunProductionTime(int sunProductionTime) {
         this.sunProductionTime = sunProductionTime;
     }
-
+    @Override
     public void stop(){
         
     }

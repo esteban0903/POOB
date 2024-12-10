@@ -1,19 +1,17 @@
 package Dominio;
 
-import javax.swing.ImageIcon;
-
 import Presentation.AudioPlayer;
 import Presentation.CharacterGUI;
-import Presentation.GameConfig;
+import javax.swing.ImageIcon;
 
 
 public class LawnMower extends Character {
-    private static final ImageIcon IMAGE = new ImageIcon("resources/LawnMower.png");
+    private static final ImageIcon IMAGE = new ImageIcon("resources/Characters/LawnMower.png");
     private static final String TYPE = "LawnMower";
     private CharacterGUI characterGUI;
     private boolean activated = false; 
     boolean soundPlayed = false; 
-    private transient AudioPlayer player = new AudioPlayer("resources/Efects/killLawnMoner.wav");
+    private final transient AudioPlayer player = new AudioPlayer("resources/Music/Efects/killLawnMoner.wav");
 
     public LawnMower(int x, int y, CharacterGUI characterGUI) {
         super("LawnMower", 3000, x, y, 0, IMAGE, TYPE);
@@ -25,7 +23,8 @@ public class LawnMower extends Character {
     public boolean isLawnMower() {
         return true;
     }
-
+    
+    @Override
     public void move() {
         new Thread(() -> {
             try {
@@ -59,7 +58,6 @@ public class LawnMower extends Character {
                 }
                 removeLawnMower(currentRow, currentCol);
             } catch (InterruptedException e) {
-                e.printStackTrace();
             }
         }).start();
     }
@@ -121,6 +119,8 @@ public class LawnMower extends Character {
 
         return new int[]{newX, newY};
     }
+    
+    @Override
     public void stop() {
     }
 

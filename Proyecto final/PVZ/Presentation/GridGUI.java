@@ -2,19 +2,19 @@ package Presentation;
 
 import Dominio.Character;
 import Dominio.CharacterFactory;
+import Dominio.GameConfig;
 import Dominio.GameController;
 import Dominio.Grid;
-import Dominio.Zombie;
 import Dominio.Plant;
-
-import javax.swing.*;
-import java.util.List;
+import Dominio.Zombie;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import javax.swing.*;
 
  public class GridGUI extends Window {
     private JPanel gridPanel;
@@ -36,7 +36,7 @@ import java.util.concurrent.TimeUnit;
     private static final int CELL_SIZE = 80;
     private static final int GRID_X_BASE = 140;
     private static final int GRID_Y_BASE = 140;
-    private AudioPlayer player = new AudioPlayer("resources/easyMusic.wav");
+    private AudioPlayer player = new AudioPlayer("resources/Music/SoundTrack/easyMusic.wav");
     private boolean isPaused;
     private Timer sunTimer;
     private Timer zombieTimer;
@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 
     public GridGUI(Map<String, String> characterTypes) {
-        super("Plants vs Zombies", "resources/gridGame.jpg");
+        super("Plants vs Zombies", "resources/Backgrounds/gridGame.jpg");
         this.grid = new Grid(rows, cols, CELL_SIZE);
         this.sunCount = GameConfig.getInitialSuns();
         this.isPaused = false;
@@ -126,10 +126,12 @@ import java.util.concurrent.TimeUnit;
         AudioPlayer gameFinishPlayer;
         if (GameConfig.getIsGameOver()) {
             gameOverMessage = "Game Over"; 
-            gameFinishPlayer = new AudioPlayer("resources/Efects/loseSound.wav");
+            gameFinishPlayer = new AudioPlayer("resources/Music/Efects/loseSound.wav");
+            System.out.println(GameConfig.getPuntaje());
         } else if (checkTime()) {
             gameOverMessage = "Ganaste";  
-            gameFinishPlayer = new AudioPlayer("resources/Efects/winSound.wav");
+            gameFinishPlayer = new AudioPlayer("resources/Music/Efects/winSound.wav");
+            System.out.println(GameConfig.getPuntaje());
         } else {
             return; 
         }
@@ -208,12 +210,12 @@ import java.util.concurrent.TimeUnit;
                 resetZombieTimer(10000);  
             }
         } else if (elapsedTime < (20000 + timeThirdRound)) { 
-            System.out.println("Tercera ronda: Zombies cada 7 segundos.");
+            //System.out.println("Tercera ronda: Zombies cada 7 segundos.");
             if (zombieTimer.getDelay() != 7000) {  
                 resetZombieTimer(7000);  
             }
         } else {  
-            System.out.println("Cuarta ronda: Zombies cada 5 segundos.");
+            //System.out.println("Cuarta ronda: Zombies cada 5 segundos.");
             if (zombieTimer.getDelay() != 5000) {  
                 resetZombieTimer(5000);  
             }
@@ -243,7 +245,7 @@ import java.util.concurrent.TimeUnit;
             for (int col = 0; col < cols; col++) {
                 JPanel cell = new JPanel();
                 cell.setOpaque(false);
-                cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
+                //cell.setBorder(BorderFactory.createLineBorder(Color.BLACK));
                 Point position = calculatePosition(row, col);
                 cell.setBounds(position.x, position.y, CELL_SIZE, CELL_SIZE + 20);
                 configureClickOnCell(row, col, cell);
@@ -355,7 +357,7 @@ import java.util.concurrent.TimeUnit;
             sunGenerator.subtractSun(character.getCost());
             characterPanel.repaint();
             
-            //showBoard();
+            showBoard();
             if (!character.isZombie()) {
                 ((Plant) character).startAction(grid, sunGenerator);
                 ((Plant) character).startAction();
@@ -378,6 +380,7 @@ import java.util.concurrent.TimeUnit;
         sunTimer.stop();
         zombieTimer.stop();
         player.stopMusic();
+        gameTimer.stop();
         GameConfig.setIsPaused();
         
     }   
@@ -387,16 +390,17 @@ import java.util.concurrent.TimeUnit;
         sunTimer.start();
         zombieTimer.start();
         player.playMusic();
+        gameTimer.start();
         GameConfig.setIsNotPaused();
     }
 
     public static void main(String[] args) {
         Map<String, String> characterTypes = Map.of(
-            "Peashooter", "resources/Peashooter.png",
-            "Sunflower", "resources/Sunflower.png",
-            "WallNut", "resources/WallNut.png",
-            "BasicZombie", "resources/BasicZombie.png",
-            "ECIPlant", "resources/ECIPlant.png"
+            "Peashooter", "resources/Characters/Peashooter.png",
+            "Sunflower", "resources/Characters/Sunflower.png",
+            "WallNut", "resources/Characters/WallNut.png",
+            "BasicZombie", "resources/Characters/BasicZombie.png",
+            "ECIPlant", "resources/Characters/ECIPlant.png"
         );
         new GridGUI(characterTypes);
     }

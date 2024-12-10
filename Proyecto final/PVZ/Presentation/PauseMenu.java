@@ -1,7 +1,7 @@
     package Presentation;
 
-    import javax.swing.*;
     import java.awt.*;
+    import javax.swing.*;
 
     public class PauseMenu extends JPanel {
 
@@ -54,8 +54,8 @@
 
         private void configureMainMenuButton(){
             mainMenuButton.addActionListener(e -> {
-                MenuWindow menuWindow = new MenuWindow();
                 parentWindow.exitGame();
+                MenuWindow menuWindow = new MenuWindow();
                 menuWindow.setVisible(true);
             });
 

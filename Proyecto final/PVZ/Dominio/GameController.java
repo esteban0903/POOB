@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.Map;
-
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
@@ -36,6 +35,7 @@ public class GameController {
             try (FileInputStream fileIn = new FileInputStream(file);
                 ObjectInputStream in = new ObjectInputStream(fileIn)) {
                 Grid grid = (Grid) in.readObject();
+                @SuppressWarnings("unchecked")
                 Map<String, String> characterTypes = (Map<String, String>) in.readObject();
                 return new Object[] {grid, characterTypes};
             } catch (IOException | ClassNotFoundException e) {

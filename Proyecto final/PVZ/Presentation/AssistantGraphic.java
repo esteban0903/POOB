@@ -1,19 +1,18 @@
 package Presentation;
 
+import java.awt.*;
+import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.border.LineBorder;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.SwingConstants;
-
-import java.awt.*;
-import java.awt.event.ActionListener;
+import javax.swing.border.LineBorder;
 
 public class AssistantGraphic {
 
     public static JButton createButton(String text , int x , int y, int width , int height, Color backgroundColor , Color foregroundColor) {
-        AudioPlayer player = new AudioPlayer("resources/Efects/soundButton.wav");
+        AudioPlayer player = new AudioPlayer("resources/Music/Efects/soundButton.wav");
         JButton button = new JButton(text);
         button.setBounds(x, y, width, height);
         button.setFocusPainted(false);

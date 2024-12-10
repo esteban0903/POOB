@@ -1,8 +1,7 @@
 package Dominio;
 
-import javax.swing.ImageIcon;
 import Presentation.CharacterGUI;
-import Presentation.GameConfig;
+import javax.swing.ImageIcon;
 
 public class Peashooter extends Plant {
     private static final int DAMAGE = 20;
@@ -10,7 +9,7 @@ public class Peashooter extends Plant {
     private CharacterGUI characterGUI;
 
     public Peashooter(int x, int y, CharacterGUI characterGUI) {
-        super("Peashooter", 300, x, y, 100, new ImageIcon("resources/Peashooter.png"));
+        super("Peashooter", 300, x, y, 100, new ImageIcon("resources/Characters/Peashooter.png"));
         this.characterGUI = characterGUI;
     }
     @Override
@@ -36,6 +35,8 @@ public class Peashooter extends Plant {
             }
         }).start();
     }
+    
+    @Override
     public void stop(){
         
     }
