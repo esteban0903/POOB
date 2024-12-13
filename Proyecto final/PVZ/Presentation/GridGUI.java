@@ -266,9 +266,9 @@ import javax.swing.*;
         for (var entry : characterTypes.entrySet()) {
             ActionListener action = createCharacterSelectionAction(entry.getKey());
             JPanel buttonPanel = AssistantGraphic.createButtonWithImage(entry.getValue(), action, entry.getKey(), 60, 60);
-
+            
             buttonPanel.setBounds(sizeButtonX, sizeButtonY, 80, 80);
-            buttonPanel.setOpaque(false);
+            
             layeredPane.add(buttonPanel, Integer.valueOf(3)); 
 
             sizeButtonY += 100;
@@ -285,7 +285,7 @@ import javax.swing.*;
 
     private void createShovelButton() {
         ActionListener action = createShovelSelectionAction();
-        shovel = AssistantGraphic.createButtonWithImage("resources/Shovel.png", action, "shovel", 60, 60);
+        shovel = AssistantGraphic.createButtonWithImage("resources/Characters/Shovel.png", action, "shovel", 60, 60);
         shovel.setBounds(300, 20, 80, 80);
         shovel.setOpaque(false);
         layeredPane.add(shovel, Integer.valueOf(3));
