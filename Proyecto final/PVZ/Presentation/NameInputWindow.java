@@ -5,6 +5,11 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+
+/**
+ * A window for inputting the player's name, providing options to continue or return to the previous screen.
+ */
+
 public class NameInputWindow extends Window {
     
     private Color orange = new Color(128, 0, 128); // Color naranja para botones
@@ -15,6 +20,11 @@ public class NameInputWindow extends Window {
     private JButton namePlayerButton = AssistantGraphic.createButton("Nombre jugador 1 ", 570, 220, 200, 40, orange, white);
     private JButton continueButton = AssistantGraphic.createButton("Continuar", 570, 280, 200, 40, orange, white);
     private JButton backButton = AssistantGraphic.createButton("Volver", 570, 340, 200, 40, orange, white);
+    
+    /**
+     * Constructs the NameInputWindow setting up UI components and initial configurations.
+     */
+
     public NameInputWindow() {
         super("NameInput", "resources/Backgrounds/nameChoose.jpg");
 
@@ -31,8 +41,11 @@ public class NameInputWindow extends Window {
         setVisible(true);
     }
 
-
-
+    /**
+     * Configures the button for inputting the player's name with a dialog prompt.
+     *
+     * @param button The JButton to configure.
+     */
 
     private void configurenamePlayerButton(JButton button) {
         button.addActionListener(e -> {
@@ -50,6 +63,12 @@ public class NameInputWindow extends Window {
         });
     }
 
+    /**
+     * Configures the button to return to the game mode selection window.
+     *
+     * @param returnButton The JButton to configure for returning.
+     */
+    
     private void configureReturnButton(JButton returnButton) {
         returnButton.addActionListener(e -> {
             GameModeWindow gameModeWindow = new GameModeWindow();
@@ -58,6 +77,12 @@ public class NameInputWindow extends Window {
             dispose();
         });
     }
+
+    /**
+     * Configures the button to proceed to the character selection window.
+     *
+     * @param continueButton The JButton to configure for continuing.
+     */
 
     private void configureContinueButton(JButton continueButton){
         continueButton.addActionListener(e -> {

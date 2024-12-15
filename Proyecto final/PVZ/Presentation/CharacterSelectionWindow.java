@@ -6,6 +6,10 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.swing.*;
 
+/**
+ * A window for selecting characters or plants from available options before starting a game.
+ */
+
 public class CharacterSelectionWindow extends Window {
     AudioPlayer player = new AudioPlayer("resources/Music/SoundTrack/characterSelect.wav");
     private JPanel availablePlantsPanel;
@@ -20,6 +24,10 @@ public class CharacterSelectionWindow extends Window {
         new CharacterSelectionWindow();
     }
 
+    /**
+     * Constructs the character selection window, initializing UI components and layout.
+     */
+
     public CharacterSelectionWindow() {
         super("Selección de Plantas", "resources/Backgrounds/characterSelection.jpg");
 
@@ -29,6 +37,7 @@ public class CharacterSelectionWindow extends Window {
         plantImages.put("Sunflower", "resources/Characters/Sunflower.png");
         plantImages.put("Wallnut", "resources/Characters/Wallnut.png");
         plantImages.put("EciPlant", "resources/Characters/EciPlant.png");
+        plantImages.put("Evolve", "resources/Characters/Evolve.png");
 
     
         selectedPlantsMap = new HashMap<>();  
@@ -45,6 +54,10 @@ public class CharacterSelectionWindow extends Window {
         showWindow();
     }
 
+    /**
+     * Initializes panels for displaying available and selected plants.
+     */
+
     private void initializePanels() {
         //se usa FlowLayout porque necesitamos que se llenen horizontalmente
 
@@ -59,6 +72,10 @@ public class CharacterSelectionWindow extends Window {
         add(selectedPlantsPanel);
     }
 
+    /**
+     * Adds plant options to the available plants panel.
+     */
+
     private void addAvailablePlants() {
         for (String plant : plantImages.keySet()) {
             int width = 30;  
@@ -72,6 +89,13 @@ public class CharacterSelectionWindow extends Window {
         }
     }
 
+    /**
+     * Configures the action listeners for the plant selection panels. When a plant panel is clicked, the corresponding plant is added to the selected plants panel.
+     *
+     * @param plant The name of the plant associated with the plant panel.
+     * @param plantPanel The JPanel containing the plant button.
+     */
+
     private void addActionToPlantPanel(String plant, JPanel plantPanel) {
         for (Component comp : plantPanel.getComponents()) {
             if (comp instanceof JButton) {
@@ -81,11 +105,13 @@ public class CharacterSelectionWindow extends Window {
         }
     }
 
+    /**
+     * Adds a selected plant to the selected plants panel.
+     *
+     * @param plant The name of the plant to be added.
+     * @param plantPanel The JPanel containing the plant button.
+     */
     private void addToSelectedPlants(String plant, JPanel plantPanel) {
-        /*if (selectedPlantsPanel.getComponentCount() >= 6) { // Máximo 6 espacios en un FlowLayout horizontal
-            JOptionPane.showMessageDialog(this, "Ya seleccionaste el máximo de plantas.");
-            return;
-        }*/
 
         disablePlantPanel(plantPanel);
         int width = 24;  
@@ -104,6 +130,12 @@ public class CharacterSelectionWindow extends Window {
         selectedPlantsPanel.repaint();
     }
 
+    /**
+     * Configures the action listeners for the selected plant panels. When a selected plant panel is clicked, the corresponding plant is removed from the selected plants panel.
+     *
+     * @param plant The name of the plant associated with the selected plant panel.
+     * @param selectedPlantPanel The JPanel containing the selected plant button.
+     */
     private void addActionToSelectedPlantPanel(String plant, JPanel selectedPlantPanel) {
         for (Component comp : selectedPlantPanel.getComponents()) {
             if (comp instanceof JButton) {
@@ -112,6 +144,13 @@ public class CharacterSelectionWindow extends Window {
             }
         }
     }
+
+    /**
+     * Removes a selected plant from the selection panel and re-enables its corresponding button in the available plants panel.
+     *
+     * @param plant The identifier for the plant to remove.
+     * @param selectedPlantPanel The JPanel from which the plant is being removed.
+     */
 
     private void removeFromSelectedPlants(String plant, JPanel selectedPlantPanel) {
         selectedPlantsMap.remove(plant);  
@@ -124,6 +163,12 @@ public class CharacterSelectionWindow extends Window {
         selectedPlantsPanel.repaint();
     }
 
+    /**
+     * Disables all buttons within a given plant panel, preventing further interactions.
+     *
+     * @param plantPanel The JPanel whose buttons will be disabled.
+     */
+
     private void disablePlantPanel(JPanel plantPanel) {
         for (Component comp : plantPanel.getComponents()) {
             if (comp instanceof JButton) {
@@ -132,6 +177,12 @@ public class CharacterSelectionWindow extends Window {
         }
     }
 
+    /**
+     * Enables all buttons within a given plant panel, allowing interactions.
+     *
+     * @param plantPanel The JPanel whose buttons will be enabled.
+     */
+
     private void enablePlantPanel(JPanel plantPanel) {
         for (Component comp : plantPanel.getComponents()) {
             if (comp instanceof JButton) {
@@ -139,6 +190,10 @@ public class CharacterSelectionWindow extends Window {
             }
         }
     }
+
+    /**
+     * Configures the start game button with an action listener that stops music, disposes of the current window, and opens the game grid UI.
+     */
 
     private void configureStartGameButton() {
         startGameButton.addActionListener(e -> {
@@ -152,6 +207,10 @@ public class CharacterSelectionWindow extends Window {
         });
     }
 
+    /**
+     * Configures the return button to navigate back to the initial window and stop the current window's music.
+     */
+    
     public void configureReturnButton() {
         returnButton.addActionListener(e -> {
             NameInputWindow nameInputWindow  = new NameInputWindow ();

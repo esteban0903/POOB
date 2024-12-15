@@ -1,4 +1,4 @@
-/*package Tests;
+package Tests;
 
 import Dominio.Grid;
 import org.junit.Before;
@@ -104,4 +104,3 @@ public class GridTest {
         assertEquals(0, grid.getAllCharacters().size());
     }
 }
-*/

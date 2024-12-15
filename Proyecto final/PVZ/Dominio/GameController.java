@@ -8,8 +8,19 @@ import java.util.Map;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
+
+
+/**
+ * Handles game save and load functionalities, allowing the game state and character settings to be serialized to a file and retrieved.
+ */
 public class GameController {
 
+    /**
+     * Saves the current game state including the grid and character types to a file chosen by the user.
+     * 
+     * @param grid The game grid to save, containing all current game objects and their states.
+     * @param characterTypes A map of character identifiers to their types, used for game reconstruction.
+     */
     public static void saveGame(Grid grid, Map<String, String> characterTypes) {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Guardar Juego Como");
@@ -26,7 +37,11 @@ public class GameController {
         }
     }
 
-
+    /**
+     * Loads a game state from a file chosen by the user.
+     * 
+     * @return An array containing the loaded grid and a map of character types if successful; null if unsuccessful.
+     */
     public static Object[] loadGame() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Abrir Juego Guardado");

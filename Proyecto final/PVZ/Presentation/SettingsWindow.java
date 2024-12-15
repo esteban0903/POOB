@@ -5,6 +5,10 @@ import java.awt.Color;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 
+/**
+ * A window for configuring various game settings including sun count, game mode, game duration, and number of rounds.
+ */
+
 public class SettingsWindow extends Window {
     
     private Color purple = new Color(128, 0, 128); // Color naranja para botones
@@ -17,6 +21,11 @@ public class SettingsWindow extends Window {
     private JButton timeConfigButton = AssistantGraphic.createButton("Configurar Tiempo", 570, 340, 200, 40, purple, white);
     private JButton roundConfigButton = AssistantGraphic.createButton("Numero de rondas ", 570, 400, 200, 40, purple, white);
     private JButton backButton = AssistantGraphic.createButton("Volver", 570, 460, 200, 40, purple, white);
+    
+    /**
+     * Constructs the SettingsWindow, setting up UI components and initial configurations.
+     */
+
     public SettingsWindow() {
         super("Configuración del Juego", "resources/Backgrounds/difficultyWindow.jpg");
 
@@ -40,6 +49,13 @@ public class SettingsWindow extends Window {
 
 
 
+    /**
+     * Configures the sun configuration button, allowing the user to set the initial sun count for the game.
+     * 
+     * When the button is clicked, a dialog is displayed prompting the user to enter the desired initial sun count.
+     * If the user enters a valid number, the initial sun count is updated in the game configuration.
+     * If the user enters an invalid value, an error message is displayed.
+     */
     private void configureSunConfigButton(JButton button) {
         button.addActionListener(e -> {
             String input = JOptionPane.showInputDialog(this, "Ingrese la cantidad inicial de soles:", "Configuración de Soles", JOptionPane.QUESTION_MESSAGE);
@@ -55,6 +71,12 @@ public class SettingsWindow extends Window {
         });
     }
 
+    /**
+     * Configures the mode button, allowing the user to select the game mode.
+     * 
+     * When the button is clicked, a dialog is displayed prompting the user to choose between two game modes.
+     * The selected mode is then set in the game configuration.
+     */
     private void configureModeButton(JButton button) {
         button.addActionListener(e -> {
             String[] options = {"Modo 1", "Modo 2"};
@@ -76,6 +98,11 @@ public class SettingsWindow extends Window {
         });
     }
 
+    /**
+     * Configures the game duration based on user input.
+     * Ensures the duration is a positive integer and updates the game settings accordingly.
+     */
+
     private void configureTimeConfigButton(JButton button) {
         button.addActionListener(e -> {
             String input = JOptionPane.showInputDialog(this, "Ingrese el tiempo de partida en minutos:", "Configuración de Tiempo", JOptionPane.QUESTION_MESSAGE);
@@ -93,6 +120,11 @@ public class SettingsWindow extends Window {
             }
         });
     }
+
+    /**
+     * Configures the number of game rounds based on user input.
+     * Validates the input to ensure it is a positive integer and updates the game configuration.
+     */
 
     private void configureRoundConfigButton(JButton button) {
         button.addActionListener(e -> {
@@ -113,6 +145,14 @@ public class SettingsWindow extends Window {
         });
     }
 
+    /**
+     * Configures the return button in the settings window.
+     * When the return button is clicked, it creates a new MenuWindow instance,
+     * stops the music, makes the MenuWindow visible, and disposes of the current SettingsWindow.
+     *
+     * @param returnButton the JButton to be configured
+     */
+    
     private void configureReturnButton(JButton returnButton) {
         returnButton.addActionListener(e -> {
             MenuWindow menuWindow = new MenuWindow();
